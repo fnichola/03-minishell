@@ -6,7 +6,7 @@
 #    By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/09 18:01:32 by fnichola          #+#    #+#              #
-#    Updated: 2022/02/26 16:46:25 by fnichola         ###   ########.fr        #
+#    Updated: 2022/02/26 19:53:40 by fnichola         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ LIBFT_DIR = libft
 LIBFT_LIB = $(LIBFT_DIR)/libft.a
 
 CC = gcc
-CFLAGS = -Wall -Werror -Wextra
+CFLAGS = -Wall -Werror -Wextra 
 
 SRCS = srcs/main.c
 
@@ -32,7 +32,7 @@ all: $(NAME)
 	$(CC) $(CFLAGS) -MMD -MP -o $@ -c $<
 	
 $(NAME): $(OBJS) $(LIBFT_LIB)
-	$(CC) $(CFLAGS) $(OBJS) $(LIBFT_LIB) -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJS) $(LIBFT_LIB) -lreadline -lncurses -o $(NAME)
 
 $(LIBFT_LIB):
 	$(MAKE) bonus -C $(LIBFT_DIR)
