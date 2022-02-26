@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/26 16:46:58 by fnichola          #+#    #+#             */
-/*   Updated: 2022/02/26 21:15:14 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/02/26 21:18:28 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,3 +36,5 @@ int	main(int argc, char **argv)
 	// rl_clear_history(); // requires GNU Readline
 	return (0);
 }
+
+// testing git
