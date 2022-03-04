@@ -1,3 +1,9 @@
+# binary
+minishell
+
+# vim swap files
+*.swp
+
 # Prerequisites
 *.d
 

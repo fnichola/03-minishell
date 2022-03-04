@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/26 16:46:58 by fnichola          #+#    #+#             */
-/*   Updated: 2022/03/02 17:19:54 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/03/04 18:42:27 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,32 @@
 #include <readline/history.h>
 #include <sys/wait.h>
 
+void	exit_error(void)
+{
+	printf("Error!\n");
+	exit(EXIT_FAILURE);
+}
+void	free_command_array(void *ptr)
+{
+	size_t	i;
+	char	**array;
+
+	array = (char **)ptr;
+	i = 0;
+	while (array && array[i])
+	{
+		free(array[i]);
+		i++;
+	}
+	free(array);
+}
+
 t_list	*parse_line(const char *line)
 {
 	t_list	*command_table;
 	char	**split_command;
 
+	command_table = NULL;
 	split_command = ft_split(line, ' '); // ignoring pipes, etc, for now
 	ft_lstadd_back(&command_table, ft_lstnew(split_command));
 	return (command_table);
@@ -35,7 +56,9 @@ int	execute_commands(t_list *command_table, char **envp)
 	while (command_table)
 	{
 		argv = (char **)command_table->content;
-		if (argv && !ft_strncmp(argv[0], "exit", ft_strlen(argv[0])))
+		if (!argv || !argv[0])
+			return (0);
+		if (!ft_strncmp(argv[0], "exit", ft_strlen(argv[0])))
 		{
 			ft_printf("exit\n");
 			return (1);
@@ -43,7 +66,8 @@ int	execute_commands(t_list *command_table, char **envp)
 		pid = fork();
 		if (pid == 0)
 		{
-			execve(argv[0], argv, envp);
+			if (execve(argv[0], argv, envp))
+				exit_error();
 		}
 		else
 		{
@@ -70,7 +94,7 @@ int minishell(char **envp)
 		command_table = parse_line(line);
 		free(line);
 		status = execute_commands(command_table, envp);
-		ft_lstclear(&command_table, free);
+		ft_lstclear(&command_table, free_command_array);
 	}
 	return (0);
 }
