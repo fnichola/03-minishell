@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/26 16:46:58 by fnichola          #+#    #+#             */
-/*   Updated: 2022/03/04 18:42:27 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/03/07 00:37:38 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ void	exit_error(void)
 	printf("Error!\n");
 	exit(EXIT_FAILURE);
 }
+
 void	free_command_array(void *ptr)
 {
 	size_t	i;
@@ -34,6 +35,28 @@ void	free_command_array(void *ptr)
 		i++;
 	}
 	free(array);
+}
+
+void	search_path_and_exec(char **argv, char **envp)
+{
+	char	**paths;
+	char	*pathname;
+	char	*temp;
+	size_t	i;
+
+	paths = ft_split(getenv("PATH"), ':');
+	i = 0;
+	while (paths[i])
+	{
+		temp = ft_strjoin(paths[i], "/");
+		pathname = ft_strjoin(temp, argv[0]);
+		free(temp);
+		execve(pathname, argv, envp);
+		free(pathname);
+		i++;
+	}
+	free(paths);
+	exit_error();
 }
 
 t_list	*parse_line(const char *line)
@@ -58,7 +81,7 @@ int	execute_commands(t_list *command_table, char **envp)
 		argv = (char **)command_table->content;
 		if (!argv || !argv[0])
 			return (0);
-		if (!ft_strncmp(argv[0], "exit", ft_strlen(argv[0])))
+		if (!ft_strncmp(argv[0], "exit", ft_strlen(argv[0])) && ft_strlen(argv[0]) >= 4)
 		{
 			ft_printf("exit\n");
 			return (1);
@@ -66,8 +89,7 @@ int	execute_commands(t_list *command_table, char **envp)
 		pid = fork();
 		if (pid == 0)
 		{
-			if (execve(argv[0], argv, envp))
-				exit_error();
+			search_path_and_exec(argv, envp);
 		}
 		else
 		{
