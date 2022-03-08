@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/26 16:46:58 by fnichola          #+#    #+#             */
-/*   Updated: 2022/03/07 00:37:38 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/03/08 17:07:27 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,34 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <sys/wait.h>
+
+size_t	argv_len(char **argv)
+{
+	size_t	i;
+
+	i = 0;
+	while (argv && argv[i])
+		i++;
+	return (i);
+}
+
+void	builtin_exit(int argc, char **argv)
+{
+	if (argc == 1)
+	{
+		printf("exit\n");
+		exit(EXIT_SUCCESS);
+	}
+	else if (argc == 2)
+	{
+		printf("exit\n");
+		exit((unsigned char)ft_atoi(argv[1]));
+	}
+	else
+	{
+		printf("too many arguments\n"); // need a separate error function
+	}
+}
 
 void	exit_error(void)
 {
@@ -83,13 +111,15 @@ int	execute_commands(t_list *command_table, char **envp)
 			return (0);
 		if (!ft_strncmp(argv[0], "exit", ft_strlen(argv[0])) && ft_strlen(argv[0]) >= 4)
 		{
-			ft_printf("exit\n");
-			return (1);
+			builtin_exit(argv_len(argv), argv);
 		}
 		pid = fork();
 		if (pid == 0)
 		{
-			search_path_and_exec(argv, envp);
+			if (ft_strchr(argv[0], '/'))
+				execve(argv[0], argv, envp);
+			else
+				search_path_and_exec(argv, envp);
 		}
 		else
 		{
