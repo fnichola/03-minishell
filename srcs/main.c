@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/26 16:46:58 by fnichola          #+#    #+#             */
-/*   Updated: 2022/03/08 17:07:27 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/03/13 17:34:48 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,9 +140,9 @@ int minishell(char **envp)
 	status = 0;
 	while (!status)
 	{
-		line = readline("minishell$ ");
+		line = readline("minishell$ ");//一行を読み取る引数をpromptとして表示できる
 		if (line && *line)
-			add_history(line);
+			add_history(line);//組み込み
 		command_table = parse_line(line);
 		free(line);
 		status = execute_commands(command_table, envp);
@@ -154,6 +154,15 @@ int minishell(char **envp)
 int	main(int argc, char **argv, char **envp)
 {
 	(void)argv;
+	int		i;
+
+	i = 0;
+	printf("evnpの中身は？\n");
+	while (envp[i] != NULL)
+	{
+		printf("%s\n", envp[i]);
+		i++;
+	}
 	if (argc == 1)
 	{
 		minishell(envp);
