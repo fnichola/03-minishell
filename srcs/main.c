@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
+/*   By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/26 16:46:58 by fnichola          #+#    #+#             */
-/*   Updated: 2022/03/13 17:34:48 by akihito          ###   ########.fr       */
+/*   Updated: 2022/03/13 21:12:38 by atomizaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <sys/wait.h>
+#include <sys/errno.h>
+#include <string.h>
 
 size_t	argv_len(char **argv)
 {
@@ -74,12 +76,13 @@ void	search_path_and_exec(char **argv, char **envp)
 
 	paths = ft_split(getenv("PATH"), ':');
 	i = 0;
-	while (paths[i])
+	while (paths[i])//usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin:/usr/local/munki
+	//
 	{
 		temp = ft_strjoin(paths[i], "/");
 		pathname = ft_strjoin(temp, argv[0]);
 		free(temp);
-		execve(pathname, argv, envp);
+		execve(pathname, argv, envp);//成功したらここで止まって実行しているプロセスに移動する。
 		free(pathname);
 		i++;
 	}
@@ -88,7 +91,7 @@ void	search_path_and_exec(char **argv, char **envp)
 }
 
 t_list	*parse_line(const char *line)
-{
+{// > リダイレクト　とか、　パイプ　|
 	t_list	*command_table;
 	char	**split_command;
 
@@ -113,15 +116,22 @@ int	execute_commands(t_list *command_table, char **envp)
 		{
 			builtin_exit(argv_len(argv), argv);
 		}
-		pid = fork();
-		if (pid == 0)
+		pid = fork();//fork()でプロセスがコピーを作って子プロセスを同時に実行
+		//子プロセスはここからしか処理を始めない。
+		if (pid == 0)//子プロセスの場合。
 		{
-			if (ft_strchr(argv[0], '/'))
-				execve(argv[0], argv, envp);
+			if (ft_strchr(argv[0], '/'))//"./a.out"だけでなく /bin/lsなどのパスを指定したときは実行しようとする。
+			{
+				if (execve(argv[0], argv, envp) == -1)//  execve("./philo", [" 410 , "200", "200"], envp)の方に、コマンドライン引数をスペースで区切ってs配列に格納するため
+				{
+					printf("minishell:%s\n", strerror(errno));//エラー処理の文字列出力
+					exit(EXIT_SUCCESS);//ここで実行できなかったら、そのプロセスから戻る。
+				}
+			}
 			else
 				search_path_and_exec(argv, envp);
 		}
-		else
+		else//親プロセスはここでまつ
 		{
 			waitpid(pid, &status, WUNTRACED);
 		}
