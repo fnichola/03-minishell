@@ -1,3 +1,12 @@
+# binary
+minishell
+
+# vscode settings
+.vscode
+
+# vim swap files
+*.swp
+
 # Prerequisites
 *.d
 
