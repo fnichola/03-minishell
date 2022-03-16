@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:39:20 by fnichola          #+#    #+#             */
-/*   Updated: 2022/03/15 18:47:32 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/03/16 18:19:49 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,7 +166,7 @@ t_token	*get_next_token(char *line)
 	else
 	{
 		i = 0;
-		return (slice_new_token(line, start_index, 0, T_EOF));
+		return (NULL);
 	}
 }
 
@@ -178,7 +178,7 @@ t_list	*tokenizer(char *line)
 	token_list = NULL;
 	new_token = get_next_token(line);
 	// printf("new_token.word = %s\n", new_token.word);
-	while (new_token->token_type != T_EOF)
+	while (new_token)
 	{
 		ft_lstadd_back(&token_list, ft_lstnew(new_token));
 		new_token = get_next_token(line);
@@ -207,21 +207,32 @@ char	*token_type_to_str(t_token_type token_type)
 		return ("T_PID");
 	else if (token_type == T_EXIT_STATUS)
 		return ("T_EXIT_STATUS");
-	else if (token_type == T_EOF)
-		return ("T_EOF");
 	else if (token_type == T_ERROR)
 		return ("T_ERROR");
 	else
 		return ("bad type!");
 }
 
+void	del_token(void *token_ptr)
+{
+	t_token	*token;
+
+	token = (t_token *)token_ptr;
+	free(token->word);
+	token->word = NULL;
+	free(token);
+	token = NULL;
+}
+
 int	main()
 {
 	char	*line;
 	t_list	*token_list;
+	t_list	*list_ptr;
 
 	line = readline("lexer-test$ ");
 	token_list = tokenizer(line);
+	list_ptr = token_list;
 	while (token_list)	
 	{
 		printf("<%s> \"%s\"\n", 
@@ -229,4 +240,7 @@ int	main()
 			((t_token *)token_list->content)->word);
 		token_list = token_list->next;
 	}
+	ft_lstclear(&list_ptr, del_token);
+	free(line);
+	return (0);
 }
