@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+         #
+#    By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/09 18:01:32 by fnichola          #+#    #+#              #
-#    Updated: 2022/03/04 18:26:57 by fnichola         ###   ########.fr        #
+#    Updated: 2022/03/15 22:57:53 by atomizaw         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,8 @@ LIBFT_LIB = $(LIBFT_DIR)/libft.a
 CC = gcc
 CFLAGS = -Wall -Werror -Wextra -g -fsanitize=address
 
-SRCS = srcs/main.c
+# SRCS = srcs/main.c
+SRCS = srcs/lexer.c
 
 ifdef WITH_BONUS
 endif

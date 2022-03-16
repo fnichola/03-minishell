@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/03/14 18:02:01 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/03/14 18:13:27 by atomizaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,10 +60,10 @@ typedef struct s_token {
 
 
 
-echo >file "hello"
-echo "hello" > file
+// echo >file "hello"
+// echo "hello" > file
 
-cat file | grep hello
-argv = {"echo", "hello"}
+// cat file | grep hello
+// argv = {"echo", "hello"}
 
 #endif
