@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:39:20 by fnichola          #+#    #+#             */
-/*   Updated: 2022/03/16 18:19:49 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/03/16 23:26:48 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,9 +67,15 @@ t_token	*get_next_token(char *line)
 			if (!line[i] || is_delimeter(line[i]))
 				return (slice_new_token(line, start_index, 1, T_WORD));
 			if (line[i] == '$')
+			{
+				i++;
 				return (slice_new_token(line, start_index, 1, T_PID));
+			}
 			if (line[i] == '?')
+			{
+				i++;
 				return (slice_new_token(line, start_index, 1, T_EXIT_STATUS));
+			}
 			start_index = i;
 			state = VARIABLE;
 			break ;
@@ -121,13 +127,19 @@ t_token	*get_next_token(char *line)
 	while (state == GTGT && line[i])
 	{
 		if (line[i] == '>')
+		{
+			i++;
 			return (slice_new_token(line, start_index, 2, T_GTGT));
+		}
 		return (slice_new_token(line, start_index, 1, T_GT));
 	}
 	while (state == LTLT && line[i])
 	{
 		if (line[i] == '<')
+		{
+			i++;
 			return (slice_new_token(line, start_index, 2, T_LTLT));
+		}
 		return (slice_new_token(line, start_index, 1, T_LT));
 	}
 	while (state == IN_SINGLE_QUOTE && line[i])
@@ -156,8 +168,7 @@ t_token	*get_next_token(char *line)
 			line[i] == ' ' ||
 			line[i] == '\t')
 		{
-			i++;
-			return (slice_new_token(line, start_index, i - start_index - 1, T_WORD));
+			return (slice_new_token(line, start_index, i - start_index, T_WORD));
 		}
 		i++;
 	}

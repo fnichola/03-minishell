@@ -4,6 +4,9 @@ minishell
 # vscode settings
 .vscode
 
+# ctags
+tags
+
 # vim swap files
 *.swp
 
