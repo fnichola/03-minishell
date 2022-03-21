@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:39:20 by fnichola          #+#    #+#             */
-/*   Updated: 2022/03/16 23:26:48 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/03/21 22:39:43 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,11 +66,6 @@ t_token	*get_next_token(char *line)
 			i++;
 			if (!line[i] || is_delimeter(line[i]))
 				return (slice_new_token(line, start_index, 1, T_WORD));
-			if (line[i] == '$')
-			{
-				i++;
-				return (slice_new_token(line, start_index, 1, T_PID));
-			}
 			if (line[i] == '?')
 			{
 				i++;
@@ -214,8 +209,6 @@ char	*token_type_to_str(t_token_type token_type)
 		return ("T_LTLT");
 	else if (token_type == T_VAR)
 		return ("T_VAR");
-	else if (token_type == T_PID)
-		return ("T_PID");
 	else if (token_type == T_EXIT_STATUS)
 		return ("T_EXIT_STATUS");
 	else if (token_type == T_ERROR)

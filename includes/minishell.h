@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/03/16 18:19:34 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/03/21 22:35:03 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@
  * T_LT = <
  * T_LTLT = <<
  * T_VAR = $
- * T_PID = $$
  * T_EXIT_STATUS = $?
  * T_ERROR = error
  */
@@ -40,7 +39,6 @@ typedef enum e_token_type {
 	T_LT,
 	T_LTLT,
 	T_VAR,
-	T_PID,
 	T_EXIT_STATUS,
 	T_ERROR
 }	t_token_type;
