@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:39:20 by fnichola          #+#    #+#             */
-/*   Updated: 2022/03/21 22:39:43 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/03/22 16:23:05 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ bool	is_delimeter(char c)
 		return (true);
 	return (false);
 }
- 
 
 t_token	*slice_new_token( char *line, size_t start_index, size_t length, t_token_type token_type)
 {
@@ -32,8 +31,8 @@ t_token	*slice_new_token( char *line, size_t start_index, size_t length, t_token
 
 	i = start_index;
 	j = 0;
-	token = malloc(sizeof(t_token));
-	token->word = malloc(sizeof(char) * (length + 1)); //add error handling
+	token = malloc_error_check(sizeof(t_token));
+	token->word = malloc_error_check(sizeof(char) * (length + 1));
 	while (j < length)
 	{
 		token->word[j] = line[i];
@@ -42,7 +41,6 @@ t_token	*slice_new_token( char *line, size_t start_index, size_t length, t_token
 	}
 	token->word[j] = 0;
 	token->token_type = token_type;
-	// printf("token.word: %s\n", token.word);
 	return (token);
 }
 
@@ -183,13 +181,11 @@ t_list	*tokenizer(char *line)
 
 	token_list = NULL;
 	new_token = get_next_token(line);
-	// printf("new_token.word = %s\n", new_token.word);
 	while (new_token)
 	{
 		ft_lstadd_back(&token_list, ft_lstnew(new_token));
 		new_token = get_next_token(line);
 	}
-	// printf("token_list = %p, next: %p\n", token_list, token_list->next);
 	return (token_list);
 }
 

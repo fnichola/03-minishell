@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/03/21 22:35:03 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/03/22 16:20:06 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <readline/history.h>
 # include <sys/wait.h>
 # include <stdbool.h>
+# include <errno.h>
 
 /**
  * T_WORD = word
@@ -57,5 +58,8 @@ typedef struct s_token {
 	char			*word;
 	t_token_type	token_type;
 }	t_token;
+
+void	exit_error(char *str);
+void	*malloc_error_check(size_t size);
 
 #endif
