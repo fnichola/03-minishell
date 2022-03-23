@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/03/16 18:19:34 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/03/23 17:04:46 by atomizaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,5 +59,19 @@ typedef struct s_token {
 	char			*word;
 	t_token_type	token_type;
 }	t_token;
+
+typedef struct s_state_func_row {
+	const char	*state_name;
+	void 		(*func)(void);
+}	t_state_func_row;
+
+static t_state_func_row state_func_test[] = {
+	{"NEUTRAL", &lex_neutral},
+	{"GTGT", &lex_gtgt},
+	{"LTLT", &lex_ltlt},
+	{"IN_SINGLE_QUOTE", &lex_single_quote},
+	{"IN_DOUBLE_QUOTE", &lex_double_quote},
+	
+}
 
 #endif
