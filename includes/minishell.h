@@ -6,11 +6,7 @@
 /*   By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2022/03/23 17:04:46 by atomizaw         ###   ########.fr       */
-=======
-/*   Updated: 2022/03/22 16:20:06 by fnichola         ###   ########.fr       */
->>>>>>> 554a20111cee4d17eb2308740c8803ee7d2726fe
+/*   Updated: 2022/03/23 18:58:34 by atomizaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,15 +64,17 @@ typedef struct s_state_func_row {
 	void 		(*func)(void);
 }	t_state_func_row;
 
-static t_state_func_row state_func_test[] = {
-	{"NEUTRAL", &lex_neutral},
-	{"GTGT", &lex_gtgt},
-	{"LTLT", &lex_ltlt},
-	{"IN_SINGLE_QUOTE", &lex_single_quote},
-	{"IN_DOUBLE_QUOTE", &lex_double_quote},
-	
-};
+typedef struct s_lex_arg {
+	char			*line;
+	size_t			*i;
+	size_t			start_index;
+	t_state			state;
+	t_list			*token_list;//tokenizer()内でget_next_token()の返り値をt_list型のtoken_listにft_lstadd_backする
+}	t_lex_arg;
+
 void	exit_error(char *str);
 void	*malloc_error_check(size_t size);
+void	lex_variable(t_lex_arg *l);
+void	lex_gtgt(t_lex_arg *l);
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:39:20 by fnichola          #+#    #+#             */
-/*   Updated: 2022/03/22 16:23:05 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/03/23 18:43:05 by atomizaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 bool	is_delimeter(char c)
 {
-	if ((c >= '\t' && c <= '\r') 
+	if ((c >= '\t' && c <= '\r')
 		|| c == ' '
 		|| c == '|'
 		|| c == '<'
@@ -22,6 +22,7 @@ bool	is_delimeter(char c)
 		return (true);
 	return (false);
 }
+ 
 
 t_token	*slice_new_token( char *line, size_t start_index, size_t length, t_token_type token_type)
 {
@@ -31,8 +32,17 @@ t_token	*slice_new_token( char *line, size_t start_index, size_t length, t_token
 
 	i = start_index;
 	j = 0;
-	token = malloc_error_check(sizeof(t_token));
-	token->word = malloc_error_check(sizeof(char) * (length + 1));
+	token = malloc(sizeof(t_token));
+	printf("length=%zu\n", length);
+	if (!token)
+	{
+		exit(1);
+	}
+	token->word = malloc(sizeof(char) * (length + 1)); //add error handling
+	if (!token->word)
+	{
+		exit(1);
+	}
 	while (j < length)
 	{
 		token->word[j] = line[i];
@@ -41,6 +51,7 @@ t_token	*slice_new_token( char *line, size_t start_index, size_t length, t_token
 	}
 	token->word[j] = 0;
 	token->token_type = token_type;
+	// printf("token.word: %s\n", token.word);
 	return (token);
 }
 
@@ -64,6 +75,11 @@ t_token	*get_next_token(char *line)
 			i++;
 			if (!line[i] || is_delimeter(line[i]))
 				return (slice_new_token(line, start_index, 1, T_WORD));
+			if (line[i] == '$')
+			{
+				i++;
+				return (slice_new_token(line, start_index, 1, T_PID));
+			}
 			if (line[i] == '?')
 			{
 				i++;
@@ -99,7 +115,7 @@ t_token	*get_next_token(char *line)
 			state = IN_DOUBLE_QUOTE;
 			break ;
 		}
-		else if (line[i] == ' ' || line[i] == '\t')
+		else if (line[i] == ' ' || line[i] == '\t') //isspace
 		{
 			i++;
 			continue ;
@@ -146,8 +162,9 @@ t_token	*get_next_token(char *line)
 	}
 	while (state == IN_DOUBLE_QUOTE && line[i])
 	{
-		if (line[i] == '"')
+		if (line[i] == '\"')
 		{
+			printf("ダブルクォーと\n");
 			i++;
 			return (slice_new_token(line, start_index, i - start_index - 1, T_WORD));
 		}
@@ -181,11 +198,13 @@ t_list	*tokenizer(char *line)
 
 	token_list = NULL;
 	new_token = get_next_token(line);
+	printf("new_token.word = %s\n", new_token->word);
 	while (new_token)
 	{
 		ft_lstadd_back(&token_list, ft_lstnew(new_token));
 		new_token = get_next_token(line);
 	}
+	// printf("token_list = %p, next: %p\n", token_list, token_list->next);
 	return (token_list);
 }
 
@@ -205,8 +224,12 @@ char	*token_type_to_str(t_token_type token_type)
 		return ("T_LTLT");
 	else if (token_type == T_VAR)
 		return ("T_VAR");
+	else if (token_type == T_PID)
+		return ("T_PID");
 	else if (token_type == T_EXIT_STATUS)
 		return ("T_EXIT_STATUS");
+	else if (token_type == T_SPECIAL)
+		return ("T_SPECIAL");
 	else if (token_type == T_ERROR)
 		return ("T_ERROR");
 	else
@@ -244,3 +267,6 @@ int	main()
 	free(line);
 	return (0);
 }
+
+struct typeA array_STATE_FLOW[] = { STATE_A, EVENT_A, NEXT_A},
+						{ STATE_B, EVENT_B, NEXT_B},
