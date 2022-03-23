@@ -33,20 +33,42 @@ void	slice_new_token(t_lex_arg *l, size_t length, t_token_type token_type)
 	token->word[j] = 0;
 	token->token_type = token_type;
 	ft_lstadd_back(l->token_list, ft_lstnew(token));
-	return (token);
+	return ;
+}
+
+void	lex_netural(t_lex_arg *l)
+{
+	*(l->i) = 0;
+	if (l->line[*(l->i)] == '|')
+	{
+		*(l->i)++;
+		slice_new_token(l, 1, T_PIPE);
+	}
+	else if (l->line[*(l->i)]) == '$'
+	{
+
+	}
 }
 
 
-t_token	*lex_neutral()
+void	lex_ltlt(t_lex_arg *l)
 {
-
+	if (l->line[*(l->i)] == '<')
+	{
+		*(l->i)++;
+		slice_new_token(l, 2, T_LTLT);
+	}
+	slice_new_token(l, 1, T_LT);
+	return ;
 }
 
 void	lex_variable(t_lex_arg *l)
 {
 	if (!l->line[*(l->i)] || is_delimeter(l->line[*(l->i)]))
-		return (slice_new_token(l->line, l->start_index, l->i - l->start_index, T_VAR));
-	*(l->i)++;
+		slice_new_token(l, *(l->i) - (l->start_index), T_VAR);
+	else
+		*(l->i)++;
+	return ;
 }
 
 void	lex_gtgt(t_lex_arg *l)
@@ -54,10 +76,31 @@ void	lex_gtgt(t_lex_arg *l)
 	if (l->line[*(l->i)] == '>')
 	{
 		*(l->i)++;
-		return (slice_new_token(l, 2, T_GTGT));
+		slice_new_token(l, 2, T_GTGT);
 	}
 	else
-		return (slice_new_token(l, 2, T_GTGT));
+		slice_new_token(l, 2, T_GTGT);
+	*(l->i)++;
+	return ;
+}
+
+void	lex_single_quote(t_lex_arg *l)
+{
+	if (l->line[*(l->i)] == '\'')
+	{
+		*(l->i)++;
+		slice_new_token(l, *(l->i) - (l->start_index) - 1, T_WORD);
+	}
+	*(l->i)++;
+}
+
+void	lex_double_quote(t_lex_arg *l)
+{
+	if (l->line[*(l->i)] == '\"')
+	{
+		*(l->i)++;
+		slice_new_token(l, *(l->i) - (l->start_index) - 1, T_WORD);
+	}
 	*(l->i)++;
 }
 

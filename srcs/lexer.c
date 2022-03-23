@@ -6,7 +6,7 @@
 /*   By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:39:20 by fnichola          #+#    #+#             */
-/*   Updated: 2022/03/23 18:43:05 by atomizaw         ###   ########.fr       */
+/*   Updated: 2022/03/23 21:36:17 by atomizaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,49 +127,49 @@ t_token	*get_next_token(char *line)
 		}
 		i++;
 	}
-	while (state == VARIABLE)
-	{
-		if (!line[i] || is_delimeter(line[i]))
-			return (slice_new_token(line, start_index, i - start_index, T_VAR));
-		i++;
-	}
-	while (state == GTGT && line[i])
-	{
-		if (line[i] == '>')
-		{
-			i++;
-			return (slice_new_token(line, start_index, 2, T_GTGT));
-		}
-		return (slice_new_token(line, start_index, 1, T_GT));
-	}
-	while (state == LTLT && line[i])
-	{
-		if (line[i] == '<')
-		{
-			i++;
-			return (slice_new_token(line, start_index, 2, T_LTLT));
-		}
-		return (slice_new_token(line, start_index, 1, T_LT));
-	}
-	while (state == IN_SINGLE_QUOTE && line[i])
-	{
-		if (line[i] == '\'')
-		{
-			i++;
-			return (slice_new_token(line, start_index, i - start_index - 1, T_WORD));
-		}
-		i++;
-	}
-	while (state == IN_DOUBLE_QUOTE && line[i])
-	{
-		if (line[i] == '\"')
-		{
-			printf("ダブルクォーと\n");
-			i++;
-			return (slice_new_token(line, start_index, i - start_index - 1, T_WORD));
-		}
-		i++;
-	}
+	// while (state == VARIABLE)
+	// {
+	// 	if (!line[i] || is_delimeter(line[i]))
+	// 		return (slice_new_token(line, start_index, i - start_index, T_VAR));
+	// 	i++;
+	// }
+	// while (state == GTGT && line[i])
+	// {
+	// 	if (line[i] == '>')
+	// 	{
+	// 		i++;
+	// 		return (slice_new_token(line, start_index, 2, T_GTGT));
+	// 	}
+	// 	return (slice_new_token(line, start_index, 1, T_GT));
+	// }
+	// while (state == LTLT && line[i])
+	// {
+	// 	if (line[i] == '<')
+	// 	{
+	// 		i++;
+	// 		return (slice_new_token(line, start_index, 2, T_LTLT));
+	// 	}
+	// 	return (slice_new_token(line, start_index, 1, T_LT));
+	// }
+	// while (state == IN_SINGLE_QUOTE && line[i])
+	// {
+	// 	if (line[i] == '\'')
+	// 	{
+	// 		i++;
+	// 		return (slice_new_token(line, start_index, i - start_index - 1, T_WORD));
+	// 	}
+	// 	i++;
+	// }
+	// while (state == IN_DOUBLE_QUOTE && line[i])
+	// {
+	// 	if (line[i] == '\"')
+	// 	{
+	// 		printf("ダブルクォーと\n");
+	// 		i++;
+	// 		return (slice_new_token(line, start_index, i - start_index - 1, T_WORD));
+	// 	}
+	// 	i++;
+	// }
 	while (state == IN_WORD && line[i])
 	{
 		if (line[i] == '|' ||
