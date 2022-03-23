@@ -6,7 +6,7 @@
 #    By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/09 18:01:32 by fnichola          #+#    #+#              #
-#    Updated: 2022/03/15 12:33:28 by fnichola         ###   ########.fr        #
+#    Updated: 2022/03/22 16:23:36 by fnichola         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,8 @@ LIBFT_LIB = $(LIBFT_DIR)/libft.a
 CC = gcc
 CFLAGS = -Wall -Werror -Wextra -g -fsanitize=address
 
-SRCS = srcs/lexer.c
+SRCS = srcs/lexer.c \
+	srcs/utilities.c
 
 ifdef WITH_BONUS
 endif

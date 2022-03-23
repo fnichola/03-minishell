@@ -6,7 +6,11 @@
 /*   By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2022/03/23 17:04:46 by atomizaw         ###   ########.fr       */
+=======
+/*   Updated: 2022/03/22 16:20:06 by fnichola         ###   ########.fr       */
+>>>>>>> 554a20111cee4d17eb2308740c8803ee7d2726fe
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +23,7 @@
 # include <readline/history.h>
 # include <sys/wait.h>
 # include <stdbool.h>
+# include <errno.h>
 
 /**
  * T_WORD = word
@@ -28,7 +33,6 @@
  * T_LT = <
  * T_LTLT = <<
  * T_VAR = $
- * T_PID = $$
  * T_EXIT_STATUS = $?
  * T_ERROR = error
  */
@@ -40,7 +44,6 @@ typedef enum e_token_type {
 	T_LT,
 	T_LTLT,
 	T_VAR,
-	T_PID,
 	T_EXIT_STATUS,
 	T_ERROR
 }	t_token_type;
@@ -72,6 +75,8 @@ static t_state_func_row state_func_test[] = {
 	{"IN_SINGLE_QUOTE", &lex_single_quote},
 	{"IN_DOUBLE_QUOTE", &lex_double_quote},
 	
-}
+};
+void	exit_error(char *str);
+void	*malloc_error_check(size_t size);
 
 #endif
