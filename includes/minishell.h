@@ -6,7 +6,7 @@
 /*   By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/03/23 20:58:49 by atomizaw         ###   ########.fr       */
+/*   Updated: 2022/03/24 22:44:40 by atomizaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ typedef struct s_token {
 }	t_token;
 
 typedef struct s_state_func_row {
+	char		symbol;
 	const char	*state_name;
 	void 		(*func)(void);
 }	t_state_func_row;

@@ -44,9 +44,10 @@ void	lex_netural(t_lex_arg *l)
 		*(l->i)++;
 		slice_new_token(l, 1, T_PIPE);
 	}
-	else if (l->line[*(l->i)]) == '$'
+	else if (l->line[*(l->i)]) == '$')
 	{
-
+		*(l->i)++;
+		if ()
 	}
 }
 
@@ -107,28 +108,52 @@ void	lex_double_quote(t_lex_arg *l)
 t_state_func_row **init_state_func_table(void)
 {
 	const t_state_func_row *state_func_table[] = {
-		{"NEUTRAL", &lex_neutral},
-		{"GTGT", &lex_gtgt},
-		{"LTLT", &lex_ltlt},
-		{"IN_SINGLE_QUOTE", &lex_single_quote},
-		{"IN_DOUBLE_QUOTE", &lex_double_quote},
-		{"VARIABLE", &lex_variable}
+		{NULL,"NEUTRAL", &lex_neutral},
+		{'>',"GTGT", &lex_gtgt},
+		{'<',"LTLT", &lex_ltlt},
+		{'\'',"IN_SINGLE_QUOTE", &lex_single_quote},
+		{'\"',"IN_DOUBLE_QUOTE", &lex_double_quote},
+		{'$',"VARIABLE", &lex_variable}
 	};
 	return (state_func_table);
 };
 
+void	find_match_state(char *line, t_state_func_row *state_func_table)
+{
+	size_t	i;
+
+	i = 0;
+	while (line[i] != '\0')
+	{
+		if (line[i] == state_func_table[i].symbol)
+		{
+			state_func_table[i].lex
+
+	}
+}
+
+void	init_lex_arg(t_lex_arg *l, char *line)
+{
+	*(l->line) = line;
+	*(l->i) = 0;
+	l->start_index = 0;
+	l->state = neutral;
+	l->token_list = NULL;
+	return ;
+}
 //もともとget_next_tokenで条件分岐していた処理を、関数ポインタで短くする。
 t_list	*tokenizer(char *line)
 {
-	t_state_func_row	**state_func_table;
+	t_state_func_row	*state_func_table;
 	int					i;
+	t_lex_arg 			*l;
 
 	i = 0;
 	state_func_table = init_state_func_table();
-
-	while (line[i] != NULL)
+	init_lex_arg(l, line);
+	while (line[i] != '\0')
 	{
-		i++;
+		find_match_state(line, state_func_table);
 	}
 	return ();
 }
