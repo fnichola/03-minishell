@@ -125,7 +125,7 @@ void	lex_double_quote(t_lex_arg *l)
 }
 
 
-void	find_match_state(char *line, t_state_func_row *state_func_table)
+void	find_match_state(char *line, t_state_func_row *state_func_table, t_lex_arg *l)
 {
 	size_t	i;
 	size_t	j;
@@ -139,12 +139,11 @@ void	find_match_state(char *line, t_state_func_row *state_func_table)
 		{
 			if (line[i] == state_func_table[j].symbol)
 			{
-				state_func_table[j].lex_func;
+				state_func_table[j].lex_func(l);
 			}
 		}
-
-
 	}
+	return ;
 }
 
 void	init_lex_arg(t_lex_arg *l, char *line)
@@ -159,9 +158,7 @@ void	init_lex_arg(t_lex_arg *l, char *line)
 //もともとget_next_tokenで条件分岐していた処理を、関数ポインタで短くする。
 const t_state_func_row *init_state_func_table(void)
 {
-	t_state_func_row	*array;
-		// {NULL,"NEUTRAL", NULL},
-	const t_state_func_row state_func_table = {
+	const t_state_func_row state_func_table[] = {
 		{'>',"GTGT", &lex_gtgt},
 		{'<',"LTLT", &lex_ltlt},
 		{'\'',"IN_SINGLE_QUOTE", &lex_single_quote},
@@ -169,8 +166,7 @@ const t_state_func_row *init_state_func_table(void)
 		{'$',"VARIABLE", &lex_variable},
 		{'0', "NOWHRE", NULL},
 	};
-	// array = (t_state_func_row *)malloc(sizeof(t_state_func_row) * 7);
-	// array = state_func_table;
+
 	return (state_func_table);
 };
 void	*tokenizer(char *line)
@@ -178,16 +174,17 @@ void	*tokenizer(char *line)
 	t_state_func_row	*state_func_table;
 	int					i;
 	t_lex_arg 			*l;
-	t_state_func_row	*state_func_table;
+	t_list				*list_ptr;
+	// t_state_func_row	*state_func_table;
 
 	i = 0;
 	state_func_table = init_state_func_table();
 	init_lex_arg(l, line);//lineを削除します。
 	while (line[i] != '\0')
 	{
-		find_match_state(line, state_func_table);
+		find_match_state(line, state_func_table, l);
 	}
-	return ;
+	return (l->token_list);
 }
 
 int	main()
