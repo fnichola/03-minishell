@@ -6,7 +6,7 @@
 /*   By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/03/24 22:44:40 by atomizaw         ###   ########.fr       */
+/*   Updated: 2022/03/27 01:31:31 by atomizaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,11 +59,6 @@ typedef struct s_token {
 	t_token_type	token_type;
 }	t_token;
 
-typedef struct s_state_func_row {
-	char		symbol;
-	const char	*state_name;
-	void 		(*func)(void);
-}	t_state_func_row;
 
 typedef struct s_lex_arg {
 	char			*line;
@@ -72,6 +67,12 @@ typedef struct s_lex_arg {
 	t_state			state;
 	t_list			*token_list;//tokenizer()内でget_next_token()の返り値をt_list型のtoken_listにft_lstadd_backする
 }	t_lex_arg;
+
+typedef struct s_state_func_row {
+	char		symbol;
+	const char	*state_name;
+	void 		(*lex_func)(t_lex_arg *l);
+}	t_state_func_row;
 
 void	exit_error(char *str);
 void	*malloc_error_check(size_t size);
