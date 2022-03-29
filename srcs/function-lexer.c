@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   function-lexer.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 18:02:55 by fnichola          #+#    #+#             */
-/*   Updated: 2022/03/23 18:110:12 by atomizaw         ###   ########.fr       */
+/*   Updated: 2022/03/29 17:51:04 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,13 +125,12 @@ void	lex_double_quote(t_lex_arg *l)
 }
 
 
-void	find_match_state(char *line, t_state_func_row *state_func_table, t_lex_arg *l)
+void	find_match_state(char *line, const t_state_func_row *state_func_table, t_lex_arg *l)
 {
 	size_t	i;
 	size_t	j;
 
 	i = 0;
-	// j = 1;
 	while (line[i] != '\0')
 	{
 		j = 0;
@@ -141,7 +140,9 @@ void	find_match_state(char *line, t_state_func_row *state_func_table, t_lex_arg 
 			{
 				state_func_table[j].lex_func(l);
 			}
+			j++;
 		}
+		i++;
 	}
 	return ;
 }
@@ -158,42 +159,67 @@ void	init_lex_arg(t_lex_arg *l, char *line)
 //もともとget_next_tokenで条件分岐していた処理を、関数ポインタで短くする。
 const t_state_func_row *init_state_func_table(void)
 {
-	const t_state_func_row state_func_table[] = {
+	const t_state_func_row temp[] = {
 		{'>',"GTGT", &lex_gtgt},
 		{'<',"LTLT", &lex_ltlt},
 		{'\'',"IN_SINGLE_QUOTE", &lex_single_quote},
 		{'\"',"IN_DOUBLE_QUOTE", &lex_double_quote},
 		{'$',"VARIABLE", &lex_variable},
-		{'0', "NOWHRE", NULL},
+		{'0', "NOTHING", NULL},
 	};
+	t_state_func_row	*state_func_table;
+	state_func_table = malloc_error_check(sizeof(temp));
+	ft_memcpy(state_func_table, temp, sizeof(temp));
 
 	return (state_func_table);
 };
 void	*tokenizer(char *line)
 {
-	t_state_func_row	*state_func_table;
+	const t_state_func_row	*state_func_table;
 	int					i;
-	t_lex_arg 			*l;
-	t_list				*list_ptr;
-	// t_state_func_row	*state_func_table;
+	t_lex_arg 			l;
 
 	i = 0;
-	state_func_table = init_state_func_table();
-	init_lex_arg(l, line);//lineを削除します。
+	state_func_table = init_state_func_table(); // need free_state_func_table too
+	init_lex_arg(&l, line); //lineを削除します。
 	while (line[i] != '\0')
 	{
-		find_match_state(line, state_func_table, l);
+		find_match_state(line, state_func_table, &l);
 	}
-	return (l->token_list);
+	return (l.token_list);
+}
+
+char	*token_type_to_str(t_token_type token_type)
+{
+	if (token_type == T_WORD)
+		return ("T_WORD");
+	else if (token_type == T_PIPE)
+		return ("T_PIPE");
+	else if (token_type == T_GT)
+		return ("T_GT");
+	else if (token_type == T_GTGT)
+		return ("T_GTGT");
+	else if (token_type == T_LT)
+		return ("T_LT");
+	else if (token_type == T_LTLT)
+		return ("T_LTLT");
+	else if (token_type == T_VAR)
+		return ("T_VAR");
+	else if (token_type == T_EXIT_STATUS)
+		return ("T_EXIT_STATUS");
+	else if (token_type == T_ERROR)
+		return ("T_ERROR");
+	else
+		return ("bad type!");
 }
 
 int	main()
 {
-	char	*line;
+	char	*line = "ls dir | grep something > file.txt"; // for initial testing, let's use this instead of readline
 	t_list	*token_list;
 	t_list	*list_ptr;
 
-	line = readline("lexer-test$ ");
+	// line = readline("lexer-test$ "); // no readline for simple testing
 	token_list = tokenizer(line);
 	list_ptr = token_list;
 	while (token_list)	
