@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+         #
+#    By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/09 18:01:32 by fnichola          #+#    #+#              #
-#    Updated: 2022/03/27 01:29:46 by atomizaw         ###   ########.fr        #
+#    Updated: 2022/04/04 18:34:43 by fnichola         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,10 @@ LIBFT_LIB = $(LIBFT_DIR)/libft.a
 CC = gcc
 CFLAGS = -Wall -Werror -Wextra -g -fsanitize=address
 
-SRCS = srcs/function-lexer.c \
+SRCS = srcs/lexer/function-lexer.c \
+	srcs/lexer/lex-functions.c \
+	srcs/lexer/lex-utilities.c \
+	srcs/lexer/lex-init.c \
 	srcs/utilities.c
 
 ifdef WITH_BONUS
@@ -30,10 +33,10 @@ DEPS = $(SRCS:.c=.d)
 all: $(NAME)
 
 %.o: %.c
-	$(CC) $(CFLAGS) -MMD -MP -o $@ -c $<
+	$(CC) $(CFLAGS) -MMD -MP -I includes -o $@ -c $<
 	
 $(NAME): $(OBJS) $(LIBFT_LIB)
-	$(CC) $(CFLAGS) $(OBJS) $(LIBFT_LIB) -lreadline -lncurses -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJS) $(LIBFT_LIB) -lreadline -lncurses -I includes -o $(NAME)
 
 $(LIBFT_LIB):
 	$(MAKE) bonus -C $(LIBFT_DIR)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/03/27 01:31:31 by atomizaw         ###   ########.fr       */
+/*   Updated: 2022/04/04 15:13:06 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,62 +21,7 @@
 # include <stdbool.h>
 # include <errno.h>
 
-/**
- * T_WORD = word
- * T_PIPE = |
- * T_GT = >
- * T_GTGT = >
- * T_LT = <
- * T_LTLT = <<
- * T_VAR = $
- * T_EXIT_STATUS = $?
- * T_ERROR = error
- */
-typedef enum e_token_type {
-	T_WORD, 
-	T_PIPE,
-	T_GT,
-	T_GTGT,
-	T_LT,
-	T_LTLT,
-	T_VAR,
-	T_EXIT_STATUS,
-	T_ERROR
-}	t_token_type;
-
-typedef enum e_state {
-	NEUTRAL,
-	GTGT,
-	LTLT,
-	IN_SINGLE_QUOTE,
-	IN_DOUBLE_QUOTE,
-	VARIABLE,
-	IN_WORD
-}	t_state;
-
-typedef struct s_token {
-	char			*word;
-	t_token_type	token_type;
-}	t_token;
-
-
-typedef struct s_lex_arg {
-	char			*line;
-	size_t			*i;
-	size_t			start_index;
-	t_state			state;
-	t_list			*token_list;//tokenizer()内でget_next_token()の返り値をt_list型のtoken_listにft_lstadd_backする
-}	t_lex_arg;
-
-typedef struct s_state_func_row {
-	char		symbol;
-	const char	*state_name;
-	void 		(*lex_func)(t_lex_arg *l);
-}	t_state_func_row;
-
 void	exit_error(char *str);
 void	*malloc_error_check(size_t size);
-void	lex_variable(t_lex_arg *l);
-void	lex_gtgt(t_lex_arg *l);
 
 #endif
