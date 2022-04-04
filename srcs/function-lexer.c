@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   function-lexer.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 18:02:55 by fnichola          #+#    #+#             */
-/*   Updated: 2022/03/29 17:51:04 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/03/30 01:28:01 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -213,7 +213,7 @@ char	*token_type_to_str(t_token_type token_type)
 		return ("bad type!");
 }
 
-int	main()
+int	main(void)
 {
 	char	*line = "ls dir | grep something > file.txt"; // for initial testing, let's use this instead of readline
 	t_list	*token_list;

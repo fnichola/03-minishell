@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+        */
+/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:39:20 by fnichola          #+#    #+#             */
-/*   Updated: 2022/03/29 16:50:00 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/03/30 01:26:55 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -247,7 +247,7 @@ void	del_token(void *token_ptr)
 	token = NULL;
 }
 
-int	main()
+int	main(void)
 {
 	char	*line;
 	t_list	*token_list;
@@ -256,10 +256,10 @@ int	main()
 	line = readline("lexer-test$ ");
 	token_list = tokenizer(line);
 	list_ptr = token_list;
-	while (token_list)	
+	while (token_list)
 	{
-		printf("<%s> \"%s\"\n", 
-			token_type_to_str(((t_token *)token_list->content)->token_type), 
+		printf("<%s> \"%s\"\n",
+			token_type_to_str(((t_token *)token_list->content)->token_type),
 			((t_token *)token_list->content)->word);
 		token_list = token_list->next;
 	}
