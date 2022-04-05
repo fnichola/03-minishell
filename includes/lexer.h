@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 15:11:01 by fnichola          #+#    #+#             */
-/*   Updated: 2022/04/04 20:58:41 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/04/05 17:01:21 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,12 +49,13 @@ typedef enum e_state {
 	NEUTRAL = 0,
 	GTGT,
 	LTLT,
+	BEGIN_SINGLE_QUOTE,
 	IN_SINGLE_QUOTE,
+	BEGIN_DOUBLE_QUOTE,
 	IN_DOUBLE_QUOTE,
 	VARIABLE,//$
 	IN_WORD,//alphabet
-	END_OF_LINE,
-	RETURN_TOKEN// 
+	END_OF_LINE
 }	t_state;
 
 typedef struct s_token {
@@ -68,6 +69,7 @@ typedef struct s_lex_arg {
 	size_t				start_index;//tokenの開始インデックスで最初の空白は無視
 	t_state				state;//
 	t_token_type		token_type;//関数ポインタの中で設定してあげる。
+	bool				found_token;
 }	t_lex_arg;
 
 /**
@@ -91,7 +93,9 @@ char	*token_type_to_str(t_token_type token_type);
 void	lex_neutral(t_lex_arg *l);
 void	lex_gtgt(t_lex_arg *l);
 void	lex_ltlt(t_lex_arg *l);
+void	lex_begin_single_quote(t_lex_arg *l);
 void	lex_in_single_quote(t_lex_arg *l);
+void	lex_begin_double_quote(t_lex_arg *l);
 void	lex_in_double_quote(t_lex_arg *l);
 void	lex_variable(t_lex_arg *l);
 void	lex_in_word(t_lex_arg *l);

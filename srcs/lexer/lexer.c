@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   function-lexer.c                                   :+:      :+:    :+:   */
+/*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 18:02:55 by fnichola          #+#    #+#             */
-/*   Updated: 2022/04/04 20:57:32 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/04/05 16:52:40 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,23 +51,28 @@ t_token	*get_next_token(t_lex_arg *l, const t_state_func_row *state_func_table)
 	l->start_index = l->i;
 	while (1)
 	{
+		printf("\nindex: %zu, character: '%c'\n", l->i, (l->line)[l->i]);
 		state_func_table[l->state].lex_func(l);
-		if (l->state == RETURN_TOKEN)//もうトークンが分かった時点でstateをRETURN_TOKENにしてあげる。
+		if (l->found_token)//もうトークンが分かった時点でfound_tokenをtrueにしてあげる。
 		{
-			printf("[RETURN_TOKEN]\n");
+			printf("[found_token == true]\n");
 			if (l->token_type == T_EOL)
 				return (NULL);
 			token->word = ft_substr(l->line, l->start_index, (l->i - l->start_index));
 			token->token_type = l->token_type;
+			if (l->state == IN_DOUBLE_QUOTE || l->state == IN_SINGLE_QUOTE)
+				(l->i)++;
+			l->found_token = false;
 			return (token);
 		}
-		(l->i)++;
+		if ((l->line)[l->i])
+			(l->i)++;
 	}
 	return (NULL);
 }
 
 /**
- * Returns a list of tokens.
+ * Returns a list of all tokens in the string "line".
  * e.g.:
  * <T_WORD>	"ls"
  * <T_WORD>	"dir"
@@ -99,7 +104,7 @@ t_list	*tokenizer(char *line)
 
 int	main()
 {
-	char	*line = "ls dir | grep something > file.txt"; // for initial testing, let's use this instead of readline
+	char	*line = "ls dir | grep<< >>something > file.txt $USER \"dbl quoted $stuff\" 'single quoted $stuff'"; // for initial testing, let's use this instead of readline
 	// t_list	*token_list;
 	// t_list	*list_ptr;
 
