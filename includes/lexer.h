@@ -39,23 +39,28 @@ typedef enum e_token_type {
 	T_GTGT,
 	T_LT,
 	T_LTLT,
-	T_VAR,//$
-	T_EXIT_STATUS,
+	T_VAR, //$
+	T_EXIT_STATUS, //$?
 	T_EOL,
 	T_ERROR
 }	t_token_type;
 
 typedef enum e_state {
-	NEUTRAL = 0,
-	GTGT,
-	LTLT,
-	BEGIN_SINGLE_QUOTE,
-	IN_SINGLE_QUOTE,
-	BEGIN_DOUBLE_QUOTE,
-	IN_DOUBLE_QUOTE,
-	VARIABLE,//$
-	IN_WORD,//alphabet
-	END_OF_LINE
+	ST_NEUTRAL = 0,
+	ST_PIPE,
+	ST_GT,
+	ST_GTGT,
+	ST_LT,
+	ST_LTLT,
+	ST_BEGIN_SINGLE_QUOTE,
+	ST_IN_SINGLE_QUOTE,
+	ST_BEGIN_DOUBLE_QUOTE,
+	ST_IN_DOUBLE_QUOTE,
+	ST_DOLLAR,
+	ST_EXIT_STATUS,
+	ST_VARIABLE,//$
+	ST_IN_WORD,//alphabet
+	ST_END_OF_LINE
 }	t_state;
 
 typedef struct s_token {
@@ -91,12 +96,17 @@ bool	is_space(char c);
 char	*token_type_to_str(t_token_type token_type);
 
 void	lex_neutral(t_lex_arg *l);
+void	lex_pipe(t_lex_arg *l);
+void	lex_gt(t_lex_arg *l);
 void	lex_gtgt(t_lex_arg *l);
+void	lex_lt(t_lex_arg *l);
 void	lex_ltlt(t_lex_arg *l);
 void	lex_begin_single_quote(t_lex_arg *l);
 void	lex_in_single_quote(t_lex_arg *l);
 void	lex_begin_double_quote(t_lex_arg *l);
 void	lex_in_double_quote(t_lex_arg *l);
+void	lex_dollar(t_lex_arg *l);
+void	lex_exit_status(t_lex_arg *l);
 void	lex_variable(t_lex_arg *l);
 void	lex_in_word(t_lex_arg *l);
 void	lex_end_of_line(t_lex_arg *l);

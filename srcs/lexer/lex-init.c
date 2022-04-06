@@ -16,16 +16,21 @@
 t_state_func_row *init_state_func_table(void)
 {
 	const t_state_func_row temp[] = {
-		{NEUTRAL,				&lex_neutral},
-		{GTGT,					&lex_gtgt},
-		{LTLT,					&lex_ltlt},
-		{BEGIN_SINGLE_QUOTE,	&lex_begin_single_quote},
-		{IN_SINGLE_QUOTE,		&lex_in_single_quote},
-		{BEGIN_DOUBLE_QUOTE,	&lex_begin_double_quote},
-		{IN_DOUBLE_QUOTE,		&lex_in_double_quote},
-		{VARIABLE,				&lex_variable},
-		{IN_WORD,				*lex_in_word},
-		{END_OF_LINE,			*lex_end_of_line}
+		{ST_NEUTRAL,				&lex_neutral},
+		{ST_PIPE,				&lex_pipe},
+		{ST_GT,					&lex_gt},
+		{ST_GTGT,				&lex_gtgt},
+		{ST_LT,					&lex_lt},
+		{ST_LTLT,				&lex_ltlt},
+		{ST_BEGIN_SINGLE_QUOTE,	&lex_begin_single_quote},
+		{ST_IN_SINGLE_QUOTE,		&lex_in_single_quote},
+		{ST_BEGIN_DOUBLE_QUOTE,	&lex_begin_double_quote},
+		{ST_IN_DOUBLE_QUOTE,		&lex_in_double_quote},
+		{ST_DOLLAR,				&lex_dollar},
+		{ST_EXIT_STATUS,			&lex_exit_status},
+		{ST_VARIABLE,			&lex_variable},
+		{ST_IN_WORD,				*lex_in_word},
+		{ST_END_OF_LINE,			*lex_end_of_line}
 	};
 	t_state_func_row	*state_func_table;
 	state_func_table = malloc_error_check(sizeof(temp));
@@ -38,7 +43,7 @@ void	init_lex_arg(t_lex_arg *l, char *line)
 	l->line = line;
 	l->i = 0;
 	l->start_index = 0;
-	l->state = NEUTRAL;
+	l->state = ST_NEUTRAL;
 	l->found_token = false;
 	return ;
 }

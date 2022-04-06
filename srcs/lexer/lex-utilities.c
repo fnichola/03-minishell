@@ -3,7 +3,6 @@
 
 void	del_token(void *token_ptr)
 {
-	printf("free token\n");
 	t_token	*token;
 
 	token = (t_token *)token_ptr;
@@ -15,11 +14,13 @@ void	del_token(void *token_ptr)
 
 bool	is_delimeter(char c)
 {
-	if ((c >= '\t' && c <= '\r')
+	if (!c
 		|| c == ' '
+		|| c == '\t'
 		|| c == '|'
 		|| c == '<'
-		|| c == '>')
+		|| c == '>'
+		)
 		return (true);
 	return (false);
 }

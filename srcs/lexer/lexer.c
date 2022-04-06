@@ -46,8 +46,7 @@ t_token	*get_next_token(t_lex_arg *l, const t_state_func_row *state_func_table)
 {
 	t_token	*token;
 
-	token = malloc_error_check(sizeof(t_token));
-	l->state = NEUTRAL;
+	l->state = ST_NEUTRAL;
 	l->start_index = l->i;
 	while (1)
 	{
@@ -58,9 +57,10 @@ t_token	*get_next_token(t_lex_arg *l, const t_state_func_row *state_func_table)
 			printf("[found_token == true]\n");
 			if (l->token_type == T_EOL)
 				return (NULL);
+			token = malloc_error_check(sizeof(t_token));
 			token->word = ft_substr(l->line, l->start_index, (l->i - l->start_index));
 			token->token_type = l->token_type;
-			if (l->state == IN_DOUBLE_QUOTE || l->state == IN_SINGLE_QUOTE)
+			if (l->state == ST_IN_DOUBLE_QUOTE || l->state == ST_IN_SINGLE_QUOTE)
 				(l->i)++;
 			l->found_token = false;
 			return (token);
@@ -68,7 +68,6 @@ t_token	*get_next_token(t_lex_arg *l, const t_state_func_row *state_func_table)
 		if ((l->line)[l->i])
 			(l->i)++;
 	}
-	free(token);
 	return (NULL);
 }
 
@@ -83,6 +82,11 @@ t_token	*get_next_token(t_lex_arg *l, const t_state_func_row *state_func_table)
  */
 t_list	*tokenizer(char *line)
 {
+	printf(
+		"---------------------------\n"
+		"Tokenizer:\n"
+		"---------------------------\n"
+		);
 	t_state_func_row		*state_func_table;
 	t_token					*new_token;
 	t_list					*token_list;
@@ -105,23 +109,34 @@ t_list	*tokenizer(char *line)
 
 int	main()
 {
-	// char	*line = "ls dir | grep<< >>something > file.txt $USER \"dbl quoted $stuff\" 'single quoted $stuff'"; // for initial testing, let's use this instead of readline
-	char	*line = "hello";
-	// t_list	*token_list;
+	char	*line;
+	t_list	*token_list;
 	t_list	*list_ptr;
 
-	// line = readline("lexer-test$ "); // no readline for simple testing
-	// token_list = tokenizer(line);
-	// list_ptr = token_list;
-	// while (token_list)	
-	// {
-	// 	printf("<%s> \"%s\"\n", 
-	// 		token_type_to_str(((t_token *)token_list->content)->token_type), 
-	// 		((t_token *)token_list->content)->word);
-	// 	token_list = token_list->next;
-	// }
-	list_ptr = tokenizer(line);
+	line = readline("lexer-test$ ");
+	token_list = tokenizer(line);
+	list_ptr = token_list;
+	printf(
+	"\n\n"
+	"---------------------------\n"
+	"Line:\n"
+	"---------------------------\n"
+	"%s\n", line
+	);
+	printf(
+		"\n\n"
+		"---------------------------\n"
+		"Token List:\n"
+		"---------------------------\n"
+		);
+	while (token_list)	
+	{
+		printf("<%s> \"%s\"\n", 
+			token_type_to_str(((t_token *)token_list->content)->token_type), 
+			((t_token *)token_list->content)->word);
+		token_list = token_list->next;
+	}
 	ft_lstclear(&list_ptr, del_token);
-	// free(line);
+	free(line);
 	return (0);
 }

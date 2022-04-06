@@ -28,7 +28,6 @@ void	*malloc_error_check(size_t size)
 {
 	void	*ptr;
 
-	printf("malloc!\n");
 	ptr = malloc(size);
 	if (!ptr)
 		exit_error("malloc");
