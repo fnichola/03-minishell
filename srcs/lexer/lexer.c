@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 18:02:55 by fnichola          #+#    #+#             */
-/*   Updated: 2022/04/05 16:52:40 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/04/06 14:32:53 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ t_token	*get_next_token(t_lex_arg *l, const t_state_func_row *state_func_table)
 		if ((l->line)[l->i])
 			(l->i)++;
 	}
+	free(token);
 	return (NULL);
 }
 
@@ -82,31 +83,32 @@ t_token	*get_next_token(t_lex_arg *l, const t_state_func_row *state_func_table)
  */
 t_list	*tokenizer(char *line)
 {
-	const t_state_func_row	*state_func_table;
+	t_state_func_row		*state_func_table;
 	t_token					*new_token;
 	t_list					*token_list;
 	t_lex_arg 				l;
 
 	new_token = NULL;
 	token_list = NULL;
-	state_func_table = init_state_func_table(); // need free_state_func_table too
-	// *(l->i) = 0;
+	state_func_table = init_state_func_table();
 	init_lex_arg(&l, line); //lineを削除します。
 	new_token = get_next_token(&l, state_func_table);
 	while (new_token)
 	{
 		printf("<%s> \"%s\"\n", token_type_to_str(new_token->token_type), new_token->word);
-		// ft_lstadd_back(&token_list, ft_lstnew(new_token));
+		ft_lstadd_back(&token_list, ft_lstnew(new_token));
 		new_token = get_next_token(&l, state_func_table);
 	}
+	free(state_func_table);
 	return (token_list);
 }
 
 int	main()
 {
-	char	*line = "ls dir | grep<< >>something > file.txt $USER \"dbl quoted $stuff\" 'single quoted $stuff'"; // for initial testing, let's use this instead of readline
+	// char	*line = "ls dir | grep<< >>something > file.txt $USER \"dbl quoted $stuff\" 'single quoted $stuff'"; // for initial testing, let's use this instead of readline
+	char	*line = "hello";
 	// t_list	*token_list;
-	// t_list	*list_ptr;
+	t_list	*list_ptr;
 
 	// line = readline("lexer-test$ "); // no readline for simple testing
 	// token_list = tokenizer(line);
@@ -118,8 +120,8 @@ int	main()
 	// 		((t_token *)token_list->content)->word);
 	// 	token_list = token_list->next;
 	// }
-	// ft_lstclear(&list_ptr, del_token);
+	list_ptr = tokenizer(line);
+	ft_lstclear(&list_ptr, del_token);
 	// free(line);
-	tokenizer(line);
 	return (0);
 }

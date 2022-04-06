@@ -3,6 +3,7 @@
 
 void	del_token(void *token_ptr)
 {
+	printf("free token\n");
 	t_token	*token;
 
 	token = (t_token *)token_ptr;

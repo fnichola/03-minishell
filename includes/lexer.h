@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 15:11:01 by fnichola          #+#    #+#             */
-/*   Updated: 2022/04/05 17:01:21 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/04/06 14:21:03 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ typedef struct s_state_func_row {
 }	t_state_func_row;
 
 
-const	t_state_func_row *init_state_func_table(void);
+t_state_func_row	*init_state_func_table(void);
 void	init_lex_arg(t_lex_arg *l, char *line);
 void	del_token(void *token_ptr);
 bool	is_delimeter(char c);

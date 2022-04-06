@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 16:19:10 by fnichola          #+#    #+#             */
-/*   Updated: 2022/03/22 16:24:15 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/04/06 14:37:06 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ void	*malloc_error_check(size_t size)
 {
 	void	*ptr;
 
+	printf("malloc!\n");
 	ptr = malloc(size);
 	if (!ptr)
 		exit_error("malloc");

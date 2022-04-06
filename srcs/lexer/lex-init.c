@@ -1,7 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lex-init.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/04/06 13:54:14 by fnichola          #+#    #+#             */
+/*   Updated: 2022/04/06 14:23:10 by fnichola         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 #include "lexer.h"
 
-const t_state_func_row *init_state_func_table(void)
+t_state_func_row *init_state_func_table(void)
 {
 	const t_state_func_row temp[] = {
 		{NEUTRAL,				&lex_neutral},
@@ -18,9 +30,8 @@ const t_state_func_row *init_state_func_table(void)
 	t_state_func_row	*state_func_table;
 	state_func_table = malloc_error_check(sizeof(temp));
 	ft_memcpy(state_func_table, temp, sizeof(temp));//constだとスコープがその関数内だけだが、memcpyでコピーしたアドレスはreturnできる。
-
 	return (state_func_table);
-};
+}
 
 void	init_lex_arg(t_lex_arg *l, char *line)
 {
