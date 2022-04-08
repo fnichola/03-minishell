@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lex-init.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 13:54:14 by fnichola          #+#    #+#             */
-/*   Updated: 2022/04/06 14:23:10 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/04/08 21:22:28 by atomizaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ t_state_func_row *init_state_func_table(void)
 		{ST_IN_WORD,				*lex_in_word},
 		{ST_END_OF_LINE,			*lex_end_of_line}
 	};
-	t_state_func_row	*state_func_table;
+	t_state_func_row	*state_func_table;//ここでconstで初期化した構造体配列をコピーしてreturnできるようにしている。
 	state_func_table = malloc_error_check(sizeof(temp));
 	ft_memcpy(state_func_table, temp, sizeof(temp));//constだとスコープがその関数内だけだが、memcpyでコピーしたアドレスはreturnできる。
 	return (state_func_table);

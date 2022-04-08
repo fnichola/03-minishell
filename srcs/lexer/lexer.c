@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 18:02:55 by fnichola          #+#    #+#             */
-/*   Updated: 2022/04/06 14:32:53 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/04/08 23:27:25 by atomizaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ t_token	*get_next_token(t_lex_arg *l, const t_state_func_row *state_func_table)
 	while (1)
 	{
 		printf("\nindex: %zu, character: '%c'\n", l->i, (l->line)[l->i]);
-		state_func_table[l->state].lex_func(l);
+		state_func_table[l->state].lex_func(l);//構造体の[]はenumでt_stateとインデックスが紐づいている。
 		if (l->found_token)//もうトークンが分かった時点でfound_tokenをtrueにしてあげる。
 		{
 			printf("[found_token == true]\n");
@@ -65,7 +65,7 @@ t_token	*get_next_token(t_lex_arg *l, const t_state_func_row *state_func_table)
 			l->found_token = false;
 			return (token);
 		}
-		if ((l->line)[l->i])
+		if ((l->line)[l->i])//tokenができてなかったら一文字進める
 			(l->i)++;
 	}
 	return (NULL);
@@ -94,8 +94,8 @@ t_list	*tokenizer(char *line)
 
 	new_token = NULL;
 	token_list = NULL;
-	state_func_table = init_state_func_table();
-	init_lex_arg(&l, line); //lineを削除します。
+	state_func_table = init_state_func_table();//stateと関数ポインタを作成している。
+	init_lex_arg(&l, line); //lineは不要。ここで関数ポインタに渡すための引数を定義
 	new_token = get_next_token(&l, state_func_table);
 	while (new_token)
 	{
