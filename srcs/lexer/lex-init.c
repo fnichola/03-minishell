@@ -6,7 +6,7 @@
 /*   By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 13:54:14 by fnichola          #+#    #+#             */
-/*   Updated: 2022/04/08 21:22:28 by atomizaw         ###   ########.fr       */
+/*   Updated: 2022/04/19 22:00:42 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ t_state_func_row *init_state_func_table(void)
 	return (state_func_table);
 }
 
-void	init_lex_arg(t_lex_arg *l, char *line)
+void	init_lex_arg(t_lex_arg *l, const char *line)
 {
 	l->line = line;
 	l->i = 0;

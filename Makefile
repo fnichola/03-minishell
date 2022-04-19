@@ -6,7 +6,7 @@
 #    By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/09 18:01:32 by fnichola          #+#    #+#              #
-#    Updated: 2022/04/05 15:58:56 by fnichola         ###   ########.fr        #
+#    Updated: 2022/04/19 21:25:43 by fnichola         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,8 @@ LIBFT_LIB = $(LIBFT_DIR)/libft.a
 CC = gcc
 CFLAGS = -Wall -Werror -Wextra -g -fsanitize=address
 
-SRCS = srcs/lexer/lexer.c \
+SRCS = srcs/main.c \
+	srcs/lexer/lexer.c \
 	srcs/lexer/lex-functions.c \
 	srcs/lexer/lex-utilities.c \
 	srcs/lexer/lex-init.c \

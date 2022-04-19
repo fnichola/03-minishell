@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 15:11:01 by fnichola          #+#    #+#             */
-/*   Updated: 2022/04/06 14:21:03 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/04/19 22:01:14 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,36 +14,13 @@
 # define LEXER_H
 
 # include "../libft/libft.h"
+# include "minishell.h"
 # include <stdio.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <sys/wait.h>
 # include <stdbool.h>
 # include <errno.h>
-
-/**
- * T_WORD = word
- * T_PIPE = |
- * T_GT = >
- * T_GTGT = >
- * T_LT = <
- * T_LTLT = <<
- * T_VAR = $
- * T_EXIT_STATUS = $?
- * T_ERROR = error
- */
-typedef enum e_token_type {
-	T_WORD, //alphabet
-	T_PIPE,//
-	T_GT,
-	T_GTGT,
-	T_LT,
-	T_LTLT,
-	T_VAR, //$
-	T_EXIT_STATUS, //$?
-	T_EOL,
-	T_ERROR
-}	t_token_type;
 
 typedef enum e_state {
 	ST_NEUTRAL = 0,
@@ -63,13 +40,8 @@ typedef enum e_state {
 	ST_END_OF_LINE
 }	t_state;
 
-typedef struct s_token {
-	char			*word;
-	t_token_type	token_type;
-}	t_token;
-
 typedef struct s_lex_arg {
-	char				*line;
+	const char			*line;
 	size_t				i;
 	size_t				start_index;//tokenの開始インデックスで最初の空白は無視
 	t_state				state;//
@@ -87,9 +59,9 @@ typedef struct s_state_func_row {
 	void 		(*lex_func)(t_lex_arg *l);
 }	t_state_func_row;
 
-
+t_list	*tokenizer(const char *line);
 t_state_func_row	*init_state_func_table(void);
-void	init_lex_arg(t_lex_arg *l, char *line);
+void	init_lex_arg(t_lex_arg *l, const char *line);
 void	del_token(void *token_ptr);
 bool	is_delimeter(char c);
 bool	is_space(char c);

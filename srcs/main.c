@@ -6,11 +6,13 @@
 /*   By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/26 16:46:58 by fnichola          #+#    #+#             */
-/*   Updated: 2022/03/15 11:51:30 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/04/19 21:56:27 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../libft/libft.h"
+#include "minishell.h"
+#include "lexer.h"
 #include <stdio.h>
 #include <readline/readline.h>
 #include <readline/history.h>
@@ -42,12 +44,6 @@ void	builtin_exit(int argc, char **argv)
 	{
 		printf("too many arguments\n"); // need a separate error function
 	}
-}
-
-void	exit_error(void)
-{
-	printf("Error!\n");
-	exit(EXIT_FAILURE);
 }
 
 void	free_command_array(void *ptr)
@@ -84,29 +80,43 @@ void	search_path_and_exec(char **argv, char **envp)
 		i++;
 	}
 	free(paths);
-	exit_error();
+	exit_error("Can't find command.");
 }
 
-t_list	*parse_line(const char *line)
+void	parse_line(const char *line, t_command *command_table)
 {
-	t_list	*command_table;
-	char	**split_command;
+	char	**simple_command;
+	t_list	*tokens;
+	t_list	*tmp;
+	size_t	i;
 
-	command_table = NULL;
-	split_command = ft_split(line, ' '); // ignoring pipes, etc, for now
-	ft_lstadd_back(&command_table, ft_lstnew(split_command));
-	return (command_table);
+	tokens = tokenizer(line);
+	tmp = tokens;
+	simple_command = malloc_error_check(sizeof(char *) * 32);
+	i = 0;
+	while (tmp)
+	{
+		simple_command[i] = ((t_token *)tmp->content)->word;
+		// add real parsing
+		// realloc if more than 32 words
+		tmp = tmp->next;
+		i++;
+	}
+	simple_command[i] = NULL;
+	ft_lstadd_back(&command_table->simple_commands, ft_lstnew(simple_command));
 }
 
-int	execute_commands(t_list *command_table, char **envp)
+int	execute_commands(t_command *command_table, char **envp)
 {
 	pid_t	pid;
 	int		status;
 	char	**argv;
-
-	while (command_table)
+	t_list	*simple_command;
+	
+	simple_command = command_table->simple_commands;
+	while (simple_command)
 	{
-		argv = (char **)command_table->content;
+		argv = (char **)simple_command->content;
 		if (!argv || !argv[0])
 			return (0);
 		if (!ft_strncmp(argv[0], "exit", ft_strlen(argv[0])) && ft_strlen(argv[0]) >= 4)
@@ -125,28 +135,28 @@ int	execute_commands(t_list *command_table, char **envp)
 		{
 			waitpid(pid, &status, WUNTRACED);
 		}
-		command_table = command_table->next;
+		simple_command = simple_command->next;
 	}
 	return (0);
 }
 
 int minishell(char **envp)
 {
-	t_list	*command_table;
+	t_command	command_table;
 	int		status;
 	char	*line;
 	//initialize
-	command_table = NULL;
+	command_table.simple_commands = NULL;
 	status = 0;
 	while (!status)
 	{
 		line = readline("minishell$ ");
 		if (line && *line)
 			add_history(line);
-		command_table = parse_line(line);
+		parse_line(line, &command_table);
 		free(line);
-		status = execute_commands(command_table, envp);
-		ft_lstclear(&command_table, free_command_array);
+		status = execute_commands(&command_table, envp);
+		ft_lstclear(&command_table.simple_commands, free_command_array);
 	}
 	return (0);
 }
@@ -156,12 +166,11 @@ int	main(int argc, char **argv, char **envp)
 	(void)argv;
 	if (argc == 1)
 	{
-		minishell(envp);//issue commit test
+		minishell(envp);
 	}
 	else
 	{
 		ft_printf("error\n");
 	}
-	// rl_clear_history(); // requires GNU Readline
 	return (0);
 }
