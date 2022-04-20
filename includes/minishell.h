@@ -22,6 +22,9 @@
 # include <errno.h>
 
 /**
+ * Token types returned by tokenizer(). Input from readline is broken into
+ * tokens and each token has a type.
+ * 
  * T_WORD = word
  * T_PIPE = |
  * T_GT = >
@@ -50,6 +53,15 @@ typedef struct s_token {
 	t_token_type	token_type;
 }	t_token;
 
+/**
+ * The command table data structure.
+ * All of the simple commands in the list "simple_commands" will be piped
+ * together. A simple command is an array of words to be passed to execve
+ * (i.e. char **argv).
+ * 
+ * output_file, input_file, and error_file are for redirection. If there is
+ * no redirection, they should be set to NULL.
+ */
 typedef struct s_command {
 	t_list	*simple_commands;
 	char	*output_file;

@@ -6,7 +6,7 @@
 /*   By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/26 16:46:58 by fnichola          #+#    #+#             */
-/*   Updated: 2022/04/19 21:56:27 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/04/19 23:05:10 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,25 +28,7 @@ size_t	argv_len(char **argv)
 	return (i);
 }
 
-void	builtin_exit(int argc, char **argv)
-{
-	if (argc == 1)
-	{
-		printf("exit\n");
-		exit(EXIT_SUCCESS);
-	}
-	else if (argc == 2)
-	{
-		printf("exit\n");
-		exit((unsigned char)ft_atoi(argv[1]));
-	}
-	else
-	{
-		printf("too many arguments\n"); // need a separate error function
-	}
-}
-
-void	free_command_array(void *ptr)
+void	free_simple_command(void *ptr)
 {
 	size_t	i;
 	char	**array;
@@ -59,6 +41,37 @@ void	free_command_array(void *ptr)
 		i++;
 	}
 	free(array);
+}
+
+void	builtin_exit(int argc, char **argv)
+{
+	int	ret;
+
+	if (argc == 1)
+	{
+		printf("exit\n");
+		exit(EXIT_SUCCESS);
+	}
+	else if (argc == 2)
+	{
+		printf("exit\n");
+		ret = ft_atoi(argv[1]);
+		exit(ret);
+	}
+	else
+	{
+		printf("too many arguments\n"); // need a separate error function
+	}
+}
+
+void free_token_list (void *ptr)
+{
+	t_token	*token;
+
+	token = (t_token *)ptr;
+	free(token->word);
+	free(token);
+
 }
 
 void	search_path_and_exec(char **argv, char **envp)
@@ -97,13 +110,15 @@ void	parse_line(const char *line, t_command *command_table)
 	while (tmp)
 	{
 		simple_command[i] = ((t_token *)tmp->content)->word;
-		// add real parsing
+		// add real parsing, right now all tokens are just passed to execve
 		// realloc if more than 32 words
+		// free token if not used in simple_command
 		tmp = tmp->next;
 		i++;
 	}
 	simple_command[i] = NULL;
 	ft_lstadd_back(&command_table->simple_commands, ft_lstnew(simple_command));
+	ft_lstclear(&tokens, free);
 }
 
 int	execute_commands(t_command *command_table, char **envp)
@@ -145,8 +160,12 @@ int minishell(char **envp)
 	t_command	command_table;
 	int		status;
 	char	*line;
-	//initialize
+
 	command_table.simple_commands = NULL;
+	command_table.input_file = NULL;
+	command_table.output_file = NULL;
+	command_table.error_file = NULL;
+
 	status = 0;
 	while (!status)
 	{
@@ -156,7 +175,7 @@ int minishell(char **envp)
 		parse_line(line, &command_table);
 		free(line);
 		status = execute_commands(&command_table, envp);
-		ft_lstclear(&command_table.simple_commands, free_command_array);
+		ft_lstclear(&command_table.simple_commands, free_simple_command);
 	}
 	return (0);
 }
