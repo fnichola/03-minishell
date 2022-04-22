@@ -54,16 +54,20 @@ typedef struct s_token {
 }	t_token;
 
 /**
- * The command table data structure.
- * All of the simple commands in the list "simple_commands" will be piped
- * together. A simple command is an array of words to be passed to execve
- * (i.e. char **argv).
+ * Command data structure.
+ * 
+ * There will be one t_command variable for each command in a pipeline.
+ * In minishell (without bonuses) there is no other way to have multiple
+ * commands in one line.
+ * 
+ * argv holds an array of strings starting with the program name/path and
+ * followed by its arguments.
  * 
  * output_file, input_file, and error_file are for redirection. If there is
  * no redirection, they should be set to NULL.
  */
 typedef struct s_command {
-	t_list	*simple_commands;
+	char	**argv;
 	char	*output_file;
 	char	*input_file;
 	char	*error_file;

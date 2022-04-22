@@ -28,19 +28,20 @@ size_t	argv_len(char **argv)
 	return (i);
 }
 
-void	free_simple_command(void *ptr)
+void	free_command_table(void *ptr)
 {
 	size_t	i;
-	char	**array;
+	t_command	*command;
 
-	array = (char **)ptr;
+	command = (t_command *)ptr;
 	i = 0;
-	while (array && array[i])
+	while (command->argv && command->argv[i])
 	{
-		free(array[i]);
+		free(command->argv[i]);
 		i++;
 	}
-	free(array);
+	free(command->argv);
+	free(command);
 }
 
 void	builtin_exit(int argc, char **argv)
@@ -96,42 +97,49 @@ void	search_path_and_exec(char **argv, char **envp)
 	exit_error("Can't find command.");
 }
 
-void	parse_line(const char *line, t_command *command_table)
+void	parse_line(const char *line, t_list **command_table)
 {
-	char	**simple_command;
+	t_command	*command;
 	t_list	*tokens;
 	t_list	*tmp;
 	size_t	i;
 
 	tokens = tokenizer(line);
 	tmp = tokens;
-	simple_command = malloc_error_check(sizeof(char *) * 32);
+	command = malloc_error_check(sizeof(t_command));
+	command->argv = malloc_error_check(sizeof(char *) * 32);
+	command->output_file = NULL;
+	command->input_file = NULL;
+	command->error_file = NULL;
+	
 	i = 0;
 	while (tmp)
 	{
-		simple_command[i] = ((t_token *)tmp->content)->word;
+		command->argv[i] = ((t_token *)tmp->content)->word;
 		// add real parsing, right now all tokens are just passed to execve
 		// realloc if more than 32 words
 		// free token if not used in simple_command
 		tmp = tmp->next;
 		i++;
 	}
-	simple_command[i] = NULL;
-	ft_lstadd_back(&command_table->simple_commands, ft_lstnew(simple_command));
+	command->argv[i] = NULL;
+	ft_lstadd_back(command_table, ft_lstnew(command));
 	ft_lstclear(&tokens, free);
 }
 
-int	execute_commands(t_command *command_table, char **envp)
+int	execute_commands(t_list *command_table, char **envp)
 {
 	pid_t	pid;
 	int		status;
 	char	**argv;
-	t_list	*simple_command;
+	t_command	*command;
+	t_list	*ptr;
 	
-	simple_command = command_table->simple_commands;
-	while (simple_command)
+	ptr = command_table;
+	while (ptr)
 	{
-		argv = (char **)simple_command->content;
+		command = (t_command *)ptr->content;
+		argv = command->argv;
 		if (!argv || !argv[0])
 			return (0);
 		if (!ft_strncmp(argv[0], "exit", ft_strlen(argv[0])) && ft_strlen(argv[0]) >= 4)
@@ -150,22 +158,18 @@ int	execute_commands(t_command *command_table, char **envp)
 		{
 			waitpid(pid, &status, WUNTRACED);
 		}
-		simple_command = simple_command->next;
+		ptr = ptr->next;
 	}
 	return (0);
 }
 
 int minishell(char **envp)
 {
-	t_command	command_table;
+	t_list	*command_table;
 	int		status;
 	char	*line;
 
-	command_table.simple_commands = NULL;
-	command_table.input_file = NULL;
-	command_table.output_file = NULL;
-	command_table.error_file = NULL;
-
+	command_table = NULL;
 	status = 0;
 	while (!status)
 	{
@@ -174,8 +178,8 @@ int minishell(char **envp)
 			add_history(line);
 		parse_line(line, &command_table);
 		free(line);
-		status = execute_commands(&command_table, envp);
-		ft_lstclear(&command_table.simple_commands, free_simple_command);
+		status = execute_commands(command_table, envp);
+		ft_lstclear(&command_table, free_command_table);
 	}
 	return (0);
 }
