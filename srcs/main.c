@@ -97,35 +97,36 @@ void	search_path_and_exec(char **argv, char **envp)
 	exit_error("Can't find command.");
 }
 
-void	parse_line(const char *line, t_list **command_table)
-{
-	t_command	*command;
-	t_list	*tokens;
-	t_list	*tmp;
-	size_t	i;
 
-	tokens = tokenizer(line);
-	tmp = tokens;
-	command = malloc_error_check(sizeof(t_command));
-	command->argv = malloc_error_check(sizeof(char *) * 32);
-	command->output_file = NULL;
-	command->input_file = NULL;
-	command->error_file = NULL;
+// void	parse_line(const char *line, t_list **command_table)
+// {
+// 	t_command	*command;
+// 	t_list	*tokens;
+// 	t_list	*tmp;
+// 	size_t	i;
+
+// 	tokens = tokenizer(line);
+// 	tmp = tokens;
+// 	command = malloc_error_check(sizeof(t_command));
+// 	command->argv = malloc_error_check(sizeof(char *) * 32);
+// 	command->output_file = NULL;
+// 	command->input_file = NULL;
+// 	command->error_file = NULL;
 	
-	i = 0;
-	while (tmp)
-	{
-		command->argv[i] = ((t_token *)tmp->content)->word;
-		// add real parsing, right now all tokens are just passed to execve
-		// realloc if more than 32 words
-		// free token if not used in simple_command
-		tmp = tmp->next;
-		i++;
-	}
-	command->argv[i] = NULL;
-	ft_lstadd_back(command_table, ft_lstnew(command));
-	ft_lstclear(&tokens, free);
-}
+// 	i = 0;
+// 	while (tmp)
+// 	{
+// 		command->argv[i] = ((t_token *)tmp->content)->word;
+// 		// add real parsing, right now all tokens are just passed to execve
+// 		// realloc if more than 32 words
+// 		// free token if not used in simple_command
+// 		tmp = tmp->next;
+// 		i++;
+// 	}
+// 	command->argv[i] = NULL;
+// 	ft_lstadd_back(command_table, ft_lstnew(command));
+// 	ft_lstclear(&tokens, free);
+// }
 
 int	execute_commands(t_list *command_table, char **envp)
 {
@@ -176,7 +177,9 @@ int minishell(char **envp)
 		line = readline("minishell$ ");
 		if (line && *line)
 			add_history(line);
-		parse_line(line, &command_table);
+		// parse_line(line, &command_table);
+		t_list *tokens = tokenizer(line);
+		command_table = parser(tokens);
 		free(line);
 		status = execute_commands(command_table, envp);
 		ft_lstclear(&command_table, free_command_table);

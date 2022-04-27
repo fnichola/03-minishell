@@ -23,6 +23,9 @@ SRCS = srcs/main.c \
 	srcs/lexer/lex-functions.c \
 	srcs/lexer/lex-utilities.c \
 	srcs/lexer/lex-init.c \
+	srcs/parser/parser.c \
+	srcs/parser/parse-functions.c \
+	srcs/parser/parse-init.c \
 	srcs/utilities.c
 
 ifdef WITH_BONUS

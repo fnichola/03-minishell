@@ -75,5 +75,6 @@ typedef struct s_command {
 
 void	exit_error(char *str);
 void	*malloc_error_check(size_t size);
+t_list	*parser(t_list *tokens);
 
 #endif
