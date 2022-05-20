@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lex-functions.c                                    :+:      :+:    :+:   */
+/*   parse-functions.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 14:58:17 by fnichola          #+#    #+#             */
-/*   Updated: 2022/04/19 22:03:29 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/05/20 12:40:12 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ void	parser_simple_command(t_parse_arg *p)
 		(p->index)++;
 		next_token(p);
 	}
-	else //if (p->token->token_type == T_PIPE)
+	else if (p->token->token_type == T_PIPE)
 	{
 		p->command->argv[p->index] = NULL;
 		ft_lstadd_back(&p->command_table, ft_lstnew(p->command));

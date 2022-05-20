@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/26 16:46:58 by fnichola          #+#    #+#             */
-/*   Updated: 2022/04/19 23:05:10 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/05/20 12:55:56 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,6 +135,9 @@ int	execute_commands(t_list *command_table, char **envp)
 	char	**argv;
 	t_command	*command;
 	t_list	*ptr;
+	int		pfd[2];
+
+	pipe(pfd); // add error check. also don't need this if only one command.
 	
 	ptr = command_table;
 	while (ptr)
@@ -148,8 +151,17 @@ int	execute_commands(t_list *command_table, char **envp)
 			builtin_exit(argv_len(argv), argv);
 		}
 		pid = fork();
-		if (pid == 0)
+		if (pid == 0) // first child
 		{
+			close(pfd[0]); // close read end of pipe
+			if (ptr->next)
+			{
+				dup2(pfd[1], STDOUT_FILENO);
+				close(pfd[1]);
+			}
+
+        }
+
 			if (ft_strchr(argv[0], '/'))
 				execve(argv[0], argv, envp);
 			else
