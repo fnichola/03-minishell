@@ -38,8 +38,8 @@
 typedef enum e_token_type {
 	T_WORD, //alphabet
 	T_PIPE,//
-	T_GT,
-	T_GTGT,
+	T_GT, // >
+	T_GTGT, // >>
 	T_LT,
 	T_LTLT,
 	T_VAR, //$
@@ -67,8 +67,8 @@ typedef struct s_token {
  * no redirection, they should be set to NULL.
  */
 typedef struct s_command {
-	char	**argv;
-	char	*output_file;
+	char	**argv; // = {"grep", "c", 0}
+	char	*output_file; // = "test.txt"
 	char	*input_file;
 	char	*error_file;
 }	t_command;

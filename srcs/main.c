@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/26 16:46:58 by fnichola          #+#    #+#             */
-/*   Updated: 2022/05/20 12:55:56 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/05/23 15:49:29 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,6 +128,31 @@ void	search_path_and_exec(char **argv, char **envp)
 // 	ft_lstclear(&tokens, free);
 // }
 
+// pid_t recursive_execute(t_list *command_table, char **envp, int pfd[2])
+// {
+// 	pid_t		pid;
+// 	char		**argv;
+// 	t_command	*command;
+// 	int			next_pfd[2];
+
+// 	pid = 0;
+// 	next_pfd[0] = STDIN_FILENO;
+// 	next_pfd[1] = STDOUT_FILENO;
+// 	if (!command_table)
+// 		return (pid);
+// 	if (command_table->next)
+// 		pipe(next_pfd);
+// 	pid = fork();
+// 	if (pid == 0)
+// 	{
+// 	}
+// 	else
+// 	{
+// 	}
+
+
+// }
+
 int	execute_commands(t_list *command_table, char **envp)
 {
 	pid_t	pid;
@@ -136,42 +161,68 @@ int	execute_commands(t_list *command_table, char **envp)
 	t_command	*command;
 	t_list	*ptr;
 	int		pfd[2];
+	int		number_of_simple_commands;
+	int		i;
+	int		tmp_in_fd;
+	int		tmp_out_fd;
 
-	pipe(pfd); // add error check. also don't need this if only one command.
-	
+	i = 0;
+	number_of_simple_commands = ft_lstsize(command_table);
+	tmp_in_fd = dup(STDIN_FILENO); // --> stdin
+	tmp_out_fd = dup(STDOUT_FILENO); // --> stdout
 	ptr = command_table;
-	while (ptr)
+
+	while (i < number_of_simple_commands)
 	{
 		command = (t_command *)ptr->content;
 		argv = command->argv;
 		if (!argv || !argv[0])
 			return (0);
-		if (!ft_strncmp(argv[0], "exit", ft_strlen(argv[0])) && ft_strlen(argv[0]) >= 4)
+		// if (!ft_strncmp(argv[0], "exit", ft_strlen(argv[0])) && ft_strlen(argv[0]) >= 4)
+		// {
+		// 	builtin_exit(argv_len(argv), argv);
+		// }
+		if (i == number_of_simple_commands - 1) // last simple command
 		{
-			builtin_exit(argv_len(argv), argv);
-		}
-		pid = fork();
-		if (pid == 0) // first child
-		{
-			close(pfd[0]); // close read end of pipe
-			if (ptr->next)
+			dup2(tmp_out_fd, STDOUT_FILENO);
+			pid = fork();
+			if (pid == 0)
 			{
-				dup2(pfd[1], STDOUT_FILENO);
-				close(pfd[1]);
+				if (ft_strchr(argv[0], '/'))
+					execve(argv[0], argv, envp);
+				else
+					search_path_and_exec(argv, envp);
 			}
-
-        }
-
-			if (ft_strchr(argv[0], '/'))
-				execve(argv[0], argv, envp);
 			else
-				search_path_and_exec(argv, envp);
+			{
+				dup2(tmp_in_fd, STDIN_FILENO);
+				close(tmp_in_fd);
+				waitpid(pid, &status, WUNTRACED);
+			}
 		}
-		else
+		else // not the last simple command
 		{
-			waitpid(pid, &status, WUNTRACED);
+			pipe(pfd);
+			dup2(pfd[1], STDOUT_FILENO);
+			close(pfd[1]);
+
+			pid = fork();
+			if (pid == 0)
+			{
+				close(pfd[0]);
+				if (ft_strchr(argv[0], '/'))
+					execve(argv[0], argv, envp);
+				else
+					search_path_and_exec(argv, envp);
+			}
+			else
+			{
+				dup2(pfd[0], STDIN_FILENO);
+				close(pfd[0]);
+			}
 		}
 		ptr = ptr->next;
+		i++;
 	}
 	return (0);
 }
@@ -212,3 +263,5 @@ int	main(int argc, char **argv, char **envp)
 	}
 	return (0);
 }
+
+
