@@ -97,131 +97,76 @@ void	search_path_and_exec(char **argv, char **envp)
 	exit_error("Can't find command.");
 }
 
+pid_t	execute_simple_command(char **argv, char **envp, t_exec_fds exec_fds)
+{
+	pid_t	pid;
 
-// void	parse_line(const char *line, t_list **command_table)
-// {
-// 	t_command	*command;
-// 	t_list	*tokens;
-// 	t_list	*tmp;
-// 	size_t	i;
+	if (!ft_strncmp(argv[0], "exit", ft_strlen(argv[0])) && ft_strlen(argv[0]) >= 4)
+	{
+		builtin_exit(argv_len(argv), argv);
+	}
+	pid = fork();
+	if (pid == 0)
+	{
+		close(exec_fds.in_fd);
+		close(exec_fds.out_fd);
+		close(exec_fds.pipe_fd[0]);
+		close(exec_fds.pipe_fd[1]);
+		if (ft_strchr(argv[0], '/'))
+			execve(argv[0], argv, envp);
+		else
+			search_path_and_exec(argv, envp);
+	}
+	return(pid);
+}
 
-// 	tokens = tokenizer(line);
-// 	tmp = tokens;
-// 	command = malloc_error_check(sizeof(t_command));
-// 	command->argv = malloc_error_check(sizeof(char *) * 32);
-// 	command->output_file = NULL;
-// 	command->input_file = NULL;
-// 	command->error_file = NULL;
-	
-// 	i = 0;
-// 	while (tmp)
-// 	{
-// 		command->argv[i] = ((t_token *)tmp->content)->word;
-// 		// add real parsing, right now all tokens are just passed to execve
-// 		// realloc if more than 32 words
-// 		// free token if not used in simple_command
-// 		tmp = tmp->next;
-// 		i++;
-// 	}
-// 	command->argv[i] = NULL;
-// 	ft_lstadd_back(command_table, ft_lstnew(command));
-// 	ft_lstclear(&tokens, free);
-// }
-
-// pid_t recursive_execute(t_list *command_table, char **envp, int pfd[2])
-// {
-// 	pid_t		pid;
-// 	char		**argv;
-// 	t_command	*command;
-// 	int			next_pfd[2];
-
-// 	pid = 0;
-// 	next_pfd[0] = STDIN_FILENO;
-// 	next_pfd[1] = STDOUT_FILENO;
-// 	if (!command_table)
-// 		return (pid);
-// 	if (command_table->next)
-// 		pipe(next_pfd);
-// 	pid = fork();
-// 	if (pid == 0)
-// 	{
-// 	}
-// 	else
-// 	{
-// 	}
-
-
-// }
-
-int	execute_commands(t_list *command_table, char **envp)
+void	execute_last_command(char **argv, char **envp, t_exec_fds *exec_fds)
 {
 	pid_t	pid;
 	int		status;
-	char	**argv;
+
+	dup2(exec_fds->out_fd, STDOUT_FILENO);
+	close(exec_fds->out_fd);
+	exec_fds->out_fd = -1;
+	pid = execute_simple_command(argv, envp, *exec_fds);
+	dup2(exec_fds->in_fd, STDIN_FILENO);
+	close(exec_fds->in_fd);
+	waitpid(pid, &status, WUNTRACED);
+}
+
+void	execute_piped_command(char **argv, char **envp, t_exec_fds *exec_fds)
+{
+	pipe(exec_fds->pipe_fd);
+	dup2(exec_fds->pipe_fd[1], STDOUT_FILENO);
+	close(exec_fds->pipe_fd[1]);
+	execute_simple_command(argv, envp, *exec_fds);
+	dup2(exec_fds->pipe_fd[0], STDIN_FILENO);
+	close(exec_fds->pipe_fd[0]);
+}
+
+int	execute_commands(t_list *command_table, char **envp)
+{
 	t_command	*command;
-	t_list	*ptr;
-	int		pfd[2];
-	int		number_of_simple_commands;
-	int		i;
-	int		tmp_in_fd;
-	int		tmp_out_fd;
+	char		**argv;
+	int			number_of_simple_commands;
+	int			i;
+	t_exec_fds	exec_fds;
 
 	i = 0;
 	number_of_simple_commands = ft_lstsize(command_table);
-	tmp_in_fd = dup(STDIN_FILENO); // --> stdin
-	tmp_out_fd = dup(STDOUT_FILENO); // --> stdout
-	ptr = command_table;
-
+	exec_fds.in_fd = dup(STDIN_FILENO);
+	exec_fds.out_fd = dup(STDOUT_FILENO);
 	while (i < number_of_simple_commands)
 	{
-		command = (t_command *)ptr->content;
+		command = (t_command *)command_table->content;
 		argv = command->argv;
 		if (!argv || !argv[0])
 			return (0);
-		// if (!ft_strncmp(argv[0], "exit", ft_strlen(argv[0])) && ft_strlen(argv[0]) >= 4)
-		// {
-		// 	builtin_exit(argv_len(argv), argv);
-		// }
 		if (i == number_of_simple_commands - 1) // last simple command
-		{
-			dup2(tmp_out_fd, STDOUT_FILENO);
-			pid = fork();
-			if (pid == 0)
-			{
-				if (ft_strchr(argv[0], '/'))
-					execve(argv[0], argv, envp);
-				else
-					search_path_and_exec(argv, envp);
-			}
-			else
-			{
-				dup2(tmp_in_fd, STDIN_FILENO);
-				close(tmp_in_fd);
-				waitpid(pid, &status, WUNTRACED);
-			}
-		}
+			execute_last_command(argv, envp, &exec_fds);
 		else // not the last simple command
-		{
-			pipe(pfd);
-			dup2(pfd[1], STDOUT_FILENO);
-			close(pfd[1]);
-
-			pid = fork();
-			if (pid == 0)
-			{
-				close(pfd[0]);
-				if (ft_strchr(argv[0], '/'))
-					execve(argv[0], argv, envp);
-				else
-					search_path_and_exec(argv, envp);
-			}
-			else
-			{
-				dup2(pfd[0], STDIN_FILENO);
-				close(pfd[0]);
-			}
-		}
-		ptr = ptr->next;
+			execute_piped_command(argv, envp, &exec_fds);
+		command_table = command_table->next;
 		i++;
 	}
 	return (0);
@@ -240,7 +185,6 @@ int minishell(char **envp)
 		line = readline("minishell$ ");
 		if (line && *line)
 			add_history(line);
-		// parse_line(line, &command_table);
 		t_list *tokens = tokenizer(line);
 		command_table = parser(tokens);
 		free(line);

@@ -73,6 +73,12 @@ typedef struct s_command {
 	char	*error_file;
 }	t_command;
 
+typedef struct s_exec_fds {
+	int	in_fd;
+	int	out_fd;
+	int	pipe_fd[2];
+}	t_exec_fds;
+
 void	exit_error(char *str);
 void	*malloc_error_check(size_t size);
 t_list	*parser(t_list *tokens);
