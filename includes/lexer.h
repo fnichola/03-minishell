@@ -62,7 +62,6 @@ typedef struct s_state_func_row {
 t_list	*tokenizer(const char *line);
 t_state_func_row	*init_state_func_table(void);
 void	init_lex_arg(t_lex_arg *l, const char *line);
-void	del_token(void *token_ptr);
 bool	is_delimeter(char c);
 bool	is_space(char c);
 char	*token_type_to_str(t_token_type token_type);

@@ -79,6 +79,10 @@ typedef struct s_exec_fds {
 	int	pipe_fd[2];
 }	t_exec_fds;
 
+typedef struct s_minishell_data {
+	t_list	*command_table;
+}	t_minishell_data;
+
 void	exit_error(char *str);
 void	*malloc_error_check(size_t size);
 t_list	*parser(t_list *tokens);

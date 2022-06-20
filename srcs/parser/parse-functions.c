@@ -31,8 +31,7 @@ void	init_command(t_parse_arg *p)
 	p->command->output_file = NULL;
 	p->command->input_file = NULL;
 	p->command->error_file = NULL;
-	p->command->argv[p->index] = p->token->word;
-	(p->index)++;
+	p->command->argv[p->index] = NULL;
 }
 
 void	parser_neutral(t_parse_arg *p)
@@ -44,15 +43,18 @@ void	parser_neutral(t_parse_arg *p)
 	}
 	init_command(p);
 	if (p->token->token_type == T_WORD)
+	{
 		p->state = ST_FIRST_WORD;
+	}
 	else if (p->token->token_type == T_PIPE)
 		next_token(p);
 }
 
 void	parser_first_word(t_parse_arg *p)
 {
-	init_command(p);
 	next_token(p);
+	p->command->argv[p->index] = ft_strdup(p->previous_token->word); // duplicate token string so we can free all tokens later
+	(p->index)++;
 	p->state = ST_SIMPLE_COMMAND;
 }
 
@@ -66,7 +68,8 @@ void	parser_simple_command(t_parse_arg *p)
 	}
 	else if (p->token->token_type == T_WORD)
 	{
-		p->command->argv[p->index] = p->token->word;
+		p->command->argv[p->index] = ft_strdup(p->token->word);
+		p->token = NULL;
 		(p->index)++;
 		next_token(p);
 	}

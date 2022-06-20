@@ -18,6 +18,8 @@
 #include <readline/history.h>
 #include <sys/wait.h>
 
+t_minishell_data	g_data;
+
 size_t	argv_len(char **argv)
 {
 	size_t	i;
@@ -48,6 +50,7 @@ void	builtin_exit(int argc, char **argv)
 {
 	int	ret;
 
+	ft_lstclear(&g_data.command_table, free_command_table);
 	if (argc == 1)
 	{
 		printf("exit\n");
@@ -65,15 +68,16 @@ void	builtin_exit(int argc, char **argv)
 	}
 }
 
-void free_token_list (void *ptr)
-{
-	t_token	*token;
+// void free_token_list (void *ptr)
+// {
+// 	t_token	*token;
 
-	token = (t_token *)ptr;
-	free(token->word);
-	free(token);
+// 	token = (t_token *)ptr;
+// 	free(token->word);
+// 	free(token);
 
-}
+// }
+
 
 void	search_path_and_exec(char **argv, char **envp)
 {
@@ -144,21 +148,23 @@ void	execute_piped_command(char **argv, char **envp, t_exec_fds *exec_fds)
 	close(exec_fds->pipe_fd[0]);
 }
 
-int	execute_commands(t_list *command_table, char **envp)
+int	execute_commands(char **envp)
 {
 	t_command	*command;
+	t_list		*command_table_ptr;
 	char		**argv;
 	int			number_of_simple_commands;
 	int			i;
 	t_exec_fds	exec_fds;
 
 	i = 0;
-	number_of_simple_commands = ft_lstsize(command_table);
+	command_table_ptr = g_data.command_table;
+	number_of_simple_commands = ft_lstsize(g_data.command_table);
 	exec_fds.in_fd = dup(STDIN_FILENO);
 	exec_fds.out_fd = dup(STDOUT_FILENO);
 	while (i < number_of_simple_commands)
 	{
-		command = (t_command *)command_table->content;
+		command = (t_command *)command_table_ptr->content;
 		argv = command->argv;
 		if (!argv || !argv[0])
 			return (0);
@@ -166,7 +172,7 @@ int	execute_commands(t_list *command_table, char **envp)
 			execute_last_command(argv, envp, &exec_fds);
 		else // not the last simple command
 			execute_piped_command(argv, envp, &exec_fds);
-		command_table = command_table->next;
+		command_table_ptr = command_table_ptr->next;
 		i++;
 	}
 	return (0);
@@ -174,11 +180,10 @@ int	execute_commands(t_list *command_table, char **envp)
 
 int minishell(char **envp)
 {
-	t_list	*command_table;
 	int		status;
 	char	*line;
 
-	command_table = NULL;
+	g_data.command_table = NULL;
 	status = 0;
 	while (!status)
 	{
@@ -186,10 +191,10 @@ int minishell(char **envp)
 		if (line && *line)
 			add_history(line);
 		t_list *tokens = tokenizer(line);
-		command_table = parser(tokens);
+		g_data.command_table = parser(tokens);
 		free(line);
-		status = execute_commands(command_table, envp);
-		ft_lstclear(&command_table, free_command_table);
+		status = execute_commands(envp);
+		ft_lstclear(&g_data.command_table, free_command_table);
 	}
 	return (0);
 }
@@ -207,5 +212,3 @@ int	main(int argc, char **argv, char **envp)
 	}
 	return (0);
 }
-
-

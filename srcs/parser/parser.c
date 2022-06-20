@@ -13,6 +13,20 @@
 #include "minishell.h"
 #include "parser.h"
 
+void	del_token(void *token_ptr)
+{
+	t_token	*token;
+
+	token = (t_token *)token_ptr;
+	if (token)
+	{
+		free(token->word);
+		token->word = NULL;
+		free(token);
+		token = NULL;
+	}
+}
+
 /**
  * Take a list of tokens (from tokenizer) and create a command table.
  * 
@@ -33,49 +47,6 @@ t_list	*parser(t_list *tokens)
 		state_func_table[p.state].parse_func(&p);
 	}
 	free(state_func_table);
+	ft_lstclear(&tokens, del_token);
 	return (p.command_table);
 }
-
-
-
-
-// // t_list command_table
-
-// typedef struct s_list
-// {
-// 	void			*content; ---> t_command *
-// 	struct s_list	*next;
-// }					t_list;
-
-// typedef struct s_command {
-// 	char	**argv; // = {"grep", "c", 0}
-// 	char	*output_file; // = "test.txt"
-// 	char	*input_file;
-// 	char	*error_file;
-// }	t_command;
-
-// command_table->content->argv = {"ls", 0}
-// command_table->next->content->argv = {"grep", "c", 0}
-
-
-// recursive_exec(command_table) // ls
-// {
-// 	// redirect の準備 dup2()
-// 	// pipe のつながり pipe()
-// 	if (command_table->next)
-// 		recursive_exec(command_table->next);
-// 	execve(...); // ls
-// 	return ;
-// }
-// recursive_exec(command_table) // grep c
-// {
-// 	// redirect の準備 dup2()
-// 	// pipe のつながり pipe()
-// 	if (command_table->next)
-// 		recursive_exec(command_table->next);
-// 	execve(...); // grep c
-// 	return ;
-// }
-
-// 準備：ls -> grep c
-// 実行：grep c -> ls

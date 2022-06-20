@@ -13,16 +13,6 @@
 #include "minishell.h"
 #include "lexer.h"
 
-void	del_token(void *token_ptr)
-{
-	t_token	*token;
-
-	token = (t_token *)token_ptr;
-	free(token->word);
-	token->word = NULL;
-	free(token);
-	token = NULL;
-}
 
 bool	is_delimeter(char c)
 {
