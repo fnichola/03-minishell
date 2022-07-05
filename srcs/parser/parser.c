@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer.c                                            :+:      :+:    :+:   */
+/*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+        */
+/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 18:02:55 by fnichola          #+#    #+#             */
-/*   Updated: 2022/04/19 21:58:53 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/06/30 22:22:23 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,10 @@ t_list	*parser(t_list *tokens)
 	state_func_table = p_init_state_func_table();//stateと関数ポインタを作成している。
 	init_parse_arg(&p, tokens);
 	p.list_ptr = tokens;
-	while (p.state != ST_FINISHED)
+	while (p.state != ST_FINISHED)//ここで、終了ステータスが2の時に無限ループする
 	{
+		// printf("parser");
+		printf("p.state %d\n", p.state);
 		p.previous_state = p.state;
 		state_func_table[p.state].parse_func(&p);
 	}

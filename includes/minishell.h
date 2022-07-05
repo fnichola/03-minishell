@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/04/19 16:52:15 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/07/04 14:59:53 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,14 @@
 # define MINISHELL_H
 
 # include "../libft/libft.h"
+# include "env.h"
 # include <stdio.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <sys/wait.h>
 # include <stdbool.h>
 # include <errno.h>
+# include <unistd.h>
 
 /**
  * Token types returned by tokenizer(). Input from readline is broken into
@@ -86,5 +88,9 @@ typedef struct s_minishell_data {
 void	exit_error(char *str);
 void	*malloc_error_check(size_t size);
 t_list	*parser(t_list *tokens);
-
+void	ft_perror(char *perror_str);
+int		ft_strcmp(char *s1, char *s2);
+char	*ft_find_env(char *env_str, char **envp);
+void	built_in_cd(char **argv);
+void	built_in_echo(char **argv);
 #endif

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+         #
+#    By: akihito <akihito@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/09 18:01:32 by fnichola          #+#    #+#              #
-#    Updated: 2022/04/19 21:25:43 by fnichola         ###   ########.fr        #
+#    Updated: 2022/07/04 17:51:04 by akihito          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,9 @@ SRCS = srcs/main.c \
 	srcs/parser/parser.c \
 	srcs/parser/parse-functions.c \
 	srcs/parser/parse-init.c \
-	srcs/utilities.c
+	srcs/utilities.c \
+	srcs/built_in/built_in_command1.c \
+	srcs/utils/env_functions.c \
 
 ifdef WITH_BONUS
 endif
@@ -37,7 +39,8 @@ DEPS = $(SRCS:.c=.d)
 all: $(NAME)
 
 %.o: %.c
-	$(CC) $(CFLAGS) -MMD -MP -I includes -o $@ -c $<
+	$(CC)  -MMD -MP -I includes -o $@ -c $<
+	# $(CC) $(CFLAGS) -MMD -MP -I includes -o $@ -c $<
 	
 $(NAME): $(OBJS) $(LIBFT_LIB)
 	$(CC) $(CFLAGS) $(OBJS) $(LIBFT_LIB) -lreadline -lncurses -I includes -o $(NAME)
