@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer.h                                            :+:      :+:    :+:   */
+/*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 15:11:01 by fnichola          #+#    #+#             */
-/*   Updated: 2022/04/19 22:01:14 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/07/06 15:21:44 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include "../libft/libft.h"
 # include "minishell.h"
+# include "struct.h"
 # include <stdio.h>
 # include <stdbool.h>
 # include <errno.h>
@@ -24,7 +25,8 @@ typedef enum e_state {
 	ST_FIRST_WORD,
 	ST_SIMPLE_COMMAND,
 	ST_REDIRECT,
-	ST_FINISHED
+	ST_FINISHED,
+	ST_ENV,
 }	t_state;
 
 typedef struct s_parse_arg {

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utilities.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 16:19:10 by fnichola          #+#    #+#             */
-/*   Updated: 2022/04/06 14:37:06 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/07/06 15:58:35 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,4 +32,25 @@ void	*malloc_error_check(size_t size)
 	if (!ptr)
 		exit_error("malloc");
 	return (ptr);
+}
+
+void	ft_perror(char *perror_str)
+{
+	ft_putstr_fd("minishell: ", STDERR_FILENO);
+	perror(perror_str);
+}
+
+int	ft_strcmp(char *s1, char *s2)
+{
+	size_t	i;
+
+	i = 0;
+	while (s1[i] && s2[i])
+	{
+		if (((unsigned char *)s1)[i] != ((unsigned char *)s2)[i] ||
+			s1[i] == 0 || s2[i] == 0)
+			return (((unsigned char *)s1)[i] - ((unsigned char *)s2)[i]);
+		i++;
+	}
+	return (0);
 }

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+         #
+#    By: akihito <akihito@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/09 18:01:32 by fnichola          #+#    #+#              #
-#    Updated: 2022/04/19 21:25:43 by fnichola         ###   ########.fr        #
+#    Updated: 2022/07/06 15:33:43 by akihito          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,9 @@ SRCS = srcs/main.c \
 	srcs/parser/parser.c \
 	srcs/parser/parse-functions.c \
 	srcs/parser/parse-init.c \
-	srcs/utilities.c
+	srcs/utilities.c \
+	srcs/built_in/built_in_command1.c \
+	srcs/utils/env_functions.c 
 
 ifdef WITH_BONUS
 endif

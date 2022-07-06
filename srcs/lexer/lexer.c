@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+        */
+/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 18:02:55 by fnichola          #+#    #+#             */
-/*   Updated: 2022/04/19 21:58:53 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/07/06 15:19:24 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ t_list	*tokenizer(const char *line)
 	t_state_func_row		*state_func_table;
 	t_token					*new_token;
 	t_list					*token_list;
-	t_lex_arg 				l;
+	t_lex_arg				l;
 
 	new_token = NULL;
 	token_list = NULL;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/26 16:46:58 by fnichola          #+#    #+#             */
-/*   Updated: 2022/05/23 15:49:29 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/07/06 16:03:45 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "minishell.h"
 #include "lexer.h"
 #include <stdio.h>
+#include "struct.h"
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <sys/wait.h>
@@ -32,7 +33,7 @@ size_t	argv_len(char **argv)
 
 void	free_command_table(void *ptr)
 {
-	size_t	i;
+	size_t		i;
 	t_command	*command;
 
 	command = (t_command *)ptr;
@@ -78,7 +79,6 @@ void	builtin_exit(int argc, char **argv)
 
 // }
 
-
 void	search_path_and_exec(char **argv, char **envp)
 {
 	char	**paths;
@@ -104,8 +104,16 @@ void	search_path_and_exec(char **argv, char **envp)
 pid_t	execute_simple_command(char **argv, char **envp, t_exec_fds exec_fds)
 {
 	pid_t	pid;
+	int		i;
 
-	if (!ft_strncmp(argv[0], "exit", ft_strlen(argv[0])) && ft_strlen(argv[0]) >= 4)
+	i = 0;
+	while (argv[i])
+	{
+		// printf("argv[%d] = %s\n", i, argv[i]);
+		i++;
+	}
+	if (!ft_strncmp(argv[0], "exit", \
+	ft_strlen(argv[0])) && ft_strlen(argv[0]) >= 4)
 	{
 		builtin_exit(argv_len(argv), argv);
 	}
@@ -116,12 +124,20 @@ pid_t	execute_simple_command(char **argv, char **envp, t_exec_fds exec_fds)
 		close(exec_fds.out_fd);
 		close(exec_fds.pipe_fd[0]);
 		close(exec_fds.pipe_fd[1]);
-		if (ft_strchr(argv[0], '/'))
+		if (!ft_strncmp(argv[0], "echo", ft_strlen(argv[0])))
+		{
+			built_in_echo(argv);
+		}
+		else if ((!ft_strncmp(argv[0], "cd", ft_strlen(argv[0]))))
+		{
+			built_in_cd(argv);
+		}
+		else if (ft_strchr(argv[0], '/'))
 			execve(argv[0], argv, envp);
 		else
 			search_path_and_exec(argv, envp);
 	}
-	return(pid);
+	return (pid);
 }
 
 void	execute_last_command(char **argv, char **envp, t_exec_fds *exec_fds)
@@ -180,9 +196,12 @@ int	execute_commands(char **envp)
 
 int minishell(char **envp)
 {
-	int		status;
-	char	*line;
+	int			status;
+	char		*line;
+	t_envlist	*env_list;
+	// t_envlist	*node;
 
+	env_list = init_env_list(envp);
 	g_data.command_table = NULL;
 	status = 0;
 	while (!status)
