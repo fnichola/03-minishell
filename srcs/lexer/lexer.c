@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
+/*   By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 18:02:55 by fnichola          #+#    #+#             */
-/*   Updated: 2022/06/23 01:30:00 by akihito          ###   ########.fr       */
+/*   Updated: 2022/04/19 21:58:53 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ t_list	*tokenizer(const char *line)
 	t_state_func_row		*state_func_table;
 	t_token					*new_token;
 	t_list					*token_list;
-	t_lex_arg				l;
+	t_lex_arg 				l;
 
 	new_token = NULL;
 	token_list = NULL;
@@ -68,8 +68,6 @@ t_list	*tokenizer(const char *line)
 	new_token = get_next_token(&l, state_func_table);
 	while (new_token)
 	{
-		printf("lexer.c %s\n", new_token->word);
-		printf("lexer.c %d\n", new_token->token_type);
 		ft_lstadd_back(&token_list, ft_lstnew(new_token));
 		new_token = get_next_token(&l, state_func_table);
 	}
