@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/07/06 15:58:49 by akihito          ###   ########.fr       */
+/*   Updated: 2022/08/03 18:25:31 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include <stdbool.h>
 # include <errno.h>
 # include <unistd.h>
+# include <stdlib.h>
 
 /**
  * Token types returned by tokenizer(). Input from readline is broken into
@@ -37,6 +38,8 @@
  * T_EXIT_STATUS = $?
  * T_ERROR = error
  */
+
+
 typedef enum e_token_type {
 	T_WORD, //alphabet
 	T_PIPE,//
@@ -69,10 +72,11 @@ typedef struct s_token {
  * no redirection, they should be set to NULL.
  */
 typedef struct s_command {
-	char	**argv; // = {"grep", "c", 0}
-	char	*output_file; // = "test.txt"
-	char	*input_file;
-	char	*error_file;
+	char		**argv; // = {"grep", "c", 0}
+	char		*output_file; // = "test.txt"
+	char		*input_file;
+	char		*error_file;
+	t_envlist	*env_list;
 }	t_command;
 
 typedef struct s_exec_fds {
@@ -85,14 +89,20 @@ typedef struct s_minishell_data {
 	t_list	*command_table;
 }	t_minishell_data;
 
-void	exit_error(char *str);
-void	*malloc_error_check(size_t size);
-t_list	*parser(t_list *tokens);
-void	ft_perror(char *perror_str);
-int		ft_strcmp(char *s1, char *s2);
-char	*ft_find_env(char *env_str, char **envp);
-void	built_in_cd(char **argv);
-void	built_in_echo(char **argv);
-void	ft_perror(char *perror_str);
-int		ft_strcmp(char *s1, char *s2);
+void		exit_error(char *str);
+void		*malloc_error_check(size_t size);
+t_list		*parser(t_list *tokens);
+void		ft_perror(char *perror_str);
+int			ft_strcmp(char *s1, char *s2);
+char		*ft_find_env(char *env_str, char **envp);
+void		built_in_cd(char **argv, t_envlist *e_list);
+void		built_in_echo(char **argv, t_envlist *e_list);
+void		built_in_pwd(void);
+void		ft_perror(char *perror_str);
+int			ft_strcmp(char *s1, char *s2);
+char		*ft_wstrjoin(char *str1, char *str2);
+char		*ft_wstrdup(const char *src);
+t_envlist	*ft_set_env(t_envlist *env_list, char *key, char *value, int add);
+char		*ft_getenv(t_envlist *elst, char *search_key);
+
 #endif

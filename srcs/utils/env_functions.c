@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/30 22:27:20 by akihito           #+#    #+#             */
-/*   Updated: 2022/07/06 15:35:43 by akihito          ###   ########.fr       */
+/*   Updated: 2022/08/03 13:54:39 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,4 +99,54 @@ char	*get_env_value(char *env)
 	ans_env = ft_strchr(env, '=');
 	(ans_env)++;//ここで　'='を消すERM_PROGRAM=vscodeでfind_indexが23になる
 	return (ans_env);
+}
+
+char	*ft_getenv(t_envlist *elst, char *search_key)
+{
+	t_envlist	*tmp;
+
+	printf("getenv\n");
+	tmp = elst->next;
+	while (elst)
+	{
+		if (ft_strcmp(elst->key, search_key) == 0)
+			return (elst->value);
+		elst = elst->next;
+	}
+	return (NULL);
+}
+
+t_envlist	*ft_set_env(t_envlist *env_list, char *key, char *value, int add)
+{
+	char		*addValue;
+	t_envlist	*tmp;
+
+	tmp = env_list->next;
+	addValue = "";
+	printf("set_env\n");
+	printf("value = %s\n", value);
+	while (tmp != env_list)
+	{
+		if (!ft_strcmp(tmp->key, key))
+		{
+			if (value)
+			{
+				if (add)
+					addValue = ft_wstrjoin(tmp->value, value);
+				else
+				{
+					printf("ft_wstrdup\n");
+					addValue = ft_wstrdup(value);
+				}
+				free(value);
+				// free(env_list->value);
+				env_list->value = addValue;
+				printf("env_list->value %s\n", env_list->value);
+			}
+			free(key);
+			return (env_list);
+		}
+		tmp = tmp->next;
+	}
+	return (env_list);
 }

@@ -1,0 +1,34 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   wrapper.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/07/31 16:47:07 by akihito           #+#    #+#             */
+/*   Updated: 2022/07/31 17:24:38 by akihito          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
+#include "struct.h"
+
+char	*ft_wstrjoin(char *str1, char *str2)
+{
+	char	*joined_str;
+
+	joined_str = ft_strjoin(str1, str2);
+	if (!joined_str)
+		exit_error("malloc");
+	return (joined_str);
+}
+
+char	*ft_wstrdup(const char *src)
+{
+	char	*res;
+
+	res = ft_strdup(src);
+	if (res == NULL)
+		exit_error("malloc");
+	return (res);
+}

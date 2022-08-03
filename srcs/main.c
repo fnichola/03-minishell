@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/26 16:46:58 by fnichola          #+#    #+#             */
-/*   Updated: 2022/07/06 16:03:45 by akihito          ###   ########.fr       */
+/*   Updated: 2022/08/03 19:07:25 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void	builtin_exit(int argc, char **argv)
 	}
 	else
 	{
-		printf("too many arguments\n"); // need a separate error function
+		printf("too many arguments\n");	//need a separate error function
 	}
 }
 
@@ -101,24 +101,19 @@ void	search_path_and_exec(char **argv, char **envp)
 	exit_error("Can't find command.");
 }
 
-pid_t	execute_simple_command(char **argv, char **envp, t_exec_fds exec_fds)
+pid_t	execute_simple_command(char **argv, char **envp, t_exec_fds exec_fds, t_envlist *e_list)
 {
 	pid_t	pid;
 	int		i;
 
 	i = 0;
-	while (argv[i])
-	{
-		// printf("argv[%d] = %s\n", i, argv[i]);
-		i++;
-	}
 	if (!ft_strncmp(argv[0], "exit", \
 	ft_strlen(argv[0])) && ft_strlen(argv[0]) >= 4)
 	{
 		builtin_exit(argv_len(argv), argv);
 	}
 	pid = fork();
-	if (pid == 0)
+	if (pid == 0)// 親プロセス
 	{
 		close(exec_fds.in_fd);
 		close(exec_fds.out_fd);
@@ -126,11 +121,19 @@ pid_t	execute_simple_command(char **argv, char **envp, t_exec_fds exec_fds)
 		close(exec_fds.pipe_fd[1]);
 		if (!ft_strncmp(argv[0], "echo", ft_strlen(argv[0])))
 		{
-			built_in_echo(argv);
+			built_in_echo(argv, e_list);
 		}
-		else if ((!ft_strncmp(argv[0], "cd", ft_strlen(argv[0]))))
+		else if (!ft_strncmp(argv[0], "cd", ft_strlen(argv[0])))
 		{
-			built_in_cd(argv);
+			built_in_cd(argv, e_list);
+		}
+		else if (!ft_strncmp(argv[0], "pwd", ft_strlen(argv[0])))
+		{
+			built_in_pwd();
+		}
+		else if (!ft_strncmp(argv[0], "export", ft_strlen(argv[0])))
+		{
+			built_in_export();
 		}
 		else if (ft_strchr(argv[0], '/'))
 			execve(argv[0], argv, envp);
@@ -140,7 +143,7 @@ pid_t	execute_simple_command(char **argv, char **envp, t_exec_fds exec_fds)
 	return (pid);
 }
 
-void	execute_last_command(char **argv, char **envp, t_exec_fds *exec_fds)
+void	execute_last_command(char **argv, char **envp, t_exec_fds *exec_fds, t_envlist *e_list)
 {
 	pid_t	pid;
 	int		status;
@@ -148,23 +151,23 @@ void	execute_last_command(char **argv, char **envp, t_exec_fds *exec_fds)
 	dup2(exec_fds->out_fd, STDOUT_FILENO);
 	close(exec_fds->out_fd);
 	exec_fds->out_fd = -1;
-	pid = execute_simple_command(argv, envp, *exec_fds);
+	pid = execute_simple_command(argv, envp, *exec_fds, e_list);
 	dup2(exec_fds->in_fd, STDIN_FILENO);
 	close(exec_fds->in_fd);
 	waitpid(pid, &status, WUNTRACED);
 }
 
-void	execute_piped_command(char **argv, char **envp, t_exec_fds *exec_fds)
+void	execute_piped_command(char **argv, char **envp, t_exec_fds *exec_fds, t_envlist *e_list)
 {
 	pipe(exec_fds->pipe_fd);
 	dup2(exec_fds->pipe_fd[1], STDOUT_FILENO);
 	close(exec_fds->pipe_fd[1]);
-	execute_simple_command(argv, envp, *exec_fds);
+	execute_simple_command(argv, envp, *exec_fds, e_list);
 	dup2(exec_fds->pipe_fd[0], STDIN_FILENO);
 	close(exec_fds->pipe_fd[0]);
 }
 
-int	execute_commands(char **envp)
+int	execute_commands(char **envp, t_envlist *e_list)
 {
 	t_command	*command;
 	t_list		*command_table_ptr;
@@ -185,21 +188,21 @@ int	execute_commands(char **envp)
 		if (!argv || !argv[0])
 			return (0);
 		if (i == number_of_simple_commands - 1) // last simple command
-			execute_last_command(argv, envp, &exec_fds);
+			execute_last_command(argv, envp, &exec_fds, e_list);
 		else // not the last simple command
-			execute_piped_command(argv, envp, &exec_fds);
+			execute_piped_command(argv, envp, &exec_fds, e_list);
 		command_table_ptr = command_table_ptr->next;
 		i++;
 	}
 	return (0);
 }
 
-int minishell(char **envp)
+int	minishell(char **envp)
 {
 	int			status;
 	char		*line;
 	t_envlist	*env_list;
-	// t_envlist	*node;
+	t_list		*tokens;
 
 	env_list = init_env_list(envp);
 	g_data.command_table = NULL;
@@ -209,10 +212,10 @@ int minishell(char **envp)
 		line = readline("minishell$ ");
 		if (line && *line)
 			add_history(line);
-		t_list *tokens = tokenizer(line);
+		tokens = tokenizer(line);
 		g_data.command_table = parser(tokens);
 		free(line);
-		status = execute_commands(envp);
+		status = execute_commands(envp, env_list);
 		ft_lstclear(&g_data.command_table, free_command_table);
 	}
 	return (0);
