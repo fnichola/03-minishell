@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 16:19:10 by fnichola          #+#    #+#             */
-/*   Updated: 2022/07/31 16:51:48 by akihito          ###   ########.fr       */
+/*   Updated: 2022/08/07 23:24:28 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,3 +55,19 @@ int	ft_strcmp(char *s1, char *s2)
 	return (0);
 }
 
+void	ft_puterror(char *s1, char *s2, char *s3)
+{
+	ft_putstr_fd("minishell: ", STDERR_FILENO);
+	ft_putstr_fd(s1, STDERR_FILENO);
+	if (s2)
+	{
+		ft_putstr_fd(": ", STDERR_FILENO);
+		ft_putstr_fd(s2, STDERR_FILENO);
+	}
+	if (s3)
+	{
+		ft_putstr_fd(": ", STDERR_FILENO);
+		ft_putstr_fd(s3, STDERR_FILENO);
+	}
+	ft_putstr_fd("\n", STDERR_FILENO);
+}

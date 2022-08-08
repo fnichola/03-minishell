@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 18:02:55 by fnichola          #+#    #+#             */
-/*   Updated: 2022/07/06 15:19:39 by akihito          ###   ########.fr       */
+/*   Updated: 2022/08/07 14:15:50 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,16 @@ t_list	*parser(t_list *tokens)
 
 	state_func_table = p_init_state_func_table();//stateと関数ポインタを作成している。
 	init_parse_arg(&p, tokens);
-	p.list_ptr = tokens;
+	p.list_ptr = tokens;//ここでtoken(単語)のリストを渡している
 	while (p.state != ST_FINISHED)
 	{
 		p.previous_state = p.state;
-		state_func_table[p.state].parse_func(&p);
+		// printf("実行");
+		// printf(" p.state  %u\n", p.state);
+		state_func_table[p.state].parse_func(&p);//構造体ないの関数ポインタを実行している
 	}
 	free(state_func_table);
 	ft_lstclear(&tokens, del_token);
+
 	return (p.command_table);
 }

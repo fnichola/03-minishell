@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 18:02:55 by fnichola          #+#    #+#             */
-/*   Updated: 2022/07/06 15:19:24 by akihito          ###   ########.fr       */
+/*   Updated: 2022/08/07 16:09:46 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ t_token	*get_next_token(t_lex_arg *l, const t_state_func_row *state_func_table)
 		state_func_table[l->state].lex_func(l);//構造体の[]はenumでt_stateとインデックスが紐づいている。
 		if (l->found_token)//もうトークンが分かった時点でfound_tokenをtrueにしてあげる。
 		{
+			// printf("l->token_type = %u\n", l->token_type);
 			if (l->token_type == T_EOL)
 				return (NULL);
 			token = malloc_error_check(sizeof(t_token));
@@ -68,7 +69,9 @@ t_list	*tokenizer(const char *line)
 	new_token = get_next_token(&l, state_func_table);
 	while (new_token)
 	{
+		// printf("word = %s\n", new_token->word);
 		ft_lstadd_back(&token_list, ft_lstnew(new_token));
+		// printf("new_token->word %s\n", (char *)token_list->next->content);
 		new_token = get_next_token(&l, state_func_table);
 	}
 	free(state_func_table);

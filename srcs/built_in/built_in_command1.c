@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 17:23:49 by akihito           #+#    #+#             */
-/*   Updated: 2022/08/03 19:14:50 by akihito          ###   ########.fr       */
+/*   Updated: 2022/08/08 17:08:39 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,16 +35,16 @@ void	built_in_echo(char **argv, t_envlist *e_list)//環境変数はまだ、echo
 	{
 		option++;
 	}
-	if (!option)
-	{
-		ft_putstr_fd("\n", STDOUT_FILENO);
-	}
 	while (argv[arg_i])
 	{
 		ft_putstr_fd(argv[arg_i], STDOUT_FILENO);
 		if (argv[arg_i + 1] != NULL)
 			ft_putstr_fd(" ", STDOUT_FILENO);
 		arg_i++;
+	}
+	if (!option)
+	{
+		ft_putstr_fd("\n", STDOUT_FILENO);
 	}
 	return ;
 }
@@ -59,6 +59,12 @@ void	built_in_cd(char **argv, t_envlist *e_list)
 	old_pwd = getcwd(NULL, 0);
 	printf("old_pwd = %s\n", old_pwd);
 	(void)e_list;
+
+	// if (!argv[1] && !argv[1][0])
+	// {
+		// printf("root移動\n");
+		// chdir("/Users/akihito");//ここでcdの引数がないときはシェル変数USERのディレクトリに移動する
+	// }
 	if (argv[1] && \
 		argv[1][0] && \
 		chdir(argv[1]) == -1)
@@ -68,9 +74,9 @@ void	built_in_cd(char **argv, t_envlist *e_list)
 		return ;
 	}
 	now_pwd = getcwd(NULL, 0);
-	if (ft_getenv(e_list, "PWD"))
+	if (ft_findenv(e_list, "PWD"))
 		tmp = ft_set_env(e_list, ft_wstrdup("PWD"), getcwd(NULL, 0), 0);
-	printf("%s\n", tmp->value);//ここでちゃんとPWDが変化しているので、exportとかでどの環境変数を使用するかを指定すればいけそう
+	printf("now_pwd = %s\n", tmp->value);//ここでちゃんとPWDが変化しているので、exportとかでどの環境変数を使用するかを指定すればいけそう
 	return ;
 }
 
@@ -95,12 +101,40 @@ void	built_in_pwd(void)
 	return ;
 }
 
-void	built_in_export()
+void	built_in_export(char **argv, t_envlist *e_list)
 {//ascii順に並べる
-	size_t	arg_i;
-	ssize_t	split_point;
-
+	ssize_t	split_index;
+	// t_envlist	*put_env;
+	ssize_t		arg_i;
+	// t_list		*ascii_orderd_elist;
 
 	arg_i = 1;
-)
+	if (argv[arg_i] == NULL)
+		put_env_asci_order(e_list, NULL);
+	else//環境変数の追加または変更の処理
+	{
+		while (argv[arg_i])
+		{
+			split_index = check_shell_val(argv[arg_i]);
+			if (split_index != -1)
+				e_list = to_setenv(e_list, argv[arg_i], split_index);
+			else//エラー文　bash: export: `TEST++': not a valid identifier
+				ft_puterror("export", argv[arg_i], "not a valid identifier");
+
+		}
+	}
+	return ;
+}
+
+void	built_in_env(t_envlist	*e_list)
+{
+	t_envlist	*per_env;
+
+	per_env = e_list;
+	while (per_env)
+	{
+		if (per_env->value)
+			printf("%s=%s\n", per_env->key, per_env->value);
+		per_env = per_env->next;
+	}
 }

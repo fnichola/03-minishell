@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/03 18:25:31 by akihito          ###   ########.fr       */
+/*   Updated: 2022/08/08 17:08:30 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,8 +86,12 @@ typedef struct s_exec_fds {
 }	t_exec_fds;
 
 typedef struct s_minishell_data {
-	t_list	*command_table;
+	t_list		*command_table;
+	int			exit_satus;
+	t_envlist	*env_list;
 }	t_minishell_data;
+
+t_minishell_data	g_data;
 
 void		exit_error(char *str);
 void		*malloc_error_check(size_t size);
@@ -103,6 +107,13 @@ int			ft_strcmp(char *s1, char *s2);
 char		*ft_wstrjoin(char *str1, char *str2);
 char		*ft_wstrdup(const char *src);
 t_envlist	*ft_set_env(t_envlist *env_list, char *key, char *value, int add);
-char		*ft_getenv(t_envlist *elst, char *search_key);
-
+char		*ft_findenv(t_envlist *elst, char *search_key);
+void		built_in_env(t_envlist	*e_list);
+void		built_in_export(char **argv, t_envlist *e_list);
+void		put_env_asci_order(t_envlist *e_list, t_envlist *sorted);
+int			check_shell_val(char *src_str);
+t_envlist	*to_setenv(t_envlist *e_list, char *src_str, size_t i);
+char		*ft_wsubstr(char const *s, unsigned int start, size_t len);
+void		ft_puterror(char *s1, char *s2, char *s3);
+t_envlist	*ft_set_env(t_envlist *env_list, char *key, char *value, int add);
 #endif

@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/26 16:46:58 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/03 19:07:25 by akihito          ###   ########.fr       */
+/*   Updated: 2022/08/08 15:28:30 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 #include <readline/history.h>
 #include <sys/wait.h>
 
-t_minishell_data	g_data;
+// t_minishell_data	g_data; //ここにあっても他のファイルで使えないから、minishell.hで定義する
 
 size_t	argv_len(char **argv)
 {
@@ -113,11 +113,12 @@ pid_t	execute_simple_command(char **argv, char **envp, t_exec_fds exec_fds, t_en
 		builtin_exit(argv_len(argv), argv);
 	}
 	pid = fork();
-	if (pid == 0)// 親プロセス
+	if (pid == 0)// 子プロセス
 	{
+		printf("子プロセス\n");
 		close(exec_fds.in_fd);
 		close(exec_fds.out_fd);
-		close(exec_fds.pipe_fd[0]);
+		// close(exec_fds.pipe_fd[0]);
 		close(exec_fds.pipe_fd[1]);
 		if (!ft_strncmp(argv[0], "echo", ft_strlen(argv[0])))
 		{
@@ -131,14 +132,23 @@ pid_t	execute_simple_command(char **argv, char **envp, t_exec_fds exec_fds, t_en
 		{
 			built_in_pwd();
 		}
+		else if (!ft_strncmp(argv[0], "env", ft_strlen(argv[0])))
+		{
+			built_in_env(e_list);
+		}
 		else if (!ft_strncmp(argv[0], "export", ft_strlen(argv[0])))
 		{
-			built_in_export();
+			built_in_export(argv, e_list);
 		}
 		else if (ft_strchr(argv[0], '/'))
 			execve(argv[0], argv, envp);
 		else
 			search_path_and_exec(argv, envp);
+	}
+	else
+	{
+		close(exec_fds.pipe_fd[0]);
+		printf("親プロセス\n");
 	}
 	return (pid);
 }
@@ -147,7 +157,15 @@ void	execute_last_command(char **argv, char **envp, t_exec_fds *exec_fds, t_envl
 {
 	pid_t	pid;
 	int		status;
+	int		i;
 
+	i = 0;
+	// while (argv[i] != NULL)
+	// {
+	// 	// printf("argv[%d] = %s\n", i, argv[i]);
+	// 	i++;
+	// }
+	printf("last\n");
 	dup2(exec_fds->out_fd, STDOUT_FILENO);
 	close(exec_fds->out_fd);
 	exec_fds->out_fd = -1;
@@ -159,6 +177,7 @@ void	execute_last_command(char **argv, char **envp, t_exec_fds *exec_fds, t_envl
 
 void	execute_piped_command(char **argv, char **envp, t_exec_fds *exec_fds, t_envlist *e_list)
 {
+	printf("piped\n");
 	pipe(exec_fds->pipe_fd);
 	dup2(exec_fds->pipe_fd[1], STDOUT_FILENO);
 	close(exec_fds->pipe_fd[1]);
@@ -177,19 +196,23 @@ int	execute_commands(char **envp, t_envlist *e_list)
 	t_exec_fds	exec_fds;
 
 	i = 0;
-	command_table_ptr = g_data.command_table;
+	command_table_ptr = g_data.command_table;//ここでグローバル変数から、コマンドを代入している
 	number_of_simple_commands = ft_lstsize(g_data.command_table);
 	exec_fds.in_fd = dup(STDIN_FILENO);
 	exec_fds.out_fd = dup(STDOUT_FILENO);
-	while (i < number_of_simple_commands)
+	// printf("exec_fds.in_fd %d\n", exec_fds.in_fd);
+	// printf("exec_fds.out_fd %d\n", exec_fds.out_fd);
+	// printf("number_of_simple_commands %d\n", number_of_simple_commands);
+	while (i < number_of_simple_commands)//number_of_simple_commandsはパイプがあれば、増えていく
 	{
+		// printf("start\n");
 		command = (t_command *)command_table_ptr->content;
-		argv = command->argv;
+		argv = command->argv;//ここでargvにcommandのargvが代入されているので、built_inにはargvを渡せばいい。
 		if (!argv || !argv[0])
 			return (0);
 		if (i == number_of_simple_commands - 1) // last simple command
 			execute_last_command(argv, envp, &exec_fds, e_list);
-		else // not the last simple command
+		else
 			execute_piped_command(argv, envp, &exec_fds, e_list);
 		command_table_ptr = command_table_ptr->next;
 		i++;
@@ -213,7 +236,9 @@ int	minishell(char **envp)
 		if (line && *line)
 			add_history(line);
 		tokens = tokenizer(line);
+		// printf("tokens %s\n", (char *)tokens->next->content);
 		g_data.command_table = parser(tokens);
+		// printf("g_data.command_table %s\n", (char *)g_data.command_table->content->);
 		free(line);
 		status = execute_commands(envp, env_list);
 		ft_lstclear(&g_data.command_table, free_command_table);

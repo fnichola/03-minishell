@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/31 16:47:07 by akihito           #+#    #+#             */
-/*   Updated: 2022/07/31 17:24:38 by akihito          ###   ########.fr       */
+/*   Updated: 2022/08/07 22:34:06 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,4 +31,17 @@ char	*ft_wstrdup(const char *src)
 	if (res == NULL)
 		exit_error("malloc");
 	return (res);
+}
+
+char	*ft_wsubstr(char const *s, unsigned int start, size_t len)
+{
+	char	*ret;
+
+	ret = ft_substr(s, start, len);
+	if (ret == NULL)
+	{
+		ft_perror("malloc");
+		exit(EXIT_FAILURE);
+	}
+	return (ret);
 }

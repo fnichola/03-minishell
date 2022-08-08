@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/30 22:27:20 by akihito           #+#    #+#             */
-/*   Updated: 2022/08/03 13:54:39 by akihito          ###   ########.fr       */
+/*   Updated: 2022/08/08 17:13:49 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,11 +101,10 @@ char	*get_env_value(char *env)
 	return (ans_env);
 }
 
-char	*ft_getenv(t_envlist *elst, char *search_key)
+char	*ft_findenv(t_envlist *elst, char *search_key)
 {
 	t_envlist	*tmp;
 
-	printf("getenv\n");
 	tmp = elst->next;
 	while (elst)
 	{
@@ -123,12 +122,13 @@ t_envlist	*ft_set_env(t_envlist *env_list, char *key, char *value, int add)
 
 	tmp = env_list->next;
 	addValue = "";
-	printf("set_env\n");
-	printf("value = %s\n", value);
+	// printf("set_env\n");
+	// printf("value = %s\n", value);
 	while (tmp != env_list)
 	{
 		if (!ft_strcmp(tmp->key, key))
 		{
+			printf("tmp->key = %s\n", tmp->key);
 			if (value)
 			{
 				if (add)
@@ -149,4 +149,80 @@ t_envlist	*ft_set_env(t_envlist *env_list, char *key, char *value, int add)
 		tmp = tmp->next;
 	}
 	return (env_list);
+}
+
+void	put_env_asci_order(t_envlist *e_list, t_envlist *sorted)
+{
+	t_envlist	*tmp;
+	t_envlist	*put_tmp;
+
+	put_tmp = NULL;
+	tmp = e_list;
+	while (tmp)
+	{
+		if (sorted == NULL || ft_strcmp(sorted->key, tmp->key) < 0)
+		{
+			if (put_tmp == NULL)
+				put_tmp = tmp;
+			else if (ft_strcmp(tmp->key, put_tmp->key) < 0)
+				put_tmp = tmp;
+		}
+		tmp = tmp->next;
+	}
+	if (put_tmp)
+	{
+		if (put_tmp->value)
+			printf("declare -x %s=\"%s\"\n", put_tmp->key, put_tmp->value);
+		else
+			printf("declare -x %s\n", put_tmp->key);
+		put_env_asci_order(e_list, put_tmp);
+	}
+	return ;
+}
+
+int	check_shell_val(char *src_str)
+{
+	ssize_t	i;
+
+	i = 0;
+	while (src_str[i])
+	{// = か　+があったらそのインデックスを返す　+はその後に追加する // export += "test"は後ろに追加する //指定の文字以外が入っていたらエラー
+		if (0 < i && \
+			((src_str[i] == '+' && src_str[i + 1] == '=') || \
+			src_str[i] == '='))
+			break ;
+		if (!(src_str[i] == '_' || \
+			ft_isalnum(src_str[i])) || \
+			ft_isdigit(src_str[0]))
+			return (-1);
+		i++;
+	}
+	return (i);
+}
+
+t_envlist	*to_setenv(t_envlist *e_list, char *src_str, size_t i)
+{
+	char	*key;
+	char	*value;
+	int		mode;
+
+	if (src_str[i] == '+')
+	{
+		key = ft_wsubstr(src_str, 0, i);
+		value = ft_wsubstr(src_str, i + 2, ft_strlen(src_str) - i - 2);
+		mode = 1;
+	}
+	else if (src_str[i] == '=')
+	{
+		key = ft_wsubstr(src_str, 0, i);
+		value = ft_wsubstr(src_str, i + 1, ft_strlen(src_str) - i - 1);
+		mode = 0;
+	}
+	else
+	{
+		key = ft_wstrdup(src_str);
+		value = NULL;
+		mode = 0;
+	}
+	return (ft_set_env(e_list, key, value, mode));
 }
