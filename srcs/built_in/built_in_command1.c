@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 17:23:49 by akihito           #+#    #+#             */
-/*   Updated: 2022/08/08 17:08:39 by akihito          ###   ########.fr       */
+/*   Updated: 2022/08/09 00:33:11 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,29 +54,26 @@ void	built_in_cd(char **argv, t_envlist *e_list)
 	char		*old_pwd;
 	char		*now_pwd;
 	t_envlist	*tmp;
+	char		*home_dir;
 
 	tmp = NULL;
 	old_pwd = getcwd(NULL, 0);
-	printf("old_pwd = %s\n", old_pwd);
-	(void)e_list;
-
-	// if (!argv[1] && !argv[1][0])
-	// {
-		// printf("root移動\n");
-		// chdir("/Users/akihito");//ここでcdの引数がないときはシェル変数USERのディレクトリに移動する
-	// }
-	if (argv[1] && \
-		argv[1][0] && \
-		chdir(argv[1]) == -1)
-	{
+	home_dir = ft_findenv(e_list, "HOME");
+	if (argv[1] && argv[1][0] && chdir(argv[1]) == -1)
+	{//status=1
 		ft_perror("cd");//エラーのステータス更新
+		free(old_pwd);
+		return ;
+	}
+	else if (!argv[1] && chdir(home_dir) == -1)//cdの引数がなかったら、環境変数HOMEのディレクトリに移動する
+	{//status=0
+		ft_perror("cd");
 		free(old_pwd);
 		return ;
 	}
 	now_pwd = getcwd(NULL, 0);
 	if (ft_findenv(e_list, "PWD"))
 		tmp = ft_set_env(e_list, ft_wstrdup("PWD"), getcwd(NULL, 0), 0);
-	printf("now_pwd = %s\n", tmp->value);//ここでちゃんとPWDが変化しているので、exportとかでどの環境変数を使用するかを指定すればいけそう
 	return ;
 }
 
@@ -103,10 +100,9 @@ void	built_in_pwd(void)
 
 void	built_in_export(char **argv, t_envlist *e_list)
 {//ascii順に並べる
-	ssize_t	split_index;
-	// t_envlist	*put_env;
+	ssize_t		split_index;
 	ssize_t		arg_i;
-	// t_list		*ascii_orderd_elist;
+	t_envlist	*tmp;
 
 	arg_i = 1;
 	if (argv[arg_i] == NULL)
@@ -117,11 +113,20 @@ void	built_in_export(char **argv, t_envlist *e_list)
 		{
 			split_index = check_shell_val(argv[arg_i]);
 			if (split_index != -1)
+			{
+				printf("to_setenv\n");
 				e_list = to_setenv(e_list, argv[arg_i], split_index);
+			}
 			else//エラー文　bash: export: `TEST++': not a valid identifier
 				ft_puterror("export", argv[arg_i], "not a valid identifier");
-
+			arg_i++;
 		}
+	}
+	tmp = e_list->next;
+	while (tmp)
+	{
+		printf("%s : %s\n", tmp->key, tmp->value);
+		tmp = tmp->next;
 	}
 	return ;
 }

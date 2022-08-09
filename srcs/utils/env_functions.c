@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/30 22:27:20 by akihito           #+#    #+#             */
-/*   Updated: 2022/08/08 17:13:49 by akihito          ###   ########.fr       */
+/*   Updated: 2022/08/08 22:55:20 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,13 +104,18 @@ char	*get_env_value(char *env)
 char	*ft_findenv(t_envlist *elst, char *search_key)
 {
 	t_envlist	*tmp;
+	// char 		*found_value;
 
 	tmp = elst->next;
-	while (elst)
+	while (tmp)
 	{
-		if (ft_strcmp(elst->key, search_key) == 0)
-			return (elst->value);
-		elst = elst->next;
+		if (ft_strcmp(tmp->key, search_key) == 0)
+		{
+			printf("tmp->value = %s\n", tmp->value);
+			// found_value = ft_wstrdup(tmp->value);
+			return (tmp->value);
+		}
+		tmp = tmp->next;
 	}
 	return (NULL);
 }
@@ -135,13 +140,13 @@ t_envlist	*ft_set_env(t_envlist *env_list, char *key, char *value, int add)
 					addValue = ft_wstrjoin(tmp->value, value);
 				else
 				{
-					printf("ft_wstrdup\n");
+					// printf("ft_wstrdup\n");
 					addValue = ft_wstrdup(value);
 				}
 				free(value);
 				// free(env_list->value);
-				env_list->value = addValue;
-				printf("env_list->value %s\n", env_list->value);
+				tmp->value = addValue;
+				// printf("tmp->value %s\n", tmp->value);
 			}
 			free(key);
 			return (env_list);

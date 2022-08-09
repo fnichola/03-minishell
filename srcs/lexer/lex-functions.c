@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 14:58:17 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/06 22:04:44 by akihito          ###   ########.fr       */
+/*   Updated: 2022/08/08 17:19:18 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	lex_gt(t_lex_arg *l)
 	// printf("[ST_GT]\n");
 	if ((l->line)[l->i] == '>')
 		l->state = ST_GTGT;
-	else	
+	else
 	{
 		l->token_type = T_GT;
 		l->found_token = true;
@@ -67,7 +67,7 @@ void	lex_lt(t_lex_arg *l)
 	// printf("[ST_LT]\n");
 	if ((l->line)[l->i] == '<')
 		l->state = ST_LTLT;
-	else	
+	else
 	{
 		l->token_type = T_LT;
 		l->found_token = true;
