@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 14:58:17 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/08 17:19:18 by akihito          ###   ########.fr       */
+/*   Updated: 2022/08/10 20:05:32 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,7 @@ void	lex_in_double_quote(t_lex_arg *l)
 
 void	lex_dollar(t_lex_arg *l)
 {
-	// printf("[ST_DOLLAR]");
+	printf("[ST_DOLLAR]");
 	if (is_delimeter((l->line)[l->i]))
 	{
 		l->token_type = T_WORD;

@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 17:23:49 by akihito           #+#    #+#             */
-/*   Updated: 2022/08/09 00:33:11 by akihito          ###   ########.fr       */
+/*   Updated: 2022/08/10 22:05:17 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ void	built_in_echo(char **argv, t_envlist *e_list)//環境変数はまだ、echo
 {
 	int		option;
 	size_t	arg_i;
+	// char	*put_str;
 
 	if (write(STDOUT_FILENO, NULL, 0) == -1)
 	{
@@ -37,6 +38,9 @@ void	built_in_echo(char **argv, t_envlist *e_list)//環境変数はまだ、echo
 	}
 	while (argv[arg_i])
 	{
+		printf("while\n");
+		// put_str = ft_echo_env(argv[arg_i], e_list);//echoで文字列中にシェル変数があったら、そのシェル変数を展開してあげた文字列を返してあげる。
+		printf("arg_i = %zu\n", arg_i);
 		ft_putstr_fd(argv[arg_i], STDOUT_FILENO);
 		if (argv[arg_i + 1] != NULL)
 			ft_putstr_fd(" ", STDOUT_FILENO);

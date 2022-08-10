@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/08 20:00:10 by akihito          ###   ########.fr       */
+/*   Updated: 2022/08/10 19:42:13 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,4 +117,6 @@ char		*ft_wsubstr(char const *s, unsigned int start, size_t len);
 void		ft_puterror(char *s1, char *s2, char *s3);
 t_envlist	*ft_set_env(t_envlist *env_list, char *key, char *value, int add);
 t_envlist	*ft_unsetenv(t_envlist *e_list, char *unset_key);
+char		*ft_echo_env(char *str, t_envlist *e_list);
+char		*find_doll_env(t_envlist *e_list, char *after_doll);
 #endif

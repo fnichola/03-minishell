@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 18:02:55 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/07 14:15:50 by akihito          ###   ########.fr       */
+/*   Updated: 2022/08/09 22:57:58 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,5 @@ t_list	*parser(t_list *tokens)
 	}
 	free(state_func_table);
 	ft_lstclear(&tokens, del_token);
-
 	return (p.command_table);
 }

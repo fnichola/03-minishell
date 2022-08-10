@@ -6,7 +6,7 @@
 #    By: akihito <akihito@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/09 18:01:32 by fnichola          #+#    #+#              #
-#    Updated: 2022/07/31 16:51:45 by akihito          ###   ########.fr        #
+#    Updated: 2022/08/10 15:32:51 by akihito          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,6 +28,7 @@ SRCS = srcs/main.c \
 	srcs/parser/parse-init.c \
 	srcs/utilities.c \
 	srcs/built_in/built_in_command1.c \
+	srcs/built_in/built_in_utils.c \
 	srcs/utils/env_functions.c \
 	srcs/utils/wrapper.c \
 

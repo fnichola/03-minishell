@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/26 16:46:58 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/08 15:28:30 by akihito          ###   ########.fr       */
+/*   Updated: 2022/08/10 20:09:03 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -230,6 +230,7 @@ int	minishell(char **envp)
 	env_list = init_env_list(envp);
 	g_data.command_table = NULL;
 	status = 0;
+	printf("minishell\n");
 	while (!status)
 	{
 		line = readline("minishell$ ");
