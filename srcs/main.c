@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/26 16:46:58 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/12 10:34:28 by akihito          ###   ########.fr       */
+/*   Updated: 2022/08/12 20:53:30 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,22 +102,29 @@ void	search_path_and_exec(char **argv, char **envp)
 	exit_error("Can't find command.");
 }
 
-pid_t	execute_simple_command(char **argv, char **envp, int *exec_fds, t_envlist *e_list)
+pid_t	execute_simple_command(char **argv, char **envp, int **exec_fds, t_envlist *e_list, int i)
 {
 	pid_t	pid;
-	int		i;
+	// int		i;
 
-	i = 0;
-	printf("exec\n");
+	// i = 0;
 	if (!ft_strncmp(argv[0], "exit", \
 	ft_strlen(argv[0])) && ft_strlen(argv[0]) >= 4)
 	{
 		builtin_exit(argv_len(argv), argv);
 	}
-	printf("exec2\n");
 	pid = fork();
 	if (pid == 0)// 子プロセス
 	{
+		if (i != 0)
+		{
+			dup2(exec_fds[i - 1][0], STDIN_FILENO);
+		}
+		if (i == 0)
+		{
+			dup2(exec_fds[i][1], 1);//この後の処理が不明。ここでpipeに出力を書き込まれる
+			close(exec_fds[i][1]);
+		}
 		printf("子プロセス\n");
 		// close(exec_fds.in_fd);
 		// close(exec_fds.out_fd);
@@ -150,13 +157,13 @@ pid_t	execute_simple_command(char **argv, char **envp, int *exec_fds, t_envlist 
 	}
 	else
 	{
-		close(exec_fds[0]);
+		// close(exec_fds[i][0]);
 		printf("親プロセス\n");
 	}
 	return (pid);
 }
 
-void	execute_last_command(char **argv, char **envp, int *exec_fds, t_envlist *e_list, int i)
+void	execute_last_command(char **argv, char **envp, int **exec_fds, t_envlist *e_list, int i)
 {
 	pid_t	pid;
 	int		status;
@@ -168,30 +175,24 @@ void	execute_last_command(char **argv, char **envp, int *exec_fds, t_envlist *e_
 	// 	dup2(exec_fds->out_fd, exec_fds->pipe_fd[1]);
 	// dup2(exec_fds->in_fd, STDIN_FILENO);
 	if (i != 0)
-		dup2(exec_fds[0], 0);
-	dup2(exec_fds[1], 1);
-	close(exec_fds[1]);
-	exec_fds[1] = -1;
-	pid = execute_simple_command(argv, envp, exec_fds, e_list);
+		dup2(exec_fds[i - 1][0], 0);
+	// dup2(exec_fds[i][1], 1); //fds[1]=3, 1 -> dup2 -> 
+	// close(exec_fds[i][1]);
+	// exec_fds[i][1] = -1;
+	pid = execute_simple_command(argv, envp, exec_fds, e_list, i);
 	// dup2(exec_fds->in_fd, STDIN_FILENO);
-	close(exec_fds[0]);
+	close(exec_fds[i][0]);
 	waitpid(pid, &status, WUNTRACED);
 }
 
-void	execute_piped_command(char **argv, char **envp, int *exec_fds, t_envlist *e_list, int i)
+void	execute_piped_command(char **argv, char **envp, int **exec_fds, t_envlist *e_list, int i)
 {
 	printf("piped\n");
 	// pipe(exec_fds);
-	printf("exec_fds[0[]] %d\n", exec_fds[0]);
-	if (i != 0)
-	{
-		dup2(exec_fds[0], 0);//
-	}
-	dup2(exec_fds[1], 1);
-	close(exec_fds[1]);
-	execute_simple_command(argv, envp, exec_fds, e_list);
+	printf("exec_fds[0] %d\n", exec_fds[i][0]);
+	execute_simple_command(argv, envp, exec_fds, e_list, i);
 	// dup2(exec_fds->pipe_fd[0], 1);//
-	close(exec_fds[0]);
+	// close(exec_fds[i][0]);
 }
 
 int	execute_commands(char **envp, t_envlist *e_list)
@@ -224,10 +225,10 @@ int	execute_commands(char **envp, t_envlist *e_list)
 		if (!argv || !argv[0])
 			return (0);
 		if (i == number_of_simple_commands - 1) // last simple command
-			execute_last_command(argv, envp, exec_fds[i], e_list, i);
+			execute_last_command(argv, envp, exec_fds, e_list, i);
 		else
 		{
-			execute_piped_command(argv, envp, exec_fds[i], e_list, i);
+			execute_piped_command(argv, envp, exec_fds, e_list, i);
 		}
 		command_table_ptr = command_table_ptr->next;
 		i++;
