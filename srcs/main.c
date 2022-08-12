@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/26 16:46:58 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/10 20:09:03 by akihito          ###   ########.fr       */
+/*   Updated: 2022/08/12 10:34:28 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,7 @@ void	search_path_and_exec(char **argv, char **envp)
 	char	*temp;
 	size_t	i;
 
+	// printf("search\n");
 	paths = ft_split(getenv("PATH"), ':');
 	i = 0;
 	while (paths[i])
@@ -101,25 +102,27 @@ void	search_path_and_exec(char **argv, char **envp)
 	exit_error("Can't find command.");
 }
 
-pid_t	execute_simple_command(char **argv, char **envp, t_exec_fds exec_fds, t_envlist *e_list)
+pid_t	execute_simple_command(char **argv, char **envp, int *exec_fds, t_envlist *e_list)
 {
 	pid_t	pid;
 	int		i;
 
 	i = 0;
+	printf("exec\n");
 	if (!ft_strncmp(argv[0], "exit", \
 	ft_strlen(argv[0])) && ft_strlen(argv[0]) >= 4)
 	{
 		builtin_exit(argv_len(argv), argv);
 	}
+	printf("exec2\n");
 	pid = fork();
 	if (pid == 0)// 子プロセス
 	{
 		printf("子プロセス\n");
-		close(exec_fds.in_fd);
-		close(exec_fds.out_fd);
+		// close(exec_fds.in_fd);
+		// close(exec_fds.out_fd);
 		// close(exec_fds.pipe_fd[0]);
-		close(exec_fds.pipe_fd[1]);
+		// close(exec_fds.pipe_fd[1]);
 		if (!ft_strncmp(argv[0], "echo", ft_strlen(argv[0])))
 		{
 			built_in_echo(argv, e_list);
@@ -147,43 +150,48 @@ pid_t	execute_simple_command(char **argv, char **envp, t_exec_fds exec_fds, t_en
 	}
 	else
 	{
-		close(exec_fds.pipe_fd[0]);
+		close(exec_fds[0]);
 		printf("親プロセス\n");
 	}
 	return (pid);
 }
 
-void	execute_last_command(char **argv, char **envp, t_exec_fds *exec_fds, t_envlist *e_list)
+void	execute_last_command(char **argv, char **envp, int *exec_fds, t_envlist *e_list, int i)
 {
 	pid_t	pid;
 	int		status;
-	int		i;
-
-	i = 0;
-	// while (argv[i] != NULL)
-	// {
-	// 	// printf("argv[%d] = %s\n", i, argv[i]);
-	// 	i++;
-	// }
+	// int		i;
+	// (void)i;
+	// i = 0;
 	printf("last\n");
-	dup2(exec_fds->out_fd, STDOUT_FILENO);
-	close(exec_fds->out_fd);
-	exec_fds->out_fd = -1;
-	pid = execute_simple_command(argv, envp, *exec_fds, e_list);
-	dup2(exec_fds->in_fd, STDIN_FILENO);
-	close(exec_fds->in_fd);
+	// if (i != 0)
+	// 	dup2(exec_fds->out_fd, exec_fds->pipe_fd[1]);
+	// dup2(exec_fds->in_fd, STDIN_FILENO);
+	if (i != 0)
+		dup2(exec_fds[0], 0);
+	dup2(exec_fds[1], 1);
+	close(exec_fds[1]);
+	exec_fds[1] = -1;
+	pid = execute_simple_command(argv, envp, exec_fds, e_list);
+	// dup2(exec_fds->in_fd, STDIN_FILENO);
+	close(exec_fds[0]);
 	waitpid(pid, &status, WUNTRACED);
 }
 
-void	execute_piped_command(char **argv, char **envp, t_exec_fds *exec_fds, t_envlist *e_list)
+void	execute_piped_command(char **argv, char **envp, int *exec_fds, t_envlist *e_list, int i)
 {
 	printf("piped\n");
-	pipe(exec_fds->pipe_fd);
-	dup2(exec_fds->pipe_fd[1], STDOUT_FILENO);
-	close(exec_fds->pipe_fd[1]);
-	execute_simple_command(argv, envp, *exec_fds, e_list);
-	dup2(exec_fds->pipe_fd[0], STDIN_FILENO);
-	close(exec_fds->pipe_fd[0]);
+	// pipe(exec_fds);
+	printf("exec_fds[0[]] %d\n", exec_fds[0]);
+	if (i != 0)
+	{
+		dup2(exec_fds[0], 0);//
+	}
+	dup2(exec_fds[1], 1);
+	close(exec_fds[1]);
+	execute_simple_command(argv, envp, exec_fds, e_list);
+	// dup2(exec_fds->pipe_fd[0], 1);//
+	close(exec_fds[0]);
 }
 
 int	execute_commands(char **envp, t_envlist *e_list)
@@ -193,27 +201,34 @@ int	execute_commands(char **envp, t_envlist *e_list)
 	char		**argv;
 	int			number_of_simple_commands;
 	int			i;
-	t_exec_fds	exec_fds;
+	int			**exec_fds;
 
-	i = 0;
+	i = -1;
 	command_table_ptr = g_data.command_table;//ここでグローバル変数から、コマンドを代入している
 	number_of_simple_commands = ft_lstsize(g_data.command_table);
-	exec_fds.in_fd = dup(STDIN_FILENO);
-	exec_fds.out_fd = dup(STDOUT_FILENO);
-	// printf("exec_fds.in_fd %d\n", exec_fds.in_fd);
-	// printf("exec_fds.out_fd %d\n", exec_fds.out_fd);
-	// printf("number_of_simple_commands %d\n", number_of_simple_commands);
+	exec_fds = (int **)malloc_error_check(sizeof(int *) * number_of_simple_commands);
+	// exec_fds.in_fd = dup(STDIN_FILENO);
+	// exec_fds.out_fd = dup(STDOUT_FILENO);
+	// exec_fds = make_fds(exe)
+	while (++i < number_of_simple_commands)
+		exec_fds[i] = (int *)malloc_error_check(sizeof(int) * 2);
+	i = -1;
+	while (++i < number_of_simple_commands)
+		ft_wpipe(exec_fds[i]);
+	i = 0;
 	while (i < number_of_simple_commands)//number_of_simple_commandsはパイプがあれば、増えていく
 	{
-		// printf("start\n");
+		printf("start\n"); 
 		command = (t_command *)command_table_ptr->content;
 		argv = command->argv;//ここでargvにcommandのargvが代入されているので、built_inにはargvを渡せばいい。
 		if (!argv || !argv[0])
 			return (0);
 		if (i == number_of_simple_commands - 1) // last simple command
-			execute_last_command(argv, envp, &exec_fds, e_list);
+			execute_last_command(argv, envp, exec_fds[i], e_list, i);
 		else
-			execute_piped_command(argv, envp, &exec_fds, e_list);
+		{
+			execute_piped_command(argv, envp, exec_fds[i], e_list, i);
+		}
 		command_table_ptr = command_table_ptr->next;
 		i++;
 	}

@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/10 19:42:13 by akihito          ###   ########.fr       */
+/*   Updated: 2022/08/12 00:19:52 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ typedef struct s_command {
 	t_envlist	*env_list;
 }	t_command;
 
-typedef struct s_exec_fds {
+typedef struct s_exec_fds {//command１つ１つに対して依存するべき
 	int	in_fd;
 	int	out_fd;
 	int	pipe_fd[2];
@@ -119,4 +119,5 @@ t_envlist	*ft_set_env(t_envlist *env_list, char *key, char *value, int add);
 t_envlist	*ft_unsetenv(t_envlist *e_list, char *unset_key);
 char		*ft_echo_env(char *str, t_envlist *e_list);
 char		*find_doll_env(t_envlist *e_list, char *after_doll);
+int			ft_wpipe(int fd[2]);
 #endif

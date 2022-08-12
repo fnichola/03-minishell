@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lex-init.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+        */
+/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 13:54:14 by fnichola          #+#    #+#             */
-/*   Updated: 2022/04/19 22:00:42 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/08/11 22:09:23 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ t_state_func_row *init_state_func_table(void)
 		{ST_EXIT_STATUS,			&lex_exit_status},
 		{ST_VARIABLE,			&lex_variable},
 		{ST_IN_WORD,				*lex_in_word},
-		{ST_END_OF_LINE,			*lex_end_of_line}
+		{ST_END_OF_LINE,			*lex_end_of_line},
 	};
 	t_state_func_row	*state_func_table;//ここでconstで初期化した構造体配列をコピーしてreturnできるようにしている。
 	state_func_table = malloc_error_check(sizeof(temp));
