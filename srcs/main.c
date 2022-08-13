@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/26 16:46:58 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/12 20:53:30 by akihito          ###   ########.fr       */
+/*   Updated: 2022/08/13 21:38:45 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,34 +165,107 @@ pid_t	execute_simple_command(char **argv, char **envp, int **exec_fds, t_envlist
 
 void	execute_last_command(char **argv, char **envp, int **exec_fds, t_envlist *e_list, int i)
 {
-	pid_t	pid;
 	int		status;
-	// int		i;
-	// (void)i;
-	// i = 0;
+	pid_t	pid;
+
 	printf("last\n");
-	// if (i != 0)
-	// 	dup2(exec_fds->out_fd, exec_fds->pipe_fd[1]);
-	// dup2(exec_fds->in_fd, STDIN_FILENO);
-	if (i != 0)
-		dup2(exec_fds[i - 1][0], 0);
-	// dup2(exec_fds[i][1], 1); //fds[1]=3, 1 -> dup2 -> 
-	// close(exec_fds[i][1]);
-	// exec_fds[i][1] = -1;
-	pid = execute_simple_command(argv, envp, exec_fds, e_list, i);
-	// dup2(exec_fds->in_fd, STDIN_FILENO);
-	close(exec_fds[i][0]);
+	if (!ft_strncmp(argv[0], "exit", \
+	ft_strlen(argv[0])) && ft_strlen(argv[0]) >= 4)
+	{
+		builtin_exit(argv_len(argv), argv);
+	}
+	pid = fork();
+	if (pid == 0)// 子プロセス
+	{
+		if (argv[1])
+		{
+			if (i != 0)
+				dup2(exec_fds[i - 1][0], STDIN_FILENO);
+			if (i == 0)
+			{
+				dup2(exec_fds[i][1], 1); //この後の処理が不明。ここでpipeに出力を書き込まれる
+				close(exec_fds[i][1]);
+			}
+		}
+		printf("子プロセス\n");
+		if (!ft_strncmp(argv[0], "echo", ft_strlen(argv[0])))
+			built_in_echo(argv, e_list);
+		else if (!ft_strncmp(argv[0], "cd", ft_strlen(argv[0])))
+			built_in_cd(argv, e_list);
+		else if (!ft_strncmp(argv[0], "pwd", ft_strlen(argv[0])))
+			built_in_pwd();
+		else if (!ft_strncmp(argv[0], "env", ft_strlen(argv[0])))
+			built_in_env(e_list);
+		else if (!ft_strncmp(argv[0], "export", ft_strlen(argv[0])))
+			built_in_export(argv, e_list);
+		else if (ft_strchr(argv[0], '/'))
+			execve(argv[0], argv, envp);
+		else
+			search_path_and_exec(argv, envp);
+	}
+	else
+	{
+		printf("親プロセス\n");
+	}
 	waitpid(pid, &status, WUNTRACED);
 }
 
 void	execute_piped_command(char **argv, char **envp, int **exec_fds, t_envlist *e_list, int i)
 {
 	printf("piped\n");
-	// pipe(exec_fds);
 	printf("exec_fds[0] %d\n", exec_fds[i][0]);
-	execute_simple_command(argv, envp, exec_fds, e_list, i);
-	// dup2(exec_fds->pipe_fd[0], 1);//
-	// close(exec_fds[i][0]);
+	pid_t	pid;
+
+	if (!ft_strncmp(argv[0], "exit", \
+	ft_strlen(argv[0])) && ft_strlen(argv[0]) >= 4)
+	{
+		builtin_exit(argv_len(argv), argv);
+	}
+	pid = fork();
+	if (pid == 0)// 子プロセス
+	{
+		if (i != 0)
+		{
+			dup2(exec_fds[i - 1][0], STDIN_FILENO);
+			close(exec_fds[i][1]);
+		}
+		if (i == 0)
+		{
+			dup2(exec_fds[i][1], 1);//この後の処理が不明。ここでpipeに出力を書き込まれる
+			close(exec_fds[i][1]);
+		}
+		printf("子プロセス\n");
+		if (!ft_strncmp(argv[0], "echo", ft_strlen(argv[0])))
+		{
+			built_in_echo(argv, e_list);
+		}
+		else if (!ft_strncmp(argv[0], "cd", ft_strlen(argv[0])))
+		{
+			built_in_cd(argv, e_list);
+		}
+		else if (!ft_strncmp(argv[0], "pwd", ft_strlen(argv[0])))
+		{
+			built_in_pwd();
+		}
+		else if (!ft_strncmp(argv[0], "env", ft_strlen(argv[0])))
+		{
+			built_in_env(e_list);
+		}
+		else if (!ft_strncmp(argv[0], "export", ft_strlen(argv[0])))
+		{
+			built_in_export(argv, e_list);
+		}
+		else if (ft_strchr(argv[0], '/'))
+			execve(argv[0], argv, envp);
+		else
+			search_path_and_exec(argv, envp);
+		close(exec_fds[i][1]);
+		close(exec_fds[i][0]);
+	}
+	else
+	{
+		printf("親プロセス\n");
+	}
 }
 
 int	execute_commands(char **envp, t_envlist *e_list)
@@ -208,9 +281,6 @@ int	execute_commands(char **envp, t_envlist *e_list)
 	command_table_ptr = g_data.command_table;//ここでグローバル変数から、コマンドを代入している
 	number_of_simple_commands = ft_lstsize(g_data.command_table);
 	exec_fds = (int **)malloc_error_check(sizeof(int *) * number_of_simple_commands);
-	// exec_fds.in_fd = dup(STDIN_FILENO);
-	// exec_fds.out_fd = dup(STDOUT_FILENO);
-	// exec_fds = make_fds(exe)
 	while (++i < number_of_simple_commands)
 		exec_fds[i] = (int *)malloc_error_check(sizeof(int) * 2);
 	i = -1;
@@ -227,9 +297,7 @@ int	execute_commands(char **envp, t_envlist *e_list)
 		if (i == number_of_simple_commands - 1) // last simple command
 			execute_last_command(argv, envp, exec_fds, e_list, i);
 		else
-		{
 			execute_piped_command(argv, envp, exec_fds, e_list, i);
-		}
 		command_table_ptr = command_table_ptr->next;
 		i++;
 	}
