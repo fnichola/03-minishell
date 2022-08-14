@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/26 16:46:58 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/13 21:38:45 by akihito          ###   ########.fr       */
+/*   Updated: 2022/08/14 15:50:23 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ void	search_path_and_exec(char **argv, char **envp)
 	char	*temp;
 	size_t	i;
 
-	// printf("search\n");
+	printf("search\n");
 	paths = ft_split(getenv("PATH"), ':');
 	i = 0;
 	while (paths[i])
@@ -157,7 +157,7 @@ pid_t	execute_simple_command(char **argv, char **envp, int **exec_fds, t_envlist
 	}
 	else
 	{
-		// close(exec_fds[i][0]);
+		close(exec_fds[i][0]);
 		printf("親プロセス\n");
 	}
 	return (pid);
@@ -186,6 +186,7 @@ void	execute_last_command(char **argv, char **envp, int **exec_fds, t_envlist *e
 				dup2(exec_fds[i][1], 1); //この後の処理が不明。ここでpipeに出力を書き込まれる
 				close(exec_fds[i][1]);
 			}
+			close(exec_fds[i][1]);
 		}
 		printf("子プロセス\n");
 		if (!ft_strncmp(argv[0], "echo", ft_strlen(argv[0])))
@@ -205,6 +206,7 @@ void	execute_last_command(char **argv, char **envp, int **exec_fds, t_envlist *e
 	}
 	else
 	{
+		close(exec_fds[i][0]);
 		printf("親プロセス\n");
 	}
 	waitpid(pid, &status, WUNTRACED);

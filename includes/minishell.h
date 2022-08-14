@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/12 00:19:52 by akihito          ###   ########.fr       */
+/*   Updated: 2022/08/14 01:28:08 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,4 +120,5 @@ t_envlist	*ft_unsetenv(t_envlist *e_list, char *unset_key);
 char		*ft_echo_env(char *str, t_envlist *e_list);
 char		*find_doll_env(t_envlist *e_list, char *after_doll);
 int			ft_wpipe(int fd[2]);
+void		ft_wexecve(char *file, char **argv, char **envp);
 #endif

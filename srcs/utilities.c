@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 16:19:10 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/07 23:24:28 by akihito          ###   ########.fr       */
+/*   Updated: 2022/08/14 01:27:36 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,3 +71,4 @@ void	ft_puterror(char *s1, char *s2, char *s3)
 	}
 	ft_putstr_fd("\n", STDERR_FILENO);
 }
+
