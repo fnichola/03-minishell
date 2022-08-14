@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/26 16:46:58 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/14 16:15:45 by akihito          ###   ########.fr       */
+/*   Updated: 2022/08/14 21:50:48 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -231,8 +231,9 @@ void	execute_piped_command(char **argv, char **envp, int **exec_fds, t_envlist *
 	{
 		if (i != 0)
 		{
+			dup2(exec_fds[i][1], 1);
 			dup2(exec_fds[i - 1][0], STDIN_FILENO);
-			close(exec_fds[i][1]);
+			close(exec_fds[i - 1][1]);
 		}
 		if (i == 0)
 		{
@@ -295,7 +296,8 @@ int	execute_commands(char **envp, t_envlist *e_list)
 	i = 0;
 	while (i < number_of_simple_commands)//number_of_simple_commandsはパイプがあれば、増えていく
 	{
-		printf("start\n"); 
+		printf("start\n");
+		printf("number_of_simple_commands = %d\n", number_of_simple_commands);
 		command = (t_command *)command_table_ptr->content;
 		argv = command->argv;//ここでargvにcommandのargvが代入されているので、built_inにはargvを渡せばいい。
 		if (!argv || !argv[0])
