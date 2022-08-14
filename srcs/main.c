@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/26 16:46:58 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/14 15:50:23 by akihito          ###   ########.fr       */
+/*   Updated: 2022/08/14 16:15:45 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,13 +180,16 @@ void	execute_last_command(char **argv, char **envp, int **exec_fds, t_envlist *e
 		if (argv[1])
 		{
 			if (i != 0)
+			{
 				dup2(exec_fds[i - 1][0], STDIN_FILENO);
-			if (i == 0)
+				close(exec_fds[i - 1][1]);
+			}
+			else
 			{
 				dup2(exec_fds[i][1], 1); //この後の処理が不明。ここでpipeに出力を書き込まれる
 				close(exec_fds[i][1]);
 			}
-			close(exec_fds[i][1]);
+			// close(exec_fds[i][1]);
 		}
 		printf("子プロセス\n");
 		if (!ft_strncmp(argv[0], "echo", ft_strlen(argv[0])))
@@ -206,7 +209,7 @@ void	execute_last_command(char **argv, char **envp, int **exec_fds, t_envlist *e
 	}
 	else
 	{
-		close(exec_fds[i][0]);
+		close(exec_fds[i][1]);
 		printf("親プロセス\n");
 	}
 	waitpid(pid, &status, WUNTRACED);
@@ -266,6 +269,7 @@ void	execute_piped_command(char **argv, char **envp, int **exec_fds, t_envlist *
 	}
 	else
 	{
+		close(exec_fds[i][1]);
 		printf("親プロセス\n");
 	}
 }
