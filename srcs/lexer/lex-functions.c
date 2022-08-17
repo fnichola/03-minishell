@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lex-functions.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
+/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 14:58:17 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/10 20:05:32 by akihito          ###   ########.fr       */
+/*   Updated: 2022/08/17 13:50:30 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ void	lex_in_double_quote(t_lex_arg *l)
 	// printf("[ST_IN_DOUBLE_QUOTE]\n");
 	if ((l->line)[l->i] == '"')
 	{
-		l->token_type = T_WORD;
+		l->token_type = T_DOUBLE_QUOTED;//T_WORDではなくT_DQUOTEDというタイプにした
 		l->found_token = true;
 	}
 }

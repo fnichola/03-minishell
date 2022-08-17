@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
+/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 15:11:01 by fnichola          #+#    #+#             */
-/*   Updated: 2022/07/06 15:21:44 by akihito          ###   ########.fr       */
+/*   Updated: 2022/08/17 15:22:03 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 
 # include "../libft/libft.h"
 # include "minishell.h"
-# include "struct.h"
 # include <stdio.h>
 # include <stdbool.h>
 # include <errno.h>
@@ -25,8 +24,9 @@ typedef enum e_state {
 	ST_FIRST_WORD,
 	ST_SIMPLE_COMMAND,
 	ST_REDIRECT,
-	ST_FINISHED,
 	ST_ENV,
+	ST_IN_DQUOTE,
+	ST_FINISHED,
 }	t_state;
 
 typedef struct s_parse_arg {
@@ -38,6 +38,7 @@ typedef struct s_parse_arg {
 	t_list			*command_table;
 	t_command		*command;
 	size_t			index;
+	t_envlist		*e_list;
 }	t_parse_arg;
 
 /**
@@ -57,5 +58,6 @@ void	init_parse_arg(t_parse_arg *p, t_list *tokens);
 void	parser_neutral(t_parse_arg *p);
 void	parser_first_word(t_parse_arg *p);
 void	parser_simple_command(t_parse_arg *p);
-
+void	parser_env (t_parse_arg *p);
+void	parser_in_dquote (t_parse_arg *p);
 #endif

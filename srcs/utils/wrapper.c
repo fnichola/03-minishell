@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   wrapper.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
+/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/31 16:47:07 by akihito           #+#    #+#             */
-/*   Updated: 2022/08/14 15:50:33 by akihito          ###   ########.fr       */
+/*   Updated: 2022/08/17 11:23:32 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "struct.h"
 
 char	*ft_wstrjoin(char *str1, char *str2)
 {

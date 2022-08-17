@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse-init.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
+/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 13:54:14 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/06 21:57:45 by akihito          ###   ########.fr       */
+/*   Updated: 2022/08/17 14:29:27 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ t_state_func_row	*p_init_state_func_table(void)
 		{ST_FIRST_WORD,		&parser_first_word},
 		{ST_SIMPLE_COMMAND,	&parser_simple_command},
 		{ST_REDIRECT,		NULL},
+		{ST_ENV,			&parser_env},
+		{ST_IN_DQUOTE,		&parser_in_dquote},//ここでexpandしてT_WORDに変更する
 		{ST_FINISHED,	NULL}
 	};
 	t_state_func_row		*state_func_table;//ここでconstで初期化した構造体配列をコピーしてreturnできるようにしている。
