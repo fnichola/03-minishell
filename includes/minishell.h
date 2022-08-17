@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/17 13:44:21 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/08/17 15:31:48 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ typedef enum e_token_type {
 	T_GTGT, // >>
 	T_LT,
 	T_LTLT,
-	T_VAR, //$
+	T_VAR, //$ 環境変数
 	T_EXIT_STATUS, //$?
 	T_EOL,
 	T_ERROR

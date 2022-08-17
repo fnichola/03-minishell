@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 14:58:17 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/17 15:22:24 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/08/17 15:27:38 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	init_command(t_parse_arg *p)
 
 void	parser_neutral(t_parse_arg *p)
 {
-	if (!p->token)
+	if (!p->token)//
 	{
 		change_state(p, ST_FINISHED);
 		return ;
@@ -116,4 +116,10 @@ void	parser_env (t_parse_arg *p)
 {
 	(void)p;
 
+}
+
+void	expand_env(t_parse_arg *p)
+{
+	(void)p;
+	return ;
 }

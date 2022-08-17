@@ -15,7 +15,6 @@
 #include "minishell.h"
 #include "lexer.h"
 #include <stdio.h>
-// #include "struct.h"
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <sys/wait.h>
@@ -172,6 +171,8 @@ void	execute_last_command(char **argv, char **envp, int **exec_fds, t_envlist *e
 	pid_t	pid;
 
 	printf("last\n");
+	printf("num_cmds %d\n",num_cmds);
+
 	if (!ft_strncmp(argv[0], "exit", \
 	ft_strlen(argv[0])) && ft_strlen(argv[0]) >= 4)
 	{
@@ -182,6 +183,7 @@ void	execute_last_command(char **argv, char **envp, int **exec_fds, t_envlist *e
 	{
 		if (num_cmds > 1)
 		{
+			printf("argv[1]\n");
 			if (i != 0)
 			{
 				dup2(exec_fds[i - 1][0], STDIN_FILENO);
@@ -192,7 +194,7 @@ void	execute_last_command(char **argv, char **envp, int **exec_fds, t_envlist *e
 				dup2(exec_fds[i][1], 1); //この後の処理が不明。ここでpipeに出力を書き込まれる
 				close(exec_fds[i][1]);
 			}
-			// close(exec_fds[i][1]);
+			close(exec_fds[i][1]);
 		}
 		printf("子プロセス\n");
 		if (!ft_strncmp(argv[0], "echo", ft_strlen(argv[0])))
@@ -218,9 +220,10 @@ void	execute_last_command(char **argv, char **envp, int **exec_fds, t_envlist *e
 	waitpid(pid, &status, WUNTRACED);
 }
 
-void	execute_piped_command(char **argv, char **envp, int **exec_fds, t_envlist *e_list, int i)
+void	execute_piped_command(char **argv, char **envp, int **exec_fds, t_envlist *e_list, int i, int num_cmds)
 {
 	printf("piped\n");
+	printf("num_cmds %d\n", num_cmds);
 	printf("exec_fds[0] %d\n", exec_fds[i][0]);
 	pid_t	pid;
 
@@ -243,6 +246,7 @@ void	execute_piped_command(char **argv, char **envp, int **exec_fds, t_envlist *
 			dup2(exec_fds[i][1], 1);//この後の処理が不明。ここでpipeに出力を書き込まれる
 			close(exec_fds[i][1]);
 		}
+		// if ()
 		printf("子プロセス\n");
 		if (!ft_strncmp(argv[0], "echo", ft_strlen(argv[0])))
 		{
@@ -308,7 +312,7 @@ int	execute_commands(char **envp, t_envlist *e_list)
 		if (i == num_cmds - 1) // last simple command
 			execute_last_command(argv, envp, exec_fds, e_list, i, num_cmds);
 		else
-			execute_piped_command(argv, envp, exec_fds, e_list, i);
+			execute_piped_command(argv, envp, exec_fds, e_list, i, num_cmds);
 		command_table_ptr = command_table_ptr->next;
 		i++;
 	}

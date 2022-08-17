@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 15:11:01 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/17 15:22:03 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/08/17 15:28:50 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ typedef struct s_state_func_row {
 t_list	*parser(t_list *tokens);
 t_state_func_row	*p_init_state_func_table(void);
 void	init_parse_arg(t_parse_arg *p, t_list *tokens);
-
 void	parser_neutral(t_parse_arg *p);
 void	parser_first_word(t_parse_arg *p);
 void	parser_simple_command(t_parse_arg *p);
