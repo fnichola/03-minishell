@@ -342,9 +342,10 @@ int	minishell(char **envp)
 			add_history(line);
 		tokens = tokenizer(line);
 		// printf("tokens %s\n", (char *)tokens->next->content);
-		g_data.command_table = parser(tokens);
+		g_data.command_table = parser(tokens, env_list);
 		// printf("g_data.command_table %s\n", (char *)g_data.command_table->content->);
 		free(line);
+		printf("before execute\n");
 		status = execute_commands(envp, env_list);
 		ft_lstclear(&g_data.command_table, free_command_table);
 	}

@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/17 15:31:48 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/08/17 15:39:43 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ t_minishell_data	g_data;
 
 void		exit_error(char *str);
 void		*malloc_error_check(size_t size);
-t_list		*parser(t_list *tokens);
+t_list		*parser(t_list *tokens, t_envlist *e_list);
 void		ft_perror(char *perror_str);
 int			ft_strcmp(char *s1, char *s2);
 char		*ft_find_env(char *env_str, char **envp);
