@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 18:02:55 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/13 16:31:49 by akihito          ###   ########.fr       */
+/*   Updated: 2022/08/15 17:31:33 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,8 @@ t_list	*parser(t_list *tokens)
 	while (p.state != ST_FINISHED)
 	{
 		p.previous_state = p.state;
-		// printf("実行");
-		// printf(" p.state  %u\n", p.state);
+		printf("実行");
+		printf(" p.state  %u\n", p.state);
 		state_func_table[p.state].parse_func(&p);//構造体ないの関数ポインタを実行している
 	}
 	free(state_func_table);

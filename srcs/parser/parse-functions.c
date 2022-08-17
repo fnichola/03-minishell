@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 14:58:17 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/06 21:59:58 by akihito          ###   ########.fr       */
+/*   Updated: 2022/08/17 11:18:23 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,20 @@ void	init_command(t_parse_arg *p)
 
 void	parser_neutral(t_parse_arg *p)
 {
-	if (!p->token)
+	if (!p->token)//
 	{
 		p->state = ST_FINISHED;
 		return ;
 	}
 	init_command(p);
+	if (p->token->token_type == T_VAR)
+	{
+		p->state = ST_ENV;
+	}
+	if (p->token->token_type == T_DOUBLE_QUOTE)
+	{
+		p->state = ST_IN_DQUOTE;
+	}
 	if (p->token->token_type == T_WORD)
 	{
 		p->state = ST_FIRST_WORD;
@@ -80,4 +88,10 @@ void	parser_simple_command(t_parse_arg *p)
 		next_token(p);
 		p->state = ST_NEUTRAL;
 	}
+}
+
+void	expand_env(t_parse_arg *p)
+{
+	(void)p;
+	return ;
 }

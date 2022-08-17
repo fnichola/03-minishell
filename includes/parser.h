@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 15:11:01 by fnichola          #+#    #+#             */
-/*   Updated: 2022/07/06 15:21:44 by akihito          ###   ########.fr       */
+/*   Updated: 2022/08/17 11:22:01 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 
 # include "../libft/libft.h"
 # include "minishell.h"
-# include "struct.h"
 # include <stdio.h>
 # include <stdbool.h>
 # include <errno.h>
@@ -25,8 +24,9 @@ typedef enum e_state {
 	ST_FIRST_WORD,
 	ST_SIMPLE_COMMAND,
 	ST_REDIRECT,
-	ST_FINISHED,
 	ST_ENV,
+	ST_IN_DQUOTE,// " $HOME test $PWD"など$が複数あったら全て検索して置換する
+	ST_FINISHED,
 }	t_state;
 
 typedef struct s_parse_arg {
@@ -53,9 +53,8 @@ typedef struct s_state_func_row {
 t_list	*parser(t_list *tokens);
 t_state_func_row	*p_init_state_func_table(void);
 void	init_parse_arg(t_parse_arg *p, t_list *tokens);
-
 void	parser_neutral(t_parse_arg *p);
 void	parser_first_word(t_parse_arg *p);
 void	parser_simple_command(t_parse_arg *p);
-
+void	expand_env(t_parse_arg *p);
 #endif

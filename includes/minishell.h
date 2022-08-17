@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/14 01:28:08 by akihito          ###   ########.fr       */
+/*   Updated: 2022/08/15 23:55:42 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,13 +41,14 @@
 
 
 typedef enum e_token_type {
-	T_WORD, //alphabet
+	T_WORD, //alphabet, single_quote
+	T_DOUBLE_QUOTE, // double-quoted text
 	T_PIPE,//
 	T_GT, // >
 	T_GTGT, // >>
 	T_LT,
 	T_LTLT,
-	T_VAR, //$
+	T_VAR, //$ 環境変数
 	T_EXIT_STATUS, //$?
 	T_EOL,
 	T_ERROR
