@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/17 15:39:43 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/08/18 17:36:41 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ void		ft_perror(char *perror_str);
 int			ft_strcmp(char *s1, char *s2);
 char		*ft_find_env(char *env_str, char **envp);
 void		built_in_cd(char **argv, t_envlist *e_list);
-void		built_in_echo(char **argv, t_envlist *e_list);
+void		built_in_echo(char **argv);
 void		built_in_pwd(void);
 void		ft_perror(char *perror_str);
 int			ft_strcmp(char *s1, char *s2);

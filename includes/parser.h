@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 15:11:01 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/17 15:45:28 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/08/18 16:28:05 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,4 +59,5 @@ void	parser_first_word(t_parse_arg *p);
 void	parser_simple_command(t_parse_arg *p);
 void	parser_env (t_parse_arg *p);
 void	parser_in_dquote (t_parse_arg *p);
+void	expand_quoted_text(t_parse_arg *p);
 #endif

@@ -6,7 +6,7 @@
 #    By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/09 18:01:32 by fnichola          #+#    #+#              #
-#    Updated: 2022/08/17 11:19:23 by fnichola         ###   ########.fr        #
+#    Updated: 2022/08/18 16:24:37 by fnichola         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,8 +24,9 @@ SRCS = srcs/main.c \
 	srcs/lexer/lex-utilities.c \
 	srcs/lexer/lex-init.c \
 	srcs/parser/parser.c \
-	srcs/parser/parse-functions.c \
-	srcs/parser/parse-init.c \
+	srcs/parser/parser-functions.c \
+	srcs/parser/parser-init.c \
+	srcs/parser/expand-quoted-text.c \
 	srcs/utilities.c \
 	srcs/built_in/built_in_command1.c \
 	srcs/built_in/built_in_utils.c \

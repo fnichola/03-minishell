@@ -104,6 +104,11 @@ void	search_path_and_exec(char **argv, char **envp)
 	exit_error("Can't find command.");
 }
 
+// void	execute_built_in(char **argv, char **envp)
+// {
+
+// }
+
 // pid_t	execute_simple_command(char **argv, char **envp, int **exec_fds, t_envlist *e_list, int i)
 // {
 // 	pid_t	pid;
@@ -198,7 +203,7 @@ void	execute_last_command(char **argv, char **envp, int **exec_fds, t_envlist *e
 		}
 		printf("子プロセス\n");
 		if (!ft_strncmp(argv[0], "echo", ft_strlen(argv[0])))
-			built_in_echo(argv, e_list);
+			built_in_echo(argv);
 		else if (!ft_strncmp(argv[0], "cd", ft_strlen(argv[0])))
 			built_in_cd(argv, e_list);
 		else if (!ft_strncmp(argv[0], "pwd", ft_strlen(argv[0])))
@@ -250,7 +255,7 @@ void	execute_piped_command(char **argv, char **envp, int **exec_fds, t_envlist *
 		printf("子プロセス\n");
 		if (!ft_strncmp(argv[0], "echo", ft_strlen(argv[0])))
 		{
-			built_in_echo(argv, e_list);
+			built_in_echo(argv);
 		}
 		else if (!ft_strncmp(argv[0], "cd", ft_strlen(argv[0])))
 		{

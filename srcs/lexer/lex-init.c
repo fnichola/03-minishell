@@ -3,36 +3,37 @@
 /*                                                        :::      ::::::::   */
 /*   lex-init.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
+/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 13:54:14 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/11 22:09:23 by akihito          ###   ########.fr       */
+/*   Updated: 2022/08/18 17:22:13 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "lexer.h"
 
-t_state_func_row *init_state_func_table(void)
+t_state_func_row	*init_state_func_table(void)
 {
-	const t_state_func_row temp[] = {
-		{ST_NEUTRAL,				&lex_neutral},
-		{ST_PIPE,				&lex_pipe},
-		{ST_GT,					&lex_gt},
-		{ST_GTGT,				&lex_gtgt},
-		{ST_LT,					&lex_lt},
-		{ST_LTLT,				&lex_ltlt},
-		{ST_BEGIN_SINGLE_QUOTE,	&lex_begin_single_quote},
-		{ST_IN_SINGLE_QUOTE,		&lex_in_single_quote},
-		{ST_BEGIN_DOUBLE_QUOTE,	&lex_begin_double_quote},
-		{ST_IN_DOUBLE_QUOTE,		&lex_in_double_quote},
-		{ST_DOLLAR,				&lex_dollar},
-		{ST_EXIT_STATUS,			&lex_exit_status},
-		{ST_VARIABLE,			&lex_variable},
-		{ST_IN_WORD,				*lex_in_word},
-		{ST_END_OF_LINE,			*lex_end_of_line},
+	const t_state_func_row	temp[] = {
+	{ST_NEUTRAL,				&lex_neutral},
+	{ST_PIPE,				&lex_pipe},
+	{ST_GT,					&lex_gt},
+	{ST_GTGT,				&lex_gtgt},
+	{ST_LT,					&lex_lt},
+	{ST_LTLT,				&lex_ltlt},
+	{ST_BEGIN_SINGLE_QUOTE,	&lex_begin_single_quote},
+	{ST_IN_SINGLE_QUOTE,		&lex_in_single_quote},
+	{ST_BEGIN_DOUBLE_QUOTE,	&lex_begin_double_quote},
+	{ST_IN_DOUBLE_QUOTE,		&lex_in_double_quote},
+	{ST_DOLLAR,				&lex_dollar},
+	{ST_EXIT_STATUS,			&lex_exit_status},
+	{ST_VARIABLE,			&lex_variable},
+	{ST_IN_WORD,				*lex_in_word},
+	{ST_END_OF_LINE,			*lex_end_of_line},
 	};
-	t_state_func_row	*state_func_table;//ここでconstで初期化した構造体配列をコピーしてreturnできるようにしている。
+	t_state_func_row		*state_func_table;//ここでconstで初期化した構造体配列をコピーしてreturnできるようにしている。
+	
 	state_func_table = malloc_error_check(sizeof(temp));
 	ft_memcpy(state_func_table, temp, sizeof(temp));//constだとスコープがその関数内だけだが、memcpyでコピーしたアドレスはreturnできる。
 	return (state_func_table);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_in_command1.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
+/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 17:23:49 by akihito           #+#    #+#             */
-/*   Updated: 2022/08/10 22:05:17 by akihito          ###   ########.fr       */
+/*   Updated: 2022/08/18 17:38:06 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #include <readline/history.h>
 #include <sys/wait.h>
 
-void	built_in_echo(char **argv, t_envlist *e_list)//環境変数はまだ、echo ?$も無限ループしてしまう。
+void	built_in_echo(char **argv)//環境変数はまだ、echo ?$も無限ループしてしまう。
 {
 	int		option;
 	size_t	arg_i;
@@ -31,16 +31,15 @@ void	built_in_echo(char **argv, t_envlist *e_list)//環境変数はまだ、echo
 	}
 	option = 0;
 	arg_i = 1;
-	(void)e_list;
 	if (argv[arg_i] && ft_strcmp(argv[arg_i], "-n") == 0 && arg_i++)//echo -n test とechoの直後しかオプションとして認識しない
 	{
 		option++;
 	}
 	while (argv[arg_i])
 	{
-		printf("while\n");
+		// printf("while\n");
 		// put_str = ft_echo_env(argv[arg_i], e_list);//echoで文字列中にシェル変数があったら、そのシェル変数を展開してあげた文字列を返してあげる。
-		printf("arg_i = %zu\n", arg_i);
+		// printf("arg_i = %zu\n", arg_i);
 		ft_putstr_fd(argv[arg_i], STDOUT_FILENO);
 		if (argv[arg_i + 1] != NULL)
 			ft_putstr_fd(" ", STDOUT_FILENO);

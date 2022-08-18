@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
+/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 18:02:55 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/07 16:09:46 by akihito          ###   ########.fr       */
+/*   Updated: 2022/08/18 17:24:16 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ t_token	*get_next_token(t_lex_arg *l, const t_state_func_row *state_func_table)
 	l->start_index = l->i;
 	while (1)
 	{
-		state_func_table[l->state].lex_func(l);//構造体の[]はenumでt_stateとインデックスが紐づいている。
+		state_func_table[l->state].lex_func(l); //構造体の[]はenumでt_stateとインデックスが紐づいている。
 		if (l->found_token)//もうトークンが分かった時点でfound_tokenをtrueにしてあげる。
 		{
 			// printf("l->token_type = %u\n", l->token_type);
@@ -40,7 +40,7 @@ t_token	*get_next_token(t_lex_arg *l, const t_state_func_row *state_func_table)
 			l->found_token = false;
 			return (token);
 		}
-		if ((l->line)[l->i])//tokenができてなかったら一文字進める
+		if ((l->line)[l->i]) //tokenができてなかったら一文字進める
 			(l->i)++;
 	}
 	return (NULL);
