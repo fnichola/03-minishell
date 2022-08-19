@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/18 17:36:41 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/08/19 16:27:26 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,6 @@
  * T_EXIT_STATUS = $?
  * T_ERROR = error
  */
-
-
 typedef enum e_token_type {
 	T_WORD, //alphabet
 	T_DOUBLE_QUOTED, // double-quoted text
@@ -58,6 +56,11 @@ typedef struct s_token {
 	char			*word;
 	t_token_type	token_type;
 }	t_token;
+
+typedef struct s_str_func_table {
+	char	*name;
+	void	(*built_in)(char **argv);
+}	t_str_func_table;
 
 /**
  * Command data structure.
@@ -87,14 +90,19 @@ typedef struct s_exec_fds {//command１つ１つに対して依存するべき
 }	t_exec_fds;
 
 typedef struct s_minishell_data {
-	t_list		*command_table;
-	int			exit_satus;
-	t_envlist	*env_list;
+	t_str_func_table	*built_in_func_table;
+	t_list				*command_table;
+	int					**exec_fds;
+	size_t				num_cmds;
+	size_t				cmd_index;
+	int					exit_satus;
+	t_envlist			*env_list;
 }	t_minishell_data;
 
 t_minishell_data	g_data;
 
 void		exit_error(char *str);
+void		built_in_exit(int argc, char **argv);
 void		*malloc_error_check(size_t size);
 t_list		*parser(t_list *tokens, t_envlist *e_list);
 void		ft_perror(char *perror_str);
