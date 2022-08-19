@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 17:23:49 by akihito           #+#    #+#             */
-/*   Updated: 2022/08/18 17:38:06 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/08/19 17:37:02 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	built_in_echo(char **argv)//環境変数はまだ、echo ?$も無限ルー�
 	return ;
 }
 
-void	built_in_cd(char **argv, t_envlist *e_list)
+void	built_in_cd(char **argv)
 {
 	char		*old_pwd;
 	char		*now_pwd;
@@ -61,7 +61,7 @@ void	built_in_cd(char **argv, t_envlist *e_list)
 
 	tmp = NULL;
 	old_pwd = getcwd(NULL, 0);
-	home_dir = ft_findenv(e_list, "HOME");
+	home_dir = ft_findenv(g_data.env_list, "HOME");
 	if (argv[1] && argv[1][0] && chdir(argv[1]) == -1)
 	{//status=1
 		ft_perror("cd");//エラーのステータス更新
@@ -75,15 +75,16 @@ void	built_in_cd(char **argv, t_envlist *e_list)
 		return ;
 	}
 	now_pwd = getcwd(NULL, 0);
-	if (ft_findenv(e_list, "PWD"))
-		tmp = ft_set_env(e_list, ft_wstrdup("PWD"), getcwd(NULL, 0), 0);
+	if (ft_findenv(g_data.env_list, "PWD"))
+		tmp = ft_set_env(g_data.env_list, ft_wstrdup("PWD"), getcwd(NULL, 0), 0);
 	return ;
 }
 
-void	built_in_pwd(void)
+void	built_in_pwd(char **argv)
 {
 	char	*path_name;
 
+	(void)argv;
 	if (write(STDOUT_FILENO, NULL, 0) == -1)//標準出力エラー
 	{//エラー
 		exit_error("pwd: write error");
@@ -101,7 +102,7 @@ void	built_in_pwd(void)
 	return ;
 }
 
-void	built_in_export(char **argv, t_envlist *e_list)
+void	built_in_export(char **argv)
 {//ascii順に並べる
 	ssize_t		split_index;
 	ssize_t		arg_i;
@@ -109,7 +110,7 @@ void	built_in_export(char **argv, t_envlist *e_list)
 
 	arg_i = 1;
 	if (argv[arg_i] == NULL)
-		put_env_asci_order(e_list, NULL);
+		put_env_asci_order(g_data.env_list, NULL);
 	else//環境変数の追加または変更の処理
 	{
 		while (argv[arg_i])
@@ -118,14 +119,14 @@ void	built_in_export(char **argv, t_envlist *e_list)
 			if (split_index != -1)
 			{
 				printf("to_setenv\n");
-				e_list = to_setenv(e_list, argv[arg_i], split_index);
+				g_data.env_list = to_setenv(g_data.env_list, argv[arg_i], split_index);
 			}
 			else//エラー文　bash: export: `TEST++': not a valid identifier
 				ft_puterror("export", argv[arg_i], "not a valid identifier");
 			arg_i++;
 		}
 	}
-	tmp = e_list->next;
+	tmp = g_data.env_list->next;
 	while (tmp)
 	{
 		printf("%s : %s\n", tmp->key, tmp->value);
@@ -134,11 +135,12 @@ void	built_in_export(char **argv, t_envlist *e_list)
 	return ;
 }
 
-void	built_in_env(t_envlist	*e_list)
+void	built_in_env(char **argv)
 {
 	t_envlist	*per_env;
 
-	per_env = e_list;
+	(void)argv;
+	per_env = g_data.env_list;
 	while (per_env)
 	{
 		if (per_env->value)

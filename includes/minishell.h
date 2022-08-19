@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/19 16:27:26 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/08/19 17:38:13 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ typedef struct s_token {
 
 typedef struct s_str_func_table {
 	char	*name;
-	void	(*built_in)(char **argv);
+	void	(*func)(char **argv);
 }	t_str_func_table;
 
 /**
@@ -90,7 +90,8 @@ typedef struct s_exec_fds {//command１つ１つに対して依存するべき
 }	t_exec_fds;
 
 typedef struct s_minishell_data {
-	t_str_func_table	*built_in_func_table;
+	t_str_func_table	*built_ins;
+	int					num_built_ins;
 	t_list				*command_table;
 	int					**exec_fds;
 	size_t				num_cmds;
@@ -102,23 +103,23 @@ typedef struct s_minishell_data {
 t_minishell_data	g_data;
 
 void		exit_error(char *str);
-void		built_in_exit(int argc, char **argv);
+void		built_in_exit(char **argv);
+void		built_in_cd(char **argv);
+void		built_in_echo(char **argv);
+void		built_in_pwd(char **argv);
+void		built_in_env(char **argv);
+void		built_in_export(char **argv);
 void		*malloc_error_check(size_t size);
 t_list		*parser(t_list *tokens, t_envlist *e_list);
 void		ft_perror(char *perror_str);
 int			ft_strcmp(char *s1, char *s2);
 char		*ft_find_env(char *env_str, char **envp);
-void		built_in_cd(char **argv, t_envlist *e_list);
-void		built_in_echo(char **argv);
-void		built_in_pwd(void);
 void		ft_perror(char *perror_str);
 int			ft_strcmp(char *s1, char *s2);
 char		*ft_wstrjoin(char *str1, char *str2);
 char		*ft_wstrdup(const char *src);
 t_envlist	*ft_set_env(t_envlist *env_list, char *key, char *value, int add);
 char		*ft_findenv(t_envlist *elst, char *search_key);
-void		built_in_env(t_envlist	*e_list);
-void		built_in_export(char **argv, t_envlist *e_list);
 void		put_env_asci_order(t_envlist *e_list, t_envlist *sorted);
 int			check_shell_val(char *src_str);
 t_envlist	*to_setenv(t_envlist *e_list, char *src_str, size_t i);

@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/26 16:46:58 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/19 16:27:26 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/08/19 18:24:02 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,13 @@ void	init_built_in_table(void)
 		{"export",	&built_in_export},
 		{"exit",	&built_in_exit},
 	};
-	t_str_func_table	*built_in_func_table;
+	t_str_func_table	*built_ins;
 
-	built_in_func_table = malloc_error_check(sizeof(temp));
-	ft_memcpy(built_in_func_table, temp, sizeof(temp));
-	g_data.built_in_func_table = built_in_func_table;
+	built_ins = malloc_error_check(sizeof(temp));
+	g_data.num_built_ins = sizeof(temp) / sizeof(t_str_func_table);
+	printf("num_built_ins = %d\n", g_data.num_built_ins);
+	ft_memcpy(built_ins, temp, sizeof(temp));
+	g_data.built_ins = built_ins;
 }
 
 size_t	argv_len(char **argv)
@@ -63,9 +65,14 @@ void	free_command_table(void *ptr)
 	free(command);
 }
 
-void	built_in_exit(int argc, char **argv)
+void	built_in_exit(char **argv)
 {
 	int	ret;
+	int	argc;
+
+	argc = 0;
+	while (argv[argc])
+		argc++;
 
 	ft_lstclear(&g_data.command_table, free_command_table);
 	if (argc == 1)
@@ -134,40 +141,57 @@ void	search_path_and_exec(char **argv, char **envp)
 	exit_error("Can't find command.");
 }
 
-bool	execute_built_in(char **argv, char **envp)
+char	*str_tolower(char *str)
+{
+	char	*str_lower;
+	size_t	i;
+
+	str_lower = ft_strdup(str);
+	i = 0;
+	while (str_lower[i])
+	{
+		str_lower[i] = ft_tolower(str_lower[i]);
+		i++;
+	}
+	return (str_lower);
+}
+
+bool	loookup_and_exec_built_in(char **argv)
+{
+	bool	is_builtin;
+	size_t	i;
+	char	*str;
+
+	str = str_tolower(argv[0]);
+	is_builtin = false;
+	i = 0;
+	while (i < g_data.num_built_ins)
+	{
+		if (!ft_strncmp(str, g_data.built_ins[i].name, 
+			ft_strlen(g_data.built_ins[i].name)) 
+			&& ft_strlen(str) >= ft_strlen(g_data.built_ins[i].name))
+		{
+			g_data.built_ins[i].func(argv);
+			is_builtin = true;
+			break ;
+		}
+		i++;
+	}
+	free(str);
+	return (is_builtin);
+}
+
+bool	execute_built_in(char **argv)
 {
 	bool	is_builtin;
 	int		old_fd[2];
 
-	is_builtin = true;
 	old_fd[0] = dup(STDIN_FILENO);
 	old_fd[1] = dup(STDOUT_FILENO);
 	dup2((g_data.exec_fds[g_data.cmd_index])[0], STDIN_FILENO);
 	dup2((g_data.exec_fds[g_data.cmd_index])[1], STDOUT_FILENO);
-
-	size_t	i = 0;
-	printf("state func table 0 %s\n", g_data.built_in_func_table[0].name);
-
-
-
-	if (!ft_strncmp(argv[0], "echo", ft_strlen(argv[0])))
-		built_in_echo(argv);
-	else if (!ft_strncmp(argv[0], "cd", ft_strlen(argv[0])))
-		built_in_cd(argv, g_data.env_list);
-	else if (!ft_strncmp(argv[0], "pwd", ft_strlen(argv[0])))
-		built_in_pwd();
-	else if (!ft_strncmp(argv[0], "env", ft_strlen(argv[0])))
-		built_in_env(g_data.env_list);
-	else if (!ft_strncmp(argv[0], "export", ft_strlen(argv[0])))
-		built_in_export(argv, g_data.env_list);
-	else if (!ft_strncmp(argv[0], "exit", \
-	ft_strlen(argv[0])) && ft_strlen(argv[0]) >= 4)
-	{
-		built_in_exit(argv_len(argv), argv);
-	}
-	else
-		is_builtin = false;
 	dup2(old_fd[0], STDIN_FILENO);
+	loookup_and_exec_built_in(argv);
 	close(old_fd[0]);
 	dup2(old_fd[1], STDOUT_FILENO);
 	close(old_fd[1]);
@@ -205,7 +229,7 @@ void	execute_external(char **argv, char **envp)
 
 void	execute_simple_command(char **argv, char **envp)
 {
-	if (execute_built_in(argv, envp))
+	if (execute_built_in(argv))
 		return ;
 	else
 		execute_external(argv, envp);
