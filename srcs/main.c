@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/26 16:46:58 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/19 18:24:02 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/08/19 19:34:54 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,8 +190,8 @@ bool	execute_built_in(char **argv)
 	old_fd[1] = dup(STDOUT_FILENO);
 	dup2((g_data.exec_fds[g_data.cmd_index])[0], STDIN_FILENO);
 	dup2((g_data.exec_fds[g_data.cmd_index])[1], STDOUT_FILENO);
-	dup2(old_fd[0], STDIN_FILENO);
 	loookup_and_exec_built_in(argv);
+	dup2(old_fd[0], STDIN_FILENO);
 	close(old_fd[0]);
 	dup2(old_fd[1], STDOUT_FILENO);
 	close(old_fd[1]);
