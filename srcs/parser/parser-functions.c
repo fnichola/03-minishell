@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser-functions.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 14:58:17 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/18 17:18:36 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/08/21 14:52:09 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,10 @@ void	parser_neutral(t_parse_arg *p)
 	{
 		change_state(p, ST_IN_DQUOTE);
 	}
+	if (p->token->token_type == T_GT)
+	{
+		change_state(p, ST_GT);
+	}
 	if (p->token->token_type == T_WORD)
 	{
 		change_state(p, ST_FIRST_WORD);
@@ -72,54 +76,54 @@ void	parser_first_word(t_parse_arg *p)
 	change_state(p, ST_SIMPLE_COMMAND);
 }
 
-void	parser_simple_command(t_parse_arg *p)
-{
-	if (!p->token)
-	{
-		p->command->argv[p->index] = NULL;
-		ft_lstadd_back(&p->command_table, ft_lstnew(p->command));
-		change_state(p, ST_FINISHED);
-	}
-	else if (p->token->token_type == T_WORD)
-	{
-		p->command->argv[p->index] = ft_strdup(p->token->word);
-		p->token = NULL;
-		(p->index)++;
-		next_token(p);
-	}
-	else if (p->token->token_type == T_VAR)
-		change_state(p, ST_ENV);
-	else if (p->token->token_type == T_DOUBLE_QUOTED)
-		change_state(p, ST_IN_DQUOTE);
-	else if (p->token->token_type == T_PIPE)
-	{
-		p->command->argv[p->index] = NULL;
-		ft_lstadd_back(&p->command_table, ft_lstnew(p->command));
-		next_token(p);
-		change_state(p, ST_NEUTRAL);
-	}
-}
+// void	parser_simple_command(t_parse_arg *p)
+// {
+// 	if (!p->token)
+// 	{
+// 		p->command->argv[p->index] = NULL;
+// 		ft_lstadd_back(&p->command_table, ft_lstnew(p->command));
+// 		change_state(p, ST_FINISHED);
+// 	}
+// 	else if (p->token->token_type == T_WORD)
+// 	{
+// 		p->command->argv[p->index] = ft_strdup(p->token->word);
+// 		p->token = NULL;
+// 		(p->index)++;
+// 		next_token(p);
+// 	}
+// 	else if (p->token->token_type == T_VAR)
+// 		change_state(p, ST_ENV);
+// 	else if (p->token->token_type == T_DOUBLE_QUOTED)
+// 		change_state(p, ST_IN_DQUOTE);
+// 	else if (p->token->token_type == T_PIPE)
+// 	{
+// 		p->command->argv[p->index] = NULL;
+// 		ft_lstadd_back(&p->command_table, ft_lstnew(p->command));
+// 		next_token(p);
+// 		change_state(p, ST_NEUTRAL);
+// 	}
+// }
 
-//ここでexpandしてT_WORDに変更する。　
-void	parser_in_dquote(t_parse_arg *p)
-{
-	t_envlist	*tmp;
-	char		*found_index;
-	char		*found_env;
-	char		*joined_str;
+// //ここでexpandしてT_WORDに変更する。　
+// void	parser_in_dquote(t_parse_arg *p)
+// {
+// 	t_envlist	*tmp;
+// 	char		*found_index;
+// 	char		*found_env;
+// 	char		*joined_str;
 
-	expand_quoted_text(p);
-	p->token->token_type = T_WORD;
-	change_state(p, p->previous_state);
-}
+// 	expand_quoted_text(p);
+// 	p->token->token_type = T_WORD;
+// 	change_state(p, p->previous_state);
+// }
 
-void	parser_env(t_parse_arg *p)
-{
-	char	*found_env;
+// void	parser_env(t_parse_arg *p)
+// {
+// 	char	*found_env;
 
-	found_env = ft_findenv(p->e_list, p->token->word);//見つからなかったらNULLを返す
-	p->token->token_type = T_WORD;
-	free(p->token->word);
-	p->token->word = ft_strdup(found_env); // ft_findenv doesn't return a "free"-able string
-	change_state(p, p->previous_state);
-}
+// 	found_env = ft_findenv(p->e_list, p->token->word);//見つからなかったらNULLを返す
+// 	p->token->token_type = T_WORD;
+// 	free(p->token->word);
+// 	p->token->word = ft_strdup(found_env); // ft_findenv doesn't return a "free"-able string
+// 	change_state(p, p->previous_state);
+// }

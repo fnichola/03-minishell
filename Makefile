@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+         #
+#    By: akihito <akihito@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/09 18:01:32 by fnichola          #+#    #+#              #
-#    Updated: 2022/08/18 16:24:37 by fnichola         ###   ########.fr        #
+#    Updated: 2022/08/22 18:50:58 by akihito          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,6 +25,8 @@ SRCS = srcs/main.c \
 	srcs/lexer/lex-init.c \
 	srcs/parser/parser.c \
 	srcs/parser/parser-functions.c \
+	srcs/parser/parser-functions2.c \
+	srcs/parser/parser-functions3.c \
 	srcs/parser/parser-init.c \
 	srcs/parser/expand-quoted-text.c \
 	srcs/utilities.c \

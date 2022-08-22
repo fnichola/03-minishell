@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/26 16:46:58 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/19 18:24:02 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/08/22 17:50:52 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,7 +186,7 @@ bool	execute_built_in(char **argv)
 	bool	is_builtin;
 	int		old_fd[2];
 
-	old_fd[0] = dup(STDIN_FILENO);
+	old_fd[0] = dup(STDIN_FILENO);//ここが親プロセスでfdを変換している
 	old_fd[1] = dup(STDOUT_FILENO);
 	dup2((g_data.exec_fds[g_data.cmd_index])[0], STDIN_FILENO);
 	dup2((g_data.exec_fds[g_data.cmd_index])[1], STDOUT_FILENO);
@@ -332,10 +332,10 @@ int	minishell(char **envp)
 		tokens = tokenizer(line);
 		// printf("tokens %s\n", (char *)tokens->next->content);
 		g_data.command_table = parser(tokens, g_data.env_list);
-		// printf("g_data.command_table %s\n", (char *)g_data.command_table->content->);
+		// printf("g_data.command_table %s\n", (char *)g_data.command_table->content->word);
 		free(line);
 		printf("before execute\n");
-			status = execute_commands(envp);
+		status = execute_commands(envp);
 		ft_lstclear(&g_data.command_table, free_command_table);
 	}
 	return (0);

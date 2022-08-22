@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/19 17:38:13 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/08/22 19:39:31 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,9 @@ typedef enum e_token_type {
 	T_PIPE,//
 	T_GT, // >
 	T_GTGT, // >>
-	T_LT,
-	T_LTLT,
+	T_LT, // <
+	T_LTLT, // <<
+	T_FILE,
 	T_VAR, //$ 環境変数
 	T_EXIT_STATUS, //$?
 	T_EOL,

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lex-functions.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 14:58:17 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/18 17:19:37 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/08/21 20:34:16 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,18 @@ void	lex_pipe(t_lex_arg *l)
 
 void	lex_gt(t_lex_arg *l)
 {
-	// printf("[ST_GT]\n");
+	printf("l->line = %s\n", l->line);
+	printf("l->i = %d\n", l->i);
+	// if ((l->line)[(l->i)] == '>')
+	// {
+	// 	printf("[ST_GTGT]\n");
+	// 	l->state = ST_GTGT;
+	// }
 	if ((l->line)[l->i] == '>')
-		l->state = ST_GTGT;
+	{
+		printf("[ST_GT]\n");
+		l->state = ST_GT;
+	}
 	else
 	{
 		l->token_type = T_GT;
@@ -57,7 +66,7 @@ void	lex_gt(t_lex_arg *l)
 
 void	lex_gtgt(t_lex_arg *l)
 {
-	// printf("[ST_GTGT]\n");
+	printf("[ST_GTGT]\n");
 	l->token_type = T_GTGT;
 	l->found_token = true;
 }

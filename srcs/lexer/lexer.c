@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 18:02:55 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/18 17:24:16 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/08/22 23:01:27 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ t_token	*get_next_token(t_lex_arg *l, const t_state_func_row *state_func_table)
 	l->start_index = l->i;
 	while (1)
 	{
+		// printf("l->state = %d\n", l->state);
 		state_func_table[l->state].lex_func(l); //構造体の[]はenumでt_stateとインデックスが紐づいている。
 		if (l->found_token)//もうトークンが分かった時点でfound_tokenをtrueにしてあげる。
 		{
@@ -70,6 +71,7 @@ t_list	*tokenizer(const char *line)
 	while (new_token)
 	{
 		// printf("word = %s\n", new_token->word);
+		// printf("otken_type = %d\n", new_token->token_type);
 		ft_lstadd_back(&token_list, ft_lstnew(new_token));
 		// printf("new_token->word %s\n", (char *)token_list->next->content);
 		new_token = get_next_token(&l, state_func_table);

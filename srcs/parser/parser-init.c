@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse-init.c                                       :+:      :+:    :+:   */
+/*   parser-init.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 13:54:14 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/17 15:45:46 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/08/22 18:06:02 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,11 @@ t_state_func_row	*p_init_state_func_table(void)
 		{ST_NEUTRAL,		&parser_neutral},
 		{ST_FIRST_WORD,		&parser_first_word},
 		{ST_SIMPLE_COMMAND,	&parser_simple_command},
-		{ST_REDIRECT,		NULL},
+		{ST_GT,		&parser_gt},
+		{ST_GTGT,		&parser_gtgt},
+		{ST_LT,			&parser_lt},
+		{ST_LTLT,			&parser_ltlt},
+		{ST_FILE,			&parser_file},
 		{ST_ENV,			&parser_env},
 		{ST_IN_DQUOTE,		&parser_in_dquote},//ここでexpandしてT_WORDに変更する
 		{ST_FINISHED,	NULL}

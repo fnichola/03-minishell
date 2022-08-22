@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 18:02:55 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/17 18:25:17 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/08/23 01:48:24 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,12 +37,17 @@ t_list	*parser(t_list *tokens, t_envlist *e_list)
 {
 	t_state_func_row	*state_func_table;
 	t_parse_arg			p;
+	t_list				*tmp;
 
 	state_func_table = p_init_state_func_table();//stateと関数ポインタを作成している。
 	init_parse_arg(&p, tokens, e_list);
 	p.list_ptr = tokens;//ここでtoken(単語)のリストを渡している
+	tmp = p.list_ptr->next;
 	while (p.state != ST_FINISHED)
 	{
+		// printf("p.state = %zu\n", p.state);
+		// printf("p->token->token_type = %d\n", p.token->token_type);
+		// printf("p.tokentype = %zu\n", p.token->token_type);
 		// printf("実行");
 		// printf("p.token_type %d\n", p.token->token_type);
 		// printf(" p.state  %u\n", p.state);

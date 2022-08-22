@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 15:11:01 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/18 16:28:05 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/08/22 18:50:20 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,11 @@ typedef enum e_state {
 	ST_NEUTRAL = 0,
 	ST_FIRST_WORD,
 	ST_SIMPLE_COMMAND,
-	ST_REDIRECT,
+	ST_GT,
+	ST_GTGT,
+	ST_LT,
+	ST_LTLT,
+	ST_FILE,
 	ST_ENV,
 	ST_IN_DQUOTE,
 	ST_FINISHED,
@@ -59,5 +63,14 @@ void	parser_first_word(t_parse_arg *p);
 void	parser_simple_command(t_parse_arg *p);
 void	parser_env (t_parse_arg *p);
 void	parser_in_dquote (t_parse_arg *p);
+void	parser_gt(t_parse_arg *p);
+void	parser_gtgt(t_parse_arg *p);
+void	change_state(t_parse_arg *p, t_state new_state);
+void	next_token(t_parse_arg *p);
 void	expand_quoted_text(t_parse_arg *p);
+void	set_redirect(t_parse_arg *p);
+void	parser_lt(t_parse_arg *p);
+void	parser_ltlt(t_parse_arg *p);
+void	parser_file(t_parse_arg *p);
+
 #endif
