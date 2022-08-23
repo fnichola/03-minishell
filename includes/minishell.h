@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/19 17:38:13 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/08/23 15:11:02 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,7 @@ void		built_in_echo(char **argv);
 void		built_in_pwd(char **argv);
 void		built_in_env(char **argv);
 void		built_in_export(char **argv);
+bool		is_str_match(char *s1, char *s2);
 void		*malloc_error_check(size_t size);
 t_list		*parser(t_list *tokens, t_envlist *e_list);
 void		ft_perror(char *perror_str);

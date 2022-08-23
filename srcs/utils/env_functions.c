@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/30 22:27:20 by akihito           #+#    #+#             */
-/*   Updated: 2022/08/17 18:43:12 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/08/23 15:13:43 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,10 +108,8 @@ char	*ft_findenv(t_envlist *elst, char *search_key)
 	tmp = elst->next;
 	while (tmp)
 	{
-		if (ft_strcmp(tmp->key, search_key) == 0)
+		if (is_str_match(tmp->key, search_key))
 		{
-			printf("tmp->value = %s\n", tmp->value);
-			// found_value = ft_wstrdup(tmp->value);
 			return (tmp->value);
 		}
 		tmp = tmp->next;

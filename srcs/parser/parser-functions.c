@@ -118,8 +118,13 @@ void	parser_env(t_parse_arg *p)
 	char	*found_env;
 
 	found_env = ft_findenv(p->e_list, p->token->word);//見つからなかったらNULLを返す
-	p->token->token_type = T_WORD;
-	free(p->token->word);
-	p->token->word = ft_strdup(found_env); // ft_findenv doesn't return a "free"-able string
+	if (found_env)
+	{
+		p->token->token_type = T_WORD;
+		free(p->token->word);
+		p->token->word = ft_strdup(found_env); // ft_findenv doesn't return a "free"-able string
+	}
+	else
+		next_token(p); // if no env is found, skip this token
 	change_state(p, p->previous_state);
 }
