@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/26 16:46:58 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/19 19:34:54 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/08/23 15:25:30 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,15 +106,6 @@ void	close_exec_fds(void)
 		i++;
 	}
 }
-// void free_token_list (void *ptr)
-// {
-// 	t_token	*token;
-
-// 	token = (t_token *)ptr;
-// 	free(token->word);
-// 	free(token);
-
-// }
 
 void	search_path_and_exec(char **argv, char **envp)
 {
@@ -156,7 +147,7 @@ char	*str_tolower(char *str)
 	return (str_lower);
 }
 
-bool	loookup_and_exec_built_in(char **argv)
+bool	lookup_and_exec_built_in(char **argv)
 {
 	bool	is_builtin;
 	size_t	i;
@@ -167,9 +158,7 @@ bool	loookup_and_exec_built_in(char **argv)
 	i = 0;
 	while (i < g_data.num_built_ins)
 	{
-		if (!ft_strncmp(str, g_data.built_ins[i].name, 
-			ft_strlen(g_data.built_ins[i].name)) 
-			&& ft_strlen(str) >= ft_strlen(g_data.built_ins[i].name))
+		if (is_str_match(str, g_data.built_ins[i].name))
 		{
 			g_data.built_ins[i].func(argv);
 			is_builtin = true;
@@ -190,7 +179,7 @@ bool	execute_built_in(char **argv)
 	old_fd[1] = dup(STDOUT_FILENO);
 	dup2((g_data.exec_fds[g_data.cmd_index])[0], STDIN_FILENO);
 	dup2((g_data.exec_fds[g_data.cmd_index])[1], STDOUT_FILENO);
-	loookup_and_exec_built_in(argv);
+	is_builtin = lookup_and_exec_built_in(argv);
 	dup2(old_fd[0], STDIN_FILENO);
 	close(old_fd[0]);
 	dup2(old_fd[1], STDOUT_FILENO);
