@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/26 16:46:58 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/24 12:00:14 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/08/24 08:19:48 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <sys/wait.h>
+
+t_minishell_data	g_data;
 
 int	minishell(char **envp)
 {

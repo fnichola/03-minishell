@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/24 12:05:21 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/08/24 08:17:40 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ typedef struct s_minishell_data {
 	t_envlist			*env_list;
 }	t_minishell_data;
 
-t_minishell_data	g_data;
+extern t_minishell_data	g_data;
 
 void		exit_error(char *str);
 void		init_built_in_table(void);
