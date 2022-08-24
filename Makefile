@@ -6,7 +6,7 @@
 #    By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/09 18:01:32 by fnichola          #+#    #+#              #
-#    Updated: 2022/08/23 15:12:30 by fnichola         ###   ########.fr        #
+#    Updated: 2022/08/24 12:04:51 by fnichola         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,6 +19,8 @@ CC = gcc
 CFLAGS = -g -fsanitize=address
 
 SRCS = srcs/main.c \
+	srcs/execute/execute-commands.c \
+	srcs/execute/exec-fds.c \
 	srcs/lexer/lexer.c \
 	srcs/lexer/lex-functions.c \
 	srcs/lexer/lex-utilities.c \
@@ -27,11 +29,18 @@ SRCS = srcs/main.c \
 	srcs/parser/parser-functions.c \
 	srcs/parser/parser-init.c \
 	srcs/parser/expand-quoted-text.c \
-	srcs/utilities.c \
 	srcs/built_in/built_in_command1.c \
-	srcs/utils/env_functions.c \
-	srcs/utils/wrapper.c \
-	srcs/utils/is_str_match.c
+	srcs/built_in/built_in_command2.c \
+	srcs/utilities/argv_len.c \
+	srcs/utilities/env_functions.c \
+	srcs/utilities/exit_error.c \
+	srcs/utilities/ft_perror.c \
+	srcs/utilities/ft_puterror.c \
+	srcs/utilities/ft_strcmp.c \
+	srcs/utilities/is_str_match.c \
+	srcs/utilities/malloc_error_check.c \
+	srcs/utilities/str_tolower.c \
+	srcs/utilities/wrapper.c
 
 ifdef WITH_BONUS
 endif
