@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/23 15:11:02 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/08/24 12:05:21 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,7 @@ typedef struct s_minishell_data {
 t_minishell_data	g_data;
 
 void		exit_error(char *str);
+void		init_built_in_table(void);
 void		built_in_exit(char **argv);
 void		built_in_cd(char **argv);
 void		built_in_echo(char **argv);
@@ -110,6 +111,7 @@ void		built_in_pwd(char **argv);
 void		built_in_env(char **argv);
 void		built_in_export(char **argv);
 bool		is_str_match(char *s1, char *s2);
+char		*str_tolower(char *str);
 void		*malloc_error_check(size_t size);
 t_list		*parser(t_list *tokens, t_envlist *e_list);
 void		ft_perror(char *perror_str);
@@ -132,4 +134,9 @@ char		*ft_echo_env(char *str, t_envlist *e_list);
 char		*find_doll_env(t_envlist *e_list, char *after_doll);
 int			ft_wpipe(int fd[2]);
 void		ft_wexecve(char *file, char **argv, char **envp);
+int			execute_commands(char **envp);
+void		init_exec_fds(void);
+void		free_exec_fds(void);
+void		free_command_table(void *ptr);
+void		close_exec_fds(void);
 #endif
