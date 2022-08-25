@@ -15,38 +15,65 @@
 **	create, edit or search the list of environment variables.
 */
 
-t_envlist	*init_env_list(char **envp)
+void	free_env_list(void)
 {
-	t_envlist	head;
-	t_envlist	*now;
-	size_t		i;
+	t_envlist	*envp;
+	t_envlist	*tmp;
 
-	i = 0;
-	now = &head;
-	if (envp[i] == NULL)
+	envp = g_data.env_list;
+	while (envp)
 	{
-		return (NULL);
+		free(envp->key);
+		free(envp->value);
+		tmp = envp;
+		envp = envp->next;
+		free(tmp);
 	}
-	while (envp[i])
-	{
-		now = create_env_list(envp[i], now);//ここでノードを作っていきリストを作る
-		i++;
-	}
-	return (head.next);
+	g_data.env_list = NULL;
 }
 
-t_envlist	*create_env_list(char *env, t_envlist *now)
+void	init_env_list(char **envp)
 {
 	size_t		i;
-	t_envlist	*node;
+	char	*name;
+	char	*value;
 
-	node = (t_envlist *)malloc_error_check(sizeof(t_envlist));
 	i = 0;
-	node->key = get_env_key(env);
-	node->value = get_env_value(env);
-	now->next = node;
-	node->next = NULL;
-	return (node);
+	while (envp[i])
+	{
+		name = get_env_key(envp[i]);
+		value =	get_env_value(envp[i]);
+		env_list_add_back(name, value);
+		i++;
+	}
+}
+
+t_envlist	*env_list_last(void)
+{
+	t_envlist	*tmp;
+
+	tmp = g_data.env_list;
+	while (tmp && tmp->next)
+		tmp = tmp->next;
+	return (tmp);
+}
+
+t_envlist	*env_list_new(char *name, char *value)
+{
+	t_envlist	*new;
+
+	new = malloc_error_check(sizeof(t_envlist));
+	new->key = name;
+	new->value = value;
+	new->next = NULL;
+}
+
+void	*env_list_add_back(char *name, char *value)
+{
+	if (!g_data.env_list)
+		g_data.env_list = env_list_new(name, value);
+	else 
+		env_list_last()->next = env_list_new(name, value);
 }
 
 int	ft_strncpy(char *dest, char *src, size_t cpy_len)
@@ -97,18 +124,41 @@ char	*get_env_value(char *env)
 	env_str_len = ft_strlen(env);
 	ans_env = ft_strchr(env, '=');
 	(ans_env)++;//ここで　'='を消すERM_PROGRAM=vscodeでfind_indexが23になる
-	return (ans_env);
+	return (ft_wstrdup(ans_env));
 }
 
-char	*ft_findenv(t_envlist *elst, char *search_key)
+/**
+ * Find an env variable and return a pointer to it's node.
+ * Use ft_getenv to retrieve the value directly.
+ */
+t_envlist	*ft_findenv(const char *name)
 {
 	t_envlist	*tmp;
-	// char 		*found_value;
 
-	tmp = elst->next;
+	tmp = g_data.env_list;
 	while (tmp)
 	{
-		if (is_str_match(tmp->key, search_key))
+		if (is_str_match(tmp->key, name))
+		{
+			return (tmp);
+		}
+		tmp = tmp->next;
+	}
+	return (NULL);
+}
+
+/**
+ * Find an env variable and return a pointer to it's VALUE.
+ * Returns NULL if not found.
+ */
+char	*ft_getenv(char *name)
+{
+	t_envlist	*tmp;
+
+	tmp = g_data.env_list;
+	while (tmp)
+	{
+		if (is_str_match(tmp->key, name))
 		{
 			return (tmp->value);
 		}
@@ -117,41 +167,61 @@ char	*ft_findenv(t_envlist *elst, char *search_key)
 	return (NULL);
 }
 
-t_envlist	*ft_set_env(t_envlist *env_list, char *key, char *value, int add)
+int	ft_setenv(const char *name, const char *value, int overwrite)
 {
-	char		*addValue;
-	t_envlist	*tmp;
+	t_envlist	*node;
 
-	tmp = env_list->next;
-	addValue = "";
-	// printf("set_env\n");
-	// printf("value = %s\n", value);
-	while (tmp != env_list)
+	node = ft_findenv(name);
+	if (!node || !name || !ft_strlen(name) || ft_strchr(name, '='))
 	{
-		if (!ft_strcmp(tmp->key, key))
-		{
-			printf("tmp->key = %s\n", tmp->key);
-			if (value)
-			{
-				if (add)
-					addValue = ft_wstrjoin(tmp->value, value);
-				else
-				{
-					// printf("ft_wstrdup\n");
-					addValue = ft_wstrdup(value);
-				}
-				free(value);
-				// free(env_list->value);
-				tmp->value = addValue;
-				// printf("tmp->value %s\n", tmp->value);
-			}
-			free(key);
-			return (env_list);
-		}
-		tmp = tmp->next;
+		errno = EINVAL;
+		return (-1);
 	}
-	return (env_list);
+	else if (node && overwrite)
+	{
+		free(node->value);
+		node->value = ft_wstrdup(value);
+	}
+	else if (!node);
+		env_list_add_back(ft_wstrdup(name), ft_wstrdup(value));
+	return (0);
 }
+
+// t_envlist	*ft_set_env(t_envlist *env_list, char *key, char *value, int add)
+// {
+// 	char		*addValue;
+// 	t_envlist	*tmp;
+
+// 	tmp = env_list->next;
+// 	addValue = "";
+// 	// printf("set_env\n");
+// 	// printf("value = %s\n", value);
+// 	while (tmp != env_list)
+// 	{
+// 		if (!ft_str_match(tmp->key, key))
+// 		{
+// 			printf("tmp->key = %s\n", tmp->key);
+// 			if (value)
+// 			{
+// 				if (add)
+// 					addValue = ft_wstrjoin(tmp->value, value);
+// 				else
+// 				{
+// 					// printf("ft_wstrdup\n");
+// 					addValue = ft_wstrdup(value);
+// 				}
+// 				free(value);
+// 				// free(env_list->value);
+// 				tmp->value = addValue;
+// 				// printf("tmp->value %s\n", tmp->value);
+// 			}
+// 			free(key);
+// 			return (env_list);
+// 		}
+// 		tmp = tmp->next;
+// 	}
+// 	return (env_list);
+// }
 
 void	put_env_asci_order(t_envlist *e_list, t_envlist *sorted)
 {
@@ -184,7 +254,7 @@ void	put_env_asci_order(t_envlist *e_list, t_envlist *sorted)
 
 int	check_shell_val(char *src_str)
 {
-	ssize_t	i;
+	size_t	i;
 
 	i = 0;
 	while (src_str[i])
@@ -202,29 +272,26 @@ int	check_shell_val(char *src_str)
 	return (i);
 }
 
-t_envlist	*to_setenv(t_envlist *e_list, char *src_str, size_t i)
+void	to_setenv(t_envlist *e_list, char *src_str, size_t i)
 {
 	char	*key;
 	char	*value;
-	int		mode;
 
 	if (src_str[i] == '+')
 	{
 		key = ft_wsubstr(src_str, 0, i);
 		value = ft_wsubstr(src_str, i + 2, ft_strlen(src_str) - i - 2);
-		mode = 1;
+		value = ft_strjoin(ft_getenv(key), value);
 	}
 	else if (src_str[i] == '=')
 	{
 		key = ft_wsubstr(src_str, 0, i);
 		value = ft_wsubstr(src_str, i + 1, ft_strlen(src_str) - i - 1);
-		mode = 0;
 	}
 	else
 	{
 		key = ft_wstrdup(src_str);
 		value = NULL;
-		mode = 0;
 	}
-	return (ft_set_env(e_list, key, value, mode));
+	ft_setenv(key, value, 1);
 }
