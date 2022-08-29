@@ -119,7 +119,7 @@ void	lex_in_double_quote(t_lex_arg *l)
 
 void	lex_dollar(t_lex_arg *l)
 {
-	printf("[ST_DOLLAR]");
+	// printf("[ST_DOLLAR]\n");
 	if (is_delimeter((l->line)[l->i]))
 	{
 		l->token_type = T_WORD;

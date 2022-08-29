@@ -15,7 +15,7 @@
 /*
  * Compare two strings, return true if they're an exact match. Length and case-sensitive.
  */
-bool	is_str_match(char *s1, char *s2)
+bool	is_str_match(const char *s1, const char *s2)
 {
 	if (!ft_strcmp(s1, s2) && ft_strlen(s1) == ft_strlen(s2))
 		return true;

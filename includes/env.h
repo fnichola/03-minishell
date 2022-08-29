@@ -22,9 +22,12 @@ typedef struct s_envlist { //環境変数を格納する構造体　単方向線
 	struct s_envlist	*next;
 }	t_envlist;
 
-t_envlist			*init_env_list(char **envp);
-// char				**get_env_key(char *evn);
-t_envlist			*create_env_list(char *envp, t_envlist *node);
-char				*get_env_key(char *env);
-char				*get_env_value(char *env);
+void		init_env_list(char **envp);
+t_envlist	*create_env_list(char *envp, t_envlist *node);
+char		*get_env_key(char *env);
+char		*get_env_value(char *env);
+int			ft_setenv(const char *name, const char *value, int overwrite);
+char		*ft_getenv(char *name);
+void		*env_list_add_back(char *name, char *value);
+void		free_env_list(void);
 # endif 

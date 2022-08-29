@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 17:23:49 by akihito           #+#    #+#             */
-/*   Updated: 2022/08/24 11:54:35 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/08/29 03:34:11 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ void	init_built_in_table(void)
 
 	built_ins = malloc_error_check(sizeof(temp));
 	g_data.num_built_ins = sizeof(temp) / sizeof(t_str_func_table);
-	printf("num_built_ins = %d\n", g_data.num_built_ins);
 	ft_memcpy(built_ins, temp, sizeof(temp));
 	g_data.built_ins = built_ins;
 }
@@ -80,7 +79,7 @@ void	built_in_cd(char **argv)
 
 	tmp = NULL;
 	old_pwd = getcwd(NULL, 0);
-	home_dir = ft_findenv(g_data.env_list, "HOME");
+	home_dir = ft_getenv("HOME");
 	if (argv[1] && argv[1][0] && chdir(argv[1]) == -1)
 	{//status=1
 		ft_perror("cd");//エラーのステータス更新
@@ -94,9 +93,10 @@ void	built_in_cd(char **argv)
 		return ;
 	}
 	now_pwd = getcwd(NULL, 0);
-	if (ft_findenv(g_data.env_list, "PWD"))
-		tmp = ft_set_env(g_data.env_list, ft_wstrdup("PWD"), getcwd(NULL, 0), 0);
-	return ;
+	ft_setenv("PWD", now_pwd, 1);
+	free(now_pwd);
+	ft_setenv("OLDPWD", old_pwd, 1);
+	free(old_pwd);
 }
 
 void	built_in_pwd(char **argv)
@@ -116,6 +116,7 @@ void	built_in_pwd(char **argv)
 	else
 	{//正常
 		printf("%s\n", path_name);
+		free(path_name);
 	}
 	// return (path_name);
 	return ;
@@ -137,8 +138,7 @@ void	built_in_export(char **argv)
 			split_index = check_shell_val(argv[arg_i]);
 			if (split_index != -1)
 			{
-				printf("to_setenv\n");
-				g_data.env_list = to_setenv(g_data.env_list, argv[arg_i], split_index);
+				to_setenv(g_data.env_list, argv[arg_i], split_index);
 			}
 			else//エラー文　bash: export: `TEST++': not a valid identifier
 				ft_puterror("export", argv[arg_i], "not a valid identifier");

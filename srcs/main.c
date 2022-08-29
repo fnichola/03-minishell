@@ -26,11 +26,10 @@ int	minishell(char **envp)
 	char		*line;
 	t_list		*tokens;
 
-	g_data.env_list = init_env_list(envp);
+	init_env_list(envp);
 	g_data.command_table = NULL;
 	init_built_in_table();
 	status = 0;
-	printf("minishell\n");
 	while (!status)
 	{
 		line = readline("minishell$ ");
@@ -41,7 +40,6 @@ int	minishell(char **envp)
 		g_data.command_table = parser(tokens, g_data.env_list);
 		// printf("g_data.command_table %s\n", (char *)g_data.command_table->content->);
 		free(line);
-		printf("before execute\n");
 			status = execute_commands(envp);
 		ft_lstclear(&g_data.command_table, free_command_table);
 	}

@@ -30,7 +30,7 @@ static void	expand_and_join(t_parse_arg *p, char *pre_str,
 	size_t	env_length;
 
 	env_length = ft_strlen(quoted_var);
-	found_env = ft_findenv(p->e_list, quoted_var);//見つからなかったらNULLを返す
+	found_env = ft_getenv(quoted_var);//見つからなかったらNULLを返す
 	if (found_env)
 	{
 		tmp_str = ft_strjoin(pre_str, found_env);

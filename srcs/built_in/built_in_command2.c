@@ -83,6 +83,7 @@ void	built_in_exit(char **argv)
 		argc++;
 
 	ft_lstclear(&g_data.command_table, free_command_table);
+	free_env_list();
 	if (argc == 1)
 	{
 		printf("exit\n");

@@ -117,7 +117,7 @@ void	parser_env(t_parse_arg *p)
 {
 	char	*found_env;
 
-	found_env = ft_findenv(p->e_list, p->token->word);//見つからなかったらNULLを返す
+	found_env = ft_getenv(p->token->word);//見つからなかったらNULLを返す
 	if (found_env)
 	{
 		p->token->token_type = T_WORD;
