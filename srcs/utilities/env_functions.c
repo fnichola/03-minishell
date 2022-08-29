@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/30 22:27:20 by akihito           #+#    #+#             */
-/*   Updated: 2022/08/23 15:13:43 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/08/29 03:33:38 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,9 +171,12 @@ int	ft_setenv(const char *name, const char *value, int overwrite)
 {
 	t_envlist	*node;
 
+	printf("ft_setenv: name = %s, value = %s\n", name, value);
+
 	node = ft_findenv(name);
-	if (!node || !name || !ft_strlen(name) || ft_strchr(name, '='))
+	if (!name || !ft_strlen(name) || ft_strchr(name, '='))
 	{
+		printf("ft_setenv: error!\n");
 		errno = EINVAL;
 		return (-1);
 	}
