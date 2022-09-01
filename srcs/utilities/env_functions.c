@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/30 22:27:20 by akihito           #+#    #+#             */
-/*   Updated: 2022/08/29 03:33:38 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/09/01 01:56:29 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	free_env_list(void)
 	envp = g_data.env_list;
 	while (envp)
 	{
-		free(envp->key);
+		free(envp->name);
 		free(envp->value);
 		tmp = envp;
 		envp = envp->next;
@@ -44,11 +44,19 @@ void	init_env_list(char **envp)
 		name = get_env_key(envp[i]);
 		value =	get_env_value(envp[i]);
 		env_list_add_back(name, value);
+		ft_findenv(name)->export = true;
 		i++;
 	}
 }
 
-t_envlist	*env_list_last(void)
+t_envlist	*env_list_first(t_envlist *ptr)
+{
+	while (ptr && ptr->prev)
+		ptr = ptr->prev;
+	return (ptr);
+}
+
+t_envlist	*env_list_last(t_envlist *ptr)
 {
 	t_envlist	*tmp;
 
@@ -63,17 +71,27 @@ t_envlist	*env_list_new(char *name, char *value)
 	t_envlist	*new;
 
 	new = malloc_error_check(sizeof(t_envlist));
-	new->key = name;
+	new->name = name;
 	new->value = value;
 	new->next = NULL;
+	new->prev = NULL;
+	new->export = false;
 }
 
 void	*env_list_add_back(char *name, char *value)
 {
+	t_envlist	*new_var;
+	t_envlist	*last_var;
+
+	new_var = env_list_new(name, value);
 	if (!g_data.env_list)
-		g_data.env_list = env_list_new(name, value);
+		g_data.env_list = new_var;
 	else 
-		env_list_last()->next = env_list_new(name, value);
+	{
+		last_var = env_list_last(g_data.env_list);
+		new_var->prev = last_var;
+		last_var->next = new_var;
+	}
 }
 
 int	ft_strncpy(char *dest, char *src, size_t cpy_len)
@@ -138,7 +156,7 @@ t_envlist	*ft_findenv(const char *name)
 	tmp = g_data.env_list;
 	while (tmp)
 	{
-		if (is_str_match(tmp->key, name))
+		if (is_str_match(tmp->name, name))
 		{
 			return (tmp);
 		}
@@ -158,7 +176,7 @@ char	*ft_getenv(char *name)
 	tmp = g_data.env_list;
 	while (tmp)
 	{
-		if (is_str_match(tmp->key, name))
+		if (is_str_match(tmp->name, name))
 		{
 			return (tmp->value);
 		}
@@ -171,7 +189,6 @@ int	ft_setenv(const char *name, const char *value, int overwrite)
 {
 	t_envlist	*node;
 
-	printf("ft_setenv: name = %s, value = %s\n", name, value);
 
 	node = ft_findenv(name);
 	if (!name || !ft_strlen(name) || ft_strchr(name, '='))
@@ -190,69 +207,51 @@ int	ft_setenv(const char *name, const char *value, int overwrite)
 	return (0);
 }
 
-// t_envlist	*ft_set_env(t_envlist *env_list, char *key, char *value, int add)
-// {
-// 	char		*addValue;
-// 	t_envlist	*tmp;
-
-// 	tmp = env_list->next;
-// 	addValue = "";
-// 	// printf("set_env\n");
-// 	// printf("value = %s\n", value);
-// 	while (tmp != env_list)
-// 	{
-// 		if (!ft_str_match(tmp->key, key))
-// 		{
-// 			printf("tmp->key = %s\n", tmp->key);
-// 			if (value)
-// 			{
-// 				if (add)
-// 					addValue = ft_wstrjoin(tmp->value, value);
-// 				else
-// 				{
-// 					// printf("ft_wstrdup\n");
-// 					addValue = ft_wstrdup(value);
-// 				}
-// 				free(value);
-// 				// free(env_list->value);
-// 				tmp->value = addValue;
-// 				// printf("tmp->value %s\n", tmp->value);
-// 			}
-// 			free(key);
-// 			return (env_list);
-// 		}
-// 		tmp = tmp->next;
-// 	}
-// 	return (env_list);
-// }
-
-void	put_env_asci_order(t_envlist *e_list, t_envlist *sorted)
+void	env_list_swap_next(t_envlist *node)
 {
-	t_envlist	*tmp;
-	t_envlist	*put_tmp;
+	t_envlist	*tmp1;
+	t_envlist	*tmp2;
 
-	put_tmp = NULL;
-	tmp = e_list;
-	while (tmp)
+	tmp1 = node->prev;
+	tmp2 = node->next->next;
+	if (tmp1)
+		tmp1->next = node->next;
+	if (tmp2)
+		tmp2->prev = node;
+	node->next->prev = tmp1;
+	node->next->next = node;
+	node->prev = node->next;
+	node->next = tmp2;
+}
+
+void	env_list_sort(void)
+{
+	bool		is_sorted;
+	t_envlist	*ptr;
+	t_envlist	*tmp1;
+	t_envlist	*tmp2;
+
+	is_sorted = false;
+	ptr = g_data.env_list;
+	if (!ptr || !ptr->next)
+		return ;
+
+	while(!is_sorted)
 	{
-		if (sorted == NULL || ft_strcmp(sorted->key, tmp->key) < 0)
+		is_sorted = true;
+		ptr = env_list_first(ptr);
+		while (ptr && ptr->next)
 		{
-			if (put_tmp == NULL)
-				put_tmp = tmp;
-			else if (ft_strcmp(tmp->key, put_tmp->key) < 0)
-				put_tmp = tmp;
+			if (ft_strcmp(ptr->name, ptr->next->name) > 0)
+			{
+				env_list_swap_next(ptr);
+				is_sorted = false;
+			}
+			if (ptr->next)
+				ptr = ptr->next;
 		}
-		tmp = tmp->next;
 	}
-	if (put_tmp)
-	{
-		if (put_tmp->value)
-			printf("declare -x %s=\"%s\"\n", put_tmp->key, put_tmp->value);
-		else
-			printf("declare -x %s\n", put_tmp->key);
-		put_env_asci_order(e_list, put_tmp);
-	}
-	return ;
+	g_data.env_list = env_list_first(ptr);
 }
 
 int	check_shell_val(char *src_str)
@@ -277,24 +276,24 @@ int	check_shell_val(char *src_str)
 
 void	to_setenv(t_envlist *e_list, char *src_str, size_t i)
 {
-	char	*key;
+	char	*name;
 	char	*value;
 
 	if (src_str[i] == '+')
 	{
-		key = ft_wsubstr(src_str, 0, i);
+		name = ft_wsubstr(src_str, 0, i);
 		value = ft_wsubstr(src_str, i + 2, ft_strlen(src_str) - i - 2);
-		value = ft_strjoin(ft_getenv(key), value);
+		value = ft_strjoin(ft_getenv(name), value);
 	}
 	else if (src_str[i] == '=')
 	{
-		key = ft_wsubstr(src_str, 0, i);
+		name = ft_wsubstr(src_str, 0, i);
 		value = ft_wsubstr(src_str, i + 1, ft_strlen(src_str) - i - 1);
 	}
 	else
 	{
-		key = ft_wstrdup(src_str);
+		name = ft_wstrdup(src_str);
 		value = NULL;
 	}
-	ft_setenv(key, value, 1);
+	ft_setenv(name, value, 1);
 }

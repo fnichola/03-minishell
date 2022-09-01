@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/24 08:17:40 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/08/29 06:28:10 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,7 @@ char		*ft_wstrjoin(char *str1, char *str2);
 char		*ft_wstrdup(const char *src);
 t_envlist	*ft_set_env(t_envlist *env_list, char *key, char *value, int add);
 t_envlist	*ft_findenv(const char *name);
-void		put_env_asci_order(t_envlist *e_list, t_envlist *sorted);
+void		put_env_ascii_order(void);
 int			check_shell_val(char *src_str);
 void		to_setenv(t_envlist *e_list, char *src_str, size_t i);
 char		*ft_wsubstr(char const *s, unsigned int start, size_t len);

@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 17:23:49 by akihito           #+#    #+#             */
-/*   Updated: 2022/08/29 03:34:11 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/09/01 01:54:01 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,37 +122,98 @@ void	built_in_pwd(char **argv)
 	return ;
 }
 
-void	built_in_export(char **argv)
-{//ascii順に並べる
-	ssize_t		split_index;
-	ssize_t		arg_i;
-	t_envlist	*tmp;
+void	printf_env_ascii(void)
+{
 
-	arg_i = 1;
-	if (argv[arg_i] == NULL)
-		put_env_asci_order(g_data.env_list, NULL);
-	else//環境変数の追加または変更の処理
+}
+
+t_envlist	split_env(const char *str)
+{
+	size_t		i;
+	t_envlist	new_var;
+
+	printf("split_env\n");
+	i = 0;
+	while (str[i])
 	{
-		while (argv[arg_i])
+		if (str[i] == '=')
 		{
-			split_index = check_shell_val(argv[arg_i]);
-			if (split_index != -1)
-			{
-				to_setenv(g_data.env_list, argv[arg_i], split_index);
-			}
-			else//エラー文　bash: export: `TEST++': not a valid identifier
-				ft_puterror("export", argv[arg_i], "not a valid identifier");
-			arg_i++;
+			new_var.name = ft_wsubstr(str, 0, i);
+			new_var.value = ft_wstrdup(&str[i+1]);
+			printf("new_var.name = %s\nnew_var.value = %s\n", new_var.name, new_var.value);
+			return (new_var);
+		}
+		i++;
+	}
+	new_var.name = NULL;
+	new_var.value = NULL;
+	return (new_var);
+}
+
+void	built_in_export(char **argv)
+{
+	size_t		i;
+	t_envlist	new_var;
+
+	if (!argv || !argv[0])
+		exit_error("Export");
+	else if (!argv[1])
+	{
+		env_list_sort();
+		t_envlist	*ptr = g_data.env_list;
+		while(ptr)
+		{
+			if (ptr->export)
+				printf("declare -x %s=%s\n", ptr->name, ptr->value);
+			ptr = ptr->next;
 		}
 	}
-	tmp = g_data.env_list->next;
-	while (tmp)
+	else
 	{
-		printf("%s : %s\n", tmp->key, tmp->value);
-		tmp = tmp->next;
+		i = 1;
+		while (argv[i])
+		{
+			new_var = split_env(argv[i]);
+			ft_setenv(new_var.name, new_var.value, 1);
+			ft_findenv(new_var.name)->export = true;
+			free(new_var.name);
+			free(new_var.value);
+			i++;
+		}
 	}
-	return ;
 }
+
+// void	built_in_export(char **argv)
+// {//ascii順に並べる
+// 	ssize_t		split_index;
+// 	ssize_t		arg_i;
+// 	t_envlist	*tmp;
+
+// 	arg_i = 1;
+// 	if (argv[arg_i] == NULL)
+// 		put_env_asci_order(g_data.env_list, NULL);
+// 	else//環境変数の追加または変更の処理
+// 	{
+// 		while (argv[arg_i])
+// 		{
+// 			split_index = check_shell_val(argv[arg_i]);
+// 			if (split_index != -1)
+// 			{
+// 				to_setenv(g_data.env_list, argv[arg_i], split_index);
+// 			}
+// 			else//エラー文　bash: export: `TEST++': not a valid identifier
+// 				ft_puterror("export", argv[arg_i], "not a valid identifier");
+// 			arg_i++;
+// 		}
+// 	}
+// 	tmp = g_data.env_list->next;
+// 	while (tmp)
+// 	{
+// 		printf("%s : %s\n", tmp->key, tmp->value);
+// 		tmp = tmp->next;
+// 	}
+// 	return ;
+// }
 
 void	built_in_env(char **argv)
 {
@@ -163,7 +224,7 @@ void	built_in_env(char **argv)
 	while (per_env)
 	{
 		if (per_env->value)
-			printf("%s=%s\n", per_env->key, per_env->value);
+			printf("%s=%s\n", per_env->name, per_env->value);
 		per_env = per_env->next;
 	}
 }

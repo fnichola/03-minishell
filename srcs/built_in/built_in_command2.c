@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/08 01:54:35 by akihito           #+#    #+#             */
-/*   Updated: 2022/08/24 11:36:06 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/08/29 06:56:40 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,13 +41,13 @@ t_envlist	*ft_unsetenv(t_envlist *e_list, char *unset_key)
 	prev = NULL;
 	while (tmp)
 	{
-		if (ft_strcmp(tmp->key, unset_key) == 0)
+		if (ft_strcmp(tmp->name, unset_key) == 0)
 		{
 			if (prev == NULL)
 				e_list = tmp;
 			else
 				prev->next = tmp->next;
-			free(tmp->key);
+			free(tmp->name);
 			free(tmp->value);
 			free(tmp);
 		}
