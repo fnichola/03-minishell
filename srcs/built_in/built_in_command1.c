@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 17:23:49 by akihito           #+#    #+#             */
-/*   Updated: 2022/08/29 07:29:15 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/09/01 01:54:01 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,7 +163,8 @@ void	built_in_export(char **argv)
 		t_envlist	*ptr = g_data.env_list;
 		while(ptr)
 		{
-			printf("%s=%s\n", ptr->name, ptr->value);
+			if (ptr->export)
+				printf("declare -x %s=%s\n", ptr->name, ptr->value);
 			ptr = ptr->next;
 		}
 	}
@@ -174,6 +175,7 @@ void	built_in_export(char **argv)
 		{
 			new_var = split_env(argv[i]);
 			ft_setenv(new_var.name, new_var.value, 1);
+			ft_findenv(new_var.name)->export = true;
 			free(new_var.name);
 			free(new_var.value);
 			i++;

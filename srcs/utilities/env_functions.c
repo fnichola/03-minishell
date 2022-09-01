@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/30 22:27:20 by akihito           #+#    #+#             */
-/*   Updated: 2022/09/01 01:29:53 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/09/01 01:56:29 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ void	init_env_list(char **envp)
 		name = get_env_key(envp[i]);
 		value =	get_env_value(envp[i]);
 		env_list_add_back(name, value);
+		ft_findenv(name)->export = true;
 		i++;
 	}
 }
@@ -74,6 +75,7 @@ t_envlist	*env_list_new(char *name, char *value)
 	new->value = value;
 	new->next = NULL;
 	new->prev = NULL;
+	new->export = false;
 }
 
 void	*env_list_add_back(char *name, char *value)
@@ -205,71 +207,22 @@ int	ft_setenv(const char *name, const char *value, int overwrite)
 	return (0);
 }
 
-// t_envlist	*ft_set_env(t_envlist *env_list, char *name, char *value, int add)
-// {
-// 	char		*addValue;
-// 	t_envlist	*tmp;
+void	env_list_swap_next(t_envlist *node)
+{
+	t_envlist	*tmp1;
+	t_envlist	*tmp2;
 
-// 	tmp = env_list->next;
-// 	addValue = "";
-// 	// printf("set_env\n");
-// 	// printf("value = %s\n", value);
-// 	while (tmp != env_list)
-// 	{
-// 		if (!ft_str_match(tmp->name, name))
-// 		{
-// 			printf("tmp->name = %s\n", tmp->name);
-// 			if (value)
-// 			{
-// 				if (add)
-// 					addValue = ft_wstrjoin(tmp->value, value);
-// 				else
-// 				{
-// 					// printf("ft_wstrdup\n");
-// 					addValue = ft_wstrdup(value);
-// 				}
-// 				free(value);
-// 				// free(env_list->value);
-// 				tmp->value = addValue;
-// 				// printf("tmp->value %s\n", tmp->value);
-// 			}
-// 			free(name);
-// 			return (env_list);
-// 		}
-// 		tmp = tmp->next;
-// 	}
-// 	return (env_list);
-// }
-
-// void	put_env_asci_order(void)
-// {
-// 	t_envlist	*tmp;
-// 	t_envlist	*put_tmp;
-
-// 	put_tmp = NULL;
-// 	tmp = g_data.env_list;
-// 	while (tmp)
-// 	{
-// 		if (sorted == NULL || ft_strcmp(sorted->name, tmp->name) < 0)
-// 		{
-// 			if (put_tmp == NULL)
-// 				put_tmp = tmp;
-// 			else if (ft_strcmp(tmp->name, put_tmp->name) < 0)
-// 				put_tmp = tmp;
-// 		}
-// 		tmp = tmp->next;
-// 	}
-// 	if (put_tmp)
-// 	{
-// 		if (put_tmp->value)
-// 			printf("declare -x %s=\"%s\"\n", put_tmp->name, put_tmp->value);
-// 		else
-// 			printf("declare -x %s\n", put_tmp->name);
-// 		put_env_asci_order(e_list, put_tmp);
-// 	}
-// 	return ;
-// }
-
+	tmp1 = node->prev;
+	tmp2 = node->next->next;
+	if (tmp1)
+		tmp1->next = node->next;
+	if (tmp2)
+		tmp2->prev = node;
+	node->next->prev = tmp1;
+	node->next->next = node;
+	node->prev = node->next;
+	node->next = tmp2;
+}
 
 void	env_list_sort(void)
 {
@@ -291,16 +244,7 @@ void	env_list_sort(void)
 		{
 			if (ft_strcmp(ptr->name, ptr->next->name) > 0)
 			{
-				tmp1 = ptr->prev;
-				tmp2 = ptr->next->next;
-				if (tmp1)
-					tmp1->next = ptr->next;
-				if (tmp2)
-					tmp2->prev = ptr;
-				ptr->next->prev = tmp1;
-				ptr->next->next = ptr;
-				ptr->prev = ptr->next;
-				ptr->next = tmp2;
+				env_list_swap_next(ptr);
 				is_sorted = false;
 			}
 			if (ptr->next)
