@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/30 22:27:20 by akihito           #+#    #+#             */
-/*   Updated: 2022/08/29 07:37:17 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/09/01 01:29:53 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -303,7 +303,8 @@ void	env_list_sort(void)
 				ptr->next = tmp2;
 				is_sorted = false;
 			}
-			ptr = ptr->next;
+			if (ptr->next)
+				ptr = ptr->next;
 		}
 	}
 	g_data.env_list = env_list_first(ptr);
