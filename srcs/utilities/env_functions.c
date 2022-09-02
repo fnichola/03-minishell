@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/30 22:27:20 by akihito           #+#    #+#             */
-/*   Updated: 2022/09/01 01:56:29 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/09/02 02:50:58 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,10 +200,16 @@ int	ft_setenv(const char *name, const char *value, int overwrite)
 	else if (node && overwrite)
 	{
 		free(node->value);
-		node->value = ft_wstrdup(value);
+		if (value)
+			node->value = ft_wstrdup(value);
 	}
 	else if (!node);
-		env_list_add_back(ft_wstrdup(name), ft_wstrdup(value));
+	{
+		if (value)
+			env_list_add_back(ft_wstrdup(name), ft_wstrdup(value));
+		else
+			env_list_add_back(ft_wstrdup(name), NULL);
+	}
 	return (0);
 }
 

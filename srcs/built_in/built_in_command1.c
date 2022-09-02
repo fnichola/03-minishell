@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 17:23:49 by akihito           #+#    #+#             */
-/*   Updated: 2022/09/01 01:54:01 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/09/02 02:53:01 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,6 +154,7 @@ void	built_in_export(char **argv)
 {
 	size_t		i;
 	t_envlist	new_var;
+	t_envlist	*found_env;
 
 	if (!argv || !argv[0])
 		exit_error("Export");
@@ -163,8 +164,10 @@ void	built_in_export(char **argv)
 		t_envlist	*ptr = g_data.env_list;
 		while(ptr)
 		{
-			if (ptr->export)
-				printf("declare -x %s=%s\n", ptr->name, ptr->value);
+			if (ptr->export && ptr->value)
+				printf("declare -x %s=\"%s\"\n", ptr->name, ptr->value);
+			else if (ptr->export)
+				printf("declare -x %s\n", ptr->name);
 			ptr = ptr->next;
 		}
 	}
@@ -173,11 +176,28 @@ void	built_in_export(char **argv)
 		i = 1;
 		while (argv[i])
 		{
-			new_var = split_env(argv[i]);
-			ft_setenv(new_var.name, new_var.value, 1);
-			ft_findenv(new_var.name)->export = true;
-			free(new_var.name);
-			free(new_var.value);
+			if (ft_strlen(argv[i]) > 1 && ft_strchr(argv[i], '='))
+			{
+				new_var = split_env(argv[i]);
+				ft_setenv(new_var.name, new_var.value, 1);
+				found_env = ft_findenv(new_var.name);
+				found_env->export = true;
+				free(new_var.name);
+				free(new_var.value);
+			}
+			else
+			{
+				found_env = ft_findenv(argv[i]);
+				if (found_env)
+					found_env->export = true;
+				else
+				{
+					ft_setenv(argv[i], NULL, 0);
+					found_env = ft_findenv(argv[i]);
+					if (found_env)
+						found_env->export = true;
+				}
+			}
 			i++;
 		}
 	}
