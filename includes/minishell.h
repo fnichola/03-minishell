@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/29 06:28:10 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/09/08 04:49:40 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,7 @@ typedef struct s_minishell_data {
 	size_t				cmd_index;
 	int					exit_satus;
 	t_envlist			*env_list;
+	char				**envp;
 }	t_minishell_data;
 
 extern t_minishell_data	g_data;

@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/26 16:46:58 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/24 08:19:48 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/09/08 05:09:24 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,23 @@
 
 t_minishell_data	g_data;
 
+void	init_envp(char **envp)
+{
+	size_t	i;
+
+	i = 0;
+	while (envp[i])
+		++i;
+	g_data.envp = malloc_error_check(sizeof(char *) * (i + 1));
+	i = 0;
+	while (envp[i])
+	{
+		g_data.envp[i] = ft_wstrdup(envp[i]);
+		++i;
+	}
+	g_data.envp[i] = NULL;
+}
+
 int	minishell(char **envp)
 {
 	int			status;
@@ -27,6 +44,7 @@ int	minishell(char **envp)
 	t_list		*tokens;
 
 	init_env_list(envp);
+	init_envp(envp);
 	g_data.command_table = NULL;
 	init_built_in_table();
 	status = 0;
@@ -51,6 +69,7 @@ int	main(int argc, char **argv, char **envp)
 	(void)argv;
 	if (argc == 1)
 	{
+		printf("environ: %s\n", __environ[0]);
 		minishell(envp);
 	}
 	else

@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/30 22:27:20 by akihito           #+#    #+#             */
-/*   Updated: 2022/09/02 02:50:58 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/09/08 05:10:01 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,17 +17,24 @@
 
 void	free_env_list(void)
 {
-	t_envlist	*envp;
+	t_envlist	*env_list_p;
 	t_envlist	*tmp;
+	char		**envp;
 
-	envp = g_data.env_list;
-	while (envp)
+	env_list_p = g_data.env_list;
+	while (env_list_p)
 	{
-		free(envp->name);
-		free(envp->value);
-		tmp = envp;
-		envp = envp->next;
+		free(env_list_p->name);
+		free(env_list_p->value);
+		tmp = env_list_p;
+		env_list_p = env_list_p->next;
 		free(tmp);
+	}
+	envp = g_data.envp;
+	while (*envp)
+	{
+		free(*envp);
+		++envp;
 	}
 	g_data.env_list = NULL;
 }
