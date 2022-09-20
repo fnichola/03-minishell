@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 15:11:01 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/22 18:50:20 by akihito          ###   ########.fr       */
+/*   Updated: 2022/08/28 19:23:02 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 # include <stdio.h>
 # include <stdbool.h>
 # include <errno.h>
+# include <fcntl.h>
+# include <dirent.h>
 
 typedef enum e_state {
 	ST_NEUTRAL = 0,
@@ -72,5 +74,7 @@ void	set_redirect(t_parse_arg *p);
 void	parser_lt(t_parse_arg *p);
 void	parser_ltlt(t_parse_arg *p);
 void	parser_file(t_parse_arg *p);
+void	operation_file_fds(t_parse_arg *p);
+int		is_file_exist(t_parse_arg *p, char *file_name);
 
 #endif

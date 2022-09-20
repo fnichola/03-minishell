@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/26 16:46:58 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/22 17:50:52 by akihito          ###   ########.fr       */
+/*   Updated: 2022/09/04 16:26:15 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,6 @@ void	built_in_exit(char **argv)
 	argc = 0;
 	while (argv[argc])
 		argc++;
-
 	ft_lstclear(&g_data.command_table, free_command_table);
 	if (argc == 1)
 	{
@@ -219,7 +218,6 @@ void	execute_external(char **argv, char **envp)
 	{
 		if (g_data.cmd_index == g_data.num_cmds - 1)
 		{
-
 			printf("close fds after executing last command\n");
 			close_exec_fds();
 			waitpid(pid, &status, WUNTRACED);
@@ -289,7 +287,6 @@ int	execute_commands(char **envp)
 	command_table_ptr = g_data.command_table;//ここでグローバル変数から、コマンドを代入している
 	g_data.num_cmds = ft_lstsize(g_data.command_table);
 	connect_pipes();
-
 	g_data.cmd_index = 0;
 	while (g_data.cmd_index < g_data.num_cmds)//num_cmdsはパイプがあれば、増えていく
 	{
@@ -318,6 +315,7 @@ int	minishell(char **envp)
 	int			status;
 	char		*line;
 	t_list		*tokens;
+	t_list		*tmp;
 
 	g_data.env_list = init_env_list(envp);
 	g_data.command_table = NULL;
@@ -330,6 +328,12 @@ int	minishell(char **envp)
 		if (line && *line)
 			add_history(line);
 		tokens = tokenizer(line);
+		tmp = tokens;
+		while (tmp)
+		{
+			printf("#### %d \n", tmp->content);
+			tmp = tmp->next;
+		}
 		// printf("tokens %s\n", (char *)tokens->next->content);
 		g_data.command_table = parser(tokens, g_data.env_list);
 		// printf("g_data.command_table %s\n", (char *)g_data.command_table->content->word);

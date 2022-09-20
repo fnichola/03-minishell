@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/22 19:39:31 by akihito          ###   ########.fr       */
+/*   Updated: 2022/09/04 21:22:33 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ typedef struct s_command {
 	char		*input_file;
 	char		*error_file;
 	t_envlist	*env_list;
+	// t_fd_list	*fd_list;
 }	t_command;
 
 typedef struct s_exec_fds {//command１つ１つに対して依存するべき

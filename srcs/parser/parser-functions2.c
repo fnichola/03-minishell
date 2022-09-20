@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/21 14:26:18 by akihito           #+#    #+#             */
-/*   Updated: 2022/08/23 01:52:49 by akihito          ###   ########.fr       */
+/*   Updated: 2022/09/20 20:54:01 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ void	parser_simple_command(t_parse_arg *p)
 	}
 	else if (p->token->token_type == T_WORD)
 	{
-		printf("p->token->token_type\n");
+		printf("T_WORD\n");
+		printf("p->token->token_type %d\n", p->token->token_type);
 		p->command->argv[p->index] = ft_strdup(p->token->word);
 		p->token = NULL;//なぜ??
 		(p->index)++;
@@ -49,7 +50,19 @@ void	parser_simple_command(t_parse_arg *p)
 		p->command->argv[p->index] = NULL;
 		ft_lstadd_back(&p->command_table, ft_lstnew(p->command));
 		next_token(p);
-		change_state(p, ST_FILE);
+		change_state(p, ST_GT);
+	}
+	else if (p->token->token_type == T_FILE)
+	{
+		printf("T_FILE\n");
+		printf("p->token->word %s\n", p->token->word);
+		// operation_file_fds(p);
+		if (p->token->word)
+		{
+			operation_file_fds(p);
+		}
+		next_token(p);
+		change_state(p, ST_NEUTRAL);
 	}
 	// else if (p->token->token_type == T_GTGT)
 	// {
@@ -91,17 +104,19 @@ void	parser_gt(t_parse_arg *p)
 	(void *)p;
 	printf("parser_gt\n");
 	// printf("p->token->token_type = %d\n", p->token->token_type);
-	p->token->token_type = T_GT;
+	p->token->token_type = T_FILE;
 	set_redirect(p);
-	change_state(p, ST_FILE);
-	next_token(p);
+	change_state(p, ST_SIMPLE_COMMAND);
+	// printf("p->token->token_type = %d\n", p->token->token_type);
+	// next_token(p);
+	// printf("p->token->token_type = %d\n", p->token->token_type);
 }
 
 void	parser_gtgt(t_parse_arg *p)
 {
 	(void *)p;
 	printf("parser_gtgt\n");
-	p->token->token_type = T_WORD;
+	// p->token->token_type = T_WORD;
 	// next_token(p);
 	change_state(p, ST_GTGT);
 }

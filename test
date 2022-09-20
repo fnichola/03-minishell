@@ -1,3 +1,25 @@
-line1
-line2
-line3
+after
+end
+before execute
+exec_fds[0] = 0, 1
+close fds after executing last command
+search
+Makefile
+a.out
+fuga
+hoge
+hogehgoe3
+hogehoge3
+in_fd
+includes
+leak_search.sh
+libft
+make
+minishell
+pipe_fd[0]
+srcs
+test
+test_file
+test_hoge
+tester
+minishell$ 

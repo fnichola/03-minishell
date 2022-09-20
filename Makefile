@@ -6,7 +6,7 @@
 #    By: akihito <akihito@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/09 18:01:32 by fnichola          #+#    #+#              #
-#    Updated: 2022/08/22 18:50:58 by akihito          ###   ########.fr        #
+#    Updated: 2022/08/28 18:02:37 by akihito          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,6 +29,7 @@ SRCS = srcs/main.c \
 	srcs/parser/parser-functions3.c \
 	srcs/parser/parser-init.c \
 	srcs/parser/expand-quoted-text.c \
+	srcs/parser/fd_utils.c \
 	srcs/utilities.c \
 	srcs/built_in/built_in_command1.c \
 	srcs/built_in/built_in_utils.c \
