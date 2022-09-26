@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/30 22:27:20 by akihito           #+#    #+#             */
-/*   Updated: 2022/09/26 00:32:40 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/09/26 00:50:07 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,12 +65,10 @@ t_envlist	*env_list_first(t_envlist *ptr)
 
 t_envlist	*env_list_last(t_envlist *ptr)
 {
-	t_envlist	*tmp;
 
-	tmp = g_data.env_list;
-	while (tmp && tmp->next)
-		tmp = tmp->next;
-	return (tmp);
+	while (ptr && ptr->next)
+		ptr = ptr->next;
+	return (ptr);
 }
 
 t_envlist	*env_list_new(char *name, char *value)
@@ -83,9 +81,10 @@ t_envlist	*env_list_new(char *name, char *value)
 	new->next = NULL;
 	new->prev = NULL;
 	new->export = false;
+	return (new);
 }
 
-void	*env_list_add_back(char *name, char *value)
+void	env_list_add_back(char *name, char *value)
 {
 	t_envlist	*new_var;
 	t_envlist	*last_var;
@@ -106,7 +105,7 @@ int	ft_strncpy(char *dest, char *src, size_t cpy_len)
 	size_t	i;
 
 	i = 0;
-	if (cpy_len < 0 || !src)
+	if (!src)
 	{
 		exit_error("strncpy error\n");
 		return (-1);
@@ -124,12 +123,10 @@ char	*get_env_key(char *env)
 {
 	// int		env_str_len;
 	char	*value_env;
-	int		find_index;
 	int		key_len;
 	char	*key_env;
 
 	key_len = 0;
-	find_index = 0;
 	value_env = ft_strchr(env, '=');
 	key_len = value_env - env;
 	key_env = (char *)malloc(sizeof(char) * (key_len + 1));
@@ -141,12 +138,8 @@ char	*get_env_key(char *env)
 
 char	*get_env_value(char *env)
 {
-	int		envp_i;
-	int		env_str_len;
 	char	*ans_env;
 
-	envp_i = 0;
-	env_str_len = ft_strlen(env);
 	ans_env = ft_strchr(env, '=');
 	(ans_env)++;//ここで　'='を消すERM_PROGRAM=vscodeでfind_indexが23になる
 	return (ft_wstrdup(ans_env));
@@ -210,7 +203,7 @@ int	ft_setenv(const char *name, const char *value, int overwrite)
 		if (value)
 			node->value = ft_wstrdup(value);
 	}
-	else if (!node);
+	else if (!node)
 	{
 		if (value)
 			env_list_add_back(ft_wstrdup(name), ft_wstrdup(value));
@@ -241,8 +234,6 @@ void	env_list_sort(void)
 {
 	bool		is_sorted;
 	t_envlist	*ptr;
-	t_envlist	*tmp1;
-	t_envlist	*tmp2;
 
 	is_sorted = false;
 	ptr = g_data.env_list;
@@ -285,30 +276,6 @@ int	check_shell_val(char *src_str)
 		i++;
 	}
 	return (i);
-}
-
-void	to_setenv(t_envlist *e_list, char *src_str, size_t i)
-{
-	char	*name;
-	char	*value;
-
-	if (src_str[i] == '+')
-	{
-		name = ft_wsubstr(src_str, 0, i);
-		value = ft_wsubstr(src_str, i + 2, ft_strlen(src_str) - i - 2);
-		value = ft_strjoin(ft_getenv(name), value);
-	}
-	else if (src_str[i] == '=')
-	{
-		name = ft_wsubstr(src_str, 0, i);
-		value = ft_wsubstr(src_str, i + 1, ft_strlen(src_str) - i - 1);
-	}
-	else
-	{
-		name = ft_wstrdup(src_str);
-		value = NULL;
-	}
-	ft_setenv(name, value, 1);
 }
 
 char	**export_to_envp(void)

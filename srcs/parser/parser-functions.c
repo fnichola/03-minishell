@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 14:58:17 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/18 17:18:36 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/09/26 00:41:48 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,11 +103,6 @@ void	parser_simple_command(t_parse_arg *p)
 //ここでexpandしてT_WORDに変更する。　
 void	parser_in_dquote(t_parse_arg *p)
 {
-	t_envlist	*tmp;
-	char		*found_index;
-	char		*found_env;
-	char		*joined_str;
-
 	expand_quoted_text(p);
 	p->token->token_type = T_WORD;
 	change_state(p, p->previous_state);

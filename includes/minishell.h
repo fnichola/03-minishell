@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/09/08 04:49:40 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/09/26 00:49:10 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ typedef struct s_exec_fds {//command１つ１つに対して依存するべき
 
 typedef struct s_minishell_data {
 	t_str_func_table	*built_ins;
-	int					num_built_ins;
+	size_t					num_built_ins;
 	t_list				*command_table;
 	int					**exec_fds;
 	size_t				num_cmds;
@@ -124,7 +124,6 @@ t_envlist	*ft_set_env(t_envlist *env_list, char *key, char *value, int add);
 t_envlist	*ft_findenv(const char *name);
 void		put_env_ascii_order(void);
 int			check_shell_val(char *src_str);
-void		to_setenv(t_envlist *e_list, char *src_str, size_t i);
 char		*ft_wsubstr(char const *s, unsigned int start, size_t len);
 void		ft_puterror(char *s1, char *s2, char *s3);
 t_envlist	*ft_set_env(t_envlist *env_list, char *key, char *value, int add);
@@ -133,7 +132,7 @@ char		*ft_echo_env(char *str, t_envlist *e_list);
 char		*find_doll_env(t_envlist *e_list, char *after_doll);
 int			ft_wpipe(int fd[2]);
 void		ft_wexecve(char *file, char **argv, char **envp);
-int			execute_commands(char **envp);
+int			execute_commands(void);
 void		init_exec_fds(void);
 void		free_exec_fds(void);
 void		free_command_table(void *ptr);

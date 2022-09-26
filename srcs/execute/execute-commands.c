@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 09:22:05 by fnichola          #+#    #+#             */
-/*   Updated: 2022/09/26 00:34:05 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/09/26 00:40:56 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,6 @@ void	execute_external(char **argv, char **envp)
 {
 	pid_t	pid;
 	int		status;
-	size_t	i;
 
 	pid = fork();
 	if (pid == 0)// 子プロセス
@@ -119,7 +118,7 @@ static void	execute_simple_command(char **argv)
 	}
 }
 
-static void	execute_commands_loop(t_list *command_table_ptr, char **envp)
+static void	execute_commands_loop(t_list *command_table_ptr)
 {
 	t_command	*command;
 	char		**argv;
@@ -138,15 +137,11 @@ static void	execute_commands_loop(t_list *command_table_ptr, char **envp)
 	}
 }
 
-int	execute_commands(char **envp)
+int	execute_commands(void)
 {
-	t_command	*command;
-	char		**argv;
-	int			**exec_fds;
-
 	g_data.num_cmds = ft_lstsize(g_data.command_table);
 	init_exec_fds();
-	execute_commands_loop(g_data.command_table, envp);
+	execute_commands_loop(g_data.command_table);
 	free_exec_fds();
 	return (0);
 }

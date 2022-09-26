@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 17:23:49 by akihito           #+#    #+#             */
-/*   Updated: 2022/09/02 02:53:01 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/09/26 00:45:14 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,10 +74,8 @@ void	built_in_cd(char **argv)
 {
 	char		*old_pwd;
 	char		*now_pwd;
-	t_envlist	*tmp;
 	char		*home_dir;
 
-	tmp = NULL;
 	old_pwd = getcwd(NULL, 0);
 	home_dir = ft_getenv("HOME");
 	if (argv[1] && argv[1][0] && chdir(argv[1]) == -1)
