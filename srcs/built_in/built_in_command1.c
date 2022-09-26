@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 17:23:49 by akihito           #+#    #+#             */
-/*   Updated: 2022/09/26 00:45:14 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/09/26 03:35:03 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,13 +153,15 @@ void	built_in_export(char **argv)
 	size_t		i;
 	t_envlist	new_var;
 	t_envlist	*found_env;
+	t_envlist	*sorted_env;
+	t_envlist	*ptr;
 
 	if (!argv || !argv[0])
 		exit_error("Export");
 	else if (!argv[1])
 	{
-		env_list_sort();
-		t_envlist	*ptr = g_data.env_list;
+		sorted_env = env_list_sort(env_list_copy_all(g_data.env_list));
+		ptr = sorted_env;
 		while(ptr)
 		{
 			if (ptr->export && ptr->value)
@@ -168,6 +170,7 @@ void	built_in_export(char **argv)
 				printf("declare -x %s\n", ptr->name);
 			ptr = ptr->next;
 		}
+		free_env_list(&sorted_env);
 	}
 	else
 	{

@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/09/26 00:49:10 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/09/26 01:48:18 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,14 +91,13 @@ typedef struct s_exec_fds {//command１つ１つに対して依存するべき
 
 typedef struct s_minishell_data {
 	t_str_func_table	*built_ins;
-	size_t					num_built_ins;
+	size_t				num_built_ins;
 	t_list				*command_table;
 	int					**exec_fds;
 	size_t				num_cmds;
 	size_t				cmd_index;
 	int					exit_satus;
 	t_envlist			*env_list;
-	char				**envp;
 }	t_minishell_data;
 
 extern t_minishell_data	g_data;

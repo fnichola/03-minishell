@@ -6,52 +6,45 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/30 22:27:20 by akihito           #+#    #+#             */
-/*   Updated: 2022/09/26 00:50:07 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/09/26 03:34:17 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-/*
-**	create, edit or search the list of environment variables.
-*/
 
-void	free_env_list(void)
+void	free_env_list(t_envlist **env_list)
 {
-	t_envlist	*env_list_p;
+	t_envlist	*ptr;
 	t_envlist	*tmp;
-	char		**envp;
 
-	env_list_p = g_data.env_list;
-	while (env_list_p)
+	ptr = *env_list;
+	while (ptr)
 	{
-		free(env_list_p->name);
-		free(env_list_p->value);
-		tmp = env_list_p;
-		env_list_p = env_list_p->next;
+		free(ptr->name);
+		free(ptr->value);
+		free(ptr->string);
+		tmp = ptr;
+		ptr = ptr->next;
 		free(tmp);
 	}
-	envp = g_data.envp;
-	while (*envp)
-	{
-		free(*envp);
-		++envp;
-	}
-	g_data.env_list = NULL;
+	*env_list = NULL;
 }
 
 void	init_env_list(char **envp)
 {
 	size_t		i;
-	char	*name;
-	char	*value;
+	char		*name;
+	char		*value;
+	t_envlist	*new_var;
 
 	i = 0;
 	while (envp[i])
 	{
-		name = get_env_key(envp[i]);
+		name = get_env_name(envp[i]);
 		value =	get_env_value(envp[i]);
-		env_list_add_back(name, value);
-		ft_findenv(name)->export = true;
+		new_var = env_list_new(name, value, ft_strdup(envp[i]));
+		env_list_add_back(&g_data.env_list, new_var);
+		new_var->export = true;
 		i++;
 	}
 }
@@ -71,33 +64,58 @@ t_envlist	*env_list_last(t_envlist *ptr)
 	return (ptr);
 }
 
-t_envlist	*env_list_new(char *name, char *value)
+/**
+ * Make a new t_envlist node.
+ * The node can be made with name and value strings or with a raw env string
+ * ("NAME=VALUE").
+ * 
+ * For convenience it can be called in three different ways,
+ * NULL parameters will be auto-generated:
+ * new_env = env_list_new(name, value, NULL);
+ * new_env = env_list_new(NULL, NULL, string);
+ * new_env = env_list_new(name, value, string);
+ */
+t_envlist	*env_list_new(char *name, char *value, char *string)
 {
 	t_envlist	*new;
 
 	new = malloc_error_check(sizeof(t_envlist));
+	if (!name && !value && string)
+	{
+		name = get_env_name(string);
+		value = get_env_value(string);
+	}
+	if (!string)
+	{
+		string = env_to_string(name, value);
+	}
+	if (!name)
+	{
+		free(new);
+		return (NULL);
+	}
 	new->name = name;
 	new->value = value;
+	new->string = string;
 	new->next = NULL;
 	new->prev = NULL;
 	new->export = false;
 	return (new);
 }
 
-void	env_list_add_back(char *name, char *value)
+t_envlist	*env_list_add_back(t_envlist **env_list, t_envlist *new_node)
 {
-	t_envlist	*new_var;
-	t_envlist	*last_var;
+	t_envlist	*last_node;
 
-	new_var = env_list_new(name, value);
-	if (!g_data.env_list)
-		g_data.env_list = new_var;
+	if (!*env_list)
+		*env_list = new_node;
 	else 
 	{
-		last_var = env_list_last(g_data.env_list);
-		new_var->prev = last_var;
-		last_var->next = new_var;
+		last_node = env_list_last(*env_list);
+		new_node->prev = last_node;
+		last_node->next = new_node;
 	}
+	return (new_node);
 }
 
 int	ft_strncpy(char *dest, char *src, size_t cpy_len)
@@ -119,30 +137,35 @@ int	ft_strncpy(char *dest, char *src, size_t cpy_len)
 	return (0);
 }
 
-char	*get_env_key(char *env)
+/**
+ * Extract name from an env string ("NAME=VALUE")
+ * Allocates and returns a new string.
+ */
+char	*get_env_name(char *env)
 {
-	// int		env_str_len;
 	char	*value_env;
-	int		key_len;
-	char	*key_env;
+	int		name_len;
+	char	*name;
 
-	key_len = 0;
+	name_len = 0;
 	value_env = ft_strchr(env, '=');
-	key_len = value_env - env;
-	key_env = (char *)malloc(sizeof(char) * (key_len + 1));
-	ft_strncpy(key_env, env, key_len);
-	// printf("key_env = %s\n", key_env);
-	// printf("key_len = %d\n", key_len);
-	return (key_env);
+	name_len = value_env - env;
+	name = (char *)malloc(sizeof(char) * (name_len + 1));
+	ft_strncpy(name, env, name_len);
+	return (name);
 }
 
+/**
+ * Extract value from an env string ("NAME=VALUE")
+ * Allocates and returns a new string.
+ */
 char	*get_env_value(char *env)
 {
-	char	*ans_env;
+	char	*value;
 
-	ans_env = ft_strchr(env, '=');
-	(ans_env)++;//ここで　'='を消すERM_PROGRAM=vscodeでfind_indexが23になる
-	return (ft_wstrdup(ans_env));
+	value = ft_strchr(env, '=');
+	(value)++;//ここで　'='を消すERM_PROGRAM=vscodeでfind_indexが23になる
+	return (ft_wstrdup(value));
 }
 
 /**
@@ -185,9 +208,16 @@ char	*ft_getenv(char *name)
 	return (NULL);
 }
 
+/**
+ * Add or update an env variable.
+ * If a variable with "name" doesn't exist it will be created.
+ * If "name" exists and overwrite != 0 its value will be udpated.
+ * Returns -1 if there are invalid parameters.
+ */
 int	ft_setenv(const char *name, const char *value, int overwrite)
 {
 	t_envlist	*node;
+	t_envlist	*new_node;
 
 
 	node = ft_findenv(name);
@@ -202,13 +232,21 @@ int	ft_setenv(const char *name, const char *value, int overwrite)
 		free(node->value);
 		if (value)
 			node->value = ft_wstrdup(value);
+		free(node->string);
+		node->string = env_to_string(name, value);
 	}
 	else if (!node)
 	{
 		if (value)
-			env_list_add_back(ft_wstrdup(name), ft_wstrdup(value));
+		{
+			new_node = env_list_new(ft_wstrdup(name), ft_wstrdup(value), NULL);
+			env_list_add_back(&g_data.env_list, new_node);
+		}
 		else
-			env_list_add_back(ft_wstrdup(name), NULL);
+		{
+			new_node = env_list_new(ft_wstrdup(name), NULL, NULL);
+			env_list_add_back(&g_data.env_list, new_node);
+		}
 	}
 	return (0);
 }
@@ -230,15 +268,56 @@ void	env_list_swap_next(t_envlist *node)
 	node->next = tmp2;
 }
 
-void	env_list_sort(void)
+size_t	env_list_size(t_envlist *node)
+{
+	size_t	size;
+
+	size = 0;
+	while (node)
+	{
+		size++;
+		node = node->next;
+	}
+	return (size);
+}
+
+t_envlist *env_list_dup(t_envlist *node)
+{
+	t_envlist	*new_node;
+	char		*name;
+	char		*value;
+	char		*string;
+
+	name = ft_wstrdup(node->name);
+	value = ft_wstrdup(node->value);
+	string = ft_wstrdup(node->string);
+	new_node = env_list_new(name, value, string);
+	new_node->export = node->export;
+	return (new_node);
+}
+
+t_envlist *env_list_copy_all(t_envlist *node)
+{
+	t_envlist	*new_list;
+
+	new_list = NULL;
+	while (node)
+	{
+		env_list_add_back(&new_list, env_list_dup(node));
+		node = node->next;
+	}
+	return (new_list);
+}
+
+t_envlist *env_list_sort(t_envlist *env_list)
 {
 	bool		is_sorted;
 	t_envlist	*ptr;
 
 	is_sorted = false;
-	ptr = g_data.env_list;
+	ptr = env_list;
 	if (!ptr || !ptr->next)
-		return ;
+		return (NULL);
 
 	while(!is_sorted)
 	{
@@ -255,7 +334,7 @@ void	env_list_sort(void)
 				ptr = ptr->next;
 		}
 	}
-	g_data.env_list = env_list_first(ptr);
+	return (env_list_first(ptr));
 }
 
 int	check_shell_val(char *src_str)
@@ -314,6 +393,22 @@ char	**export_to_envp(void)
 	}
 	new_envp[i] = NULL;
 	return (new_envp);
+}
+
+/**
+ * Makes a new string in envp format ("NAME=VALUE").
+ */
+char	*env_to_string(const char *name, const char *value)
+{
+	char	*tmp_str;
+	char	*env_string;
+
+	if (!name)
+		return (NULL);
+	tmp_str = ft_strjoin(name, "=");
+	env_string = ft_strjoin(tmp_str, value);
+	free(tmp_str);
+	return (env_string);
 }
 
 void	free_envp(char **envp)

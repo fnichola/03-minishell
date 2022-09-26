@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/31 16:47:07 by akihito           #+#    #+#             */
-/*   Updated: 2022/08/17 15:31:21 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/09/26 03:23:04 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ char	*ft_wstrdup(const char *src)
 {
 	char	*res;
 
+	if (!src)
+		return (NULL);
 	res = ft_strdup(src);
 	if (res == NULL)
 		exit_error("malloc");
