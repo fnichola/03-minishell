@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/30 22:35:29 by akihito           #+#    #+#             */
-/*   Updated: 2022/09/01 01:55:52 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/09/25 12:31:34 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,4 +36,6 @@ void		free_env_list(void);
 void		env_list_sort(void);
 t_envlist	*env_list_first(t_envlist *ptr);
 t_envlist	*env_list_last(t_envlist *ptr);
+char		**export_to_envp(void);
+void	free_envp(char **envp);
 # endif 

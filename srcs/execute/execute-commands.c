@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 09:22:05 by fnichola          #+#    #+#             */
-/*   Updated: 2022/09/08 03:40:21 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/09/26 00:34:05 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,19 +99,24 @@ void	execute_external(char **argv, char **envp)
 	{
 		if (g_data.cmd_index == g_data.num_cmds - 1)
 		{
-
 			close_exec_fds();
 			waitpid(pid, &status, WUNTRACED);
 		}
 	}
 }
 
-static void	execute_simple_command(char **argv, char **envp)
+static void	execute_simple_command(char **argv)
 {
+	char	**envp;
+
 	if (execute_built_in(argv))
 		return ;
 	else
+	{
+		envp = export_to_envp();
 		execute_external(argv, envp);
+		free_envp(envp);
+	}
 }
 
 static void	execute_commands_loop(t_list *command_table_ptr, char **envp)
@@ -127,7 +132,7 @@ static void	execute_commands_loop(t_list *command_table_ptr, char **envp)
 		argv = command->argv;//ここでargvにcommandのargvが代入されているので、built_inにはargvを渡せばいい。
 		if (!argv || !argv[0])
 			return ;
-		execute_simple_command(argv, envp);
+		execute_simple_command(argv);
 		command_table_ptr = command_table_ptr->next;
 		g_data.cmd_index++;
 	}
