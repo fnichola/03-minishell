@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/09/28 21:11:46 by akihito          ###   ########.fr       */
+/*   Updated: 2022/09/30 18:26:58 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include "../libft/libft.h"
 # include "env.h"
+# include "expand.h"
 # include <stdio.h>
 # include <readline/readline.h>
 # include <readline/history.h>

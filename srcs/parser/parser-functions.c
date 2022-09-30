@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 14:58:17 by fnichola          #+#    #+#             */
-/*   Updated: 2022/09/28 22:57:48 by akihito          ###   ########.fr       */
+/*   Updated: 2022/09/30 23:47:19 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ void	init_command(t_parse_arg *p)
 
 void	parser_neutral(t_parse_arg *p)
 {
+	printf("p->token = %s\n", p->token->word);
 	if (!p->token)
 	{
 		change_state(p, ST_FINISHED);
@@ -62,8 +63,11 @@ void	parser_neutral(t_parse_arg *p)
 	}
 	else if (p->token->token_type == T_PIPE)
 		next_token(p);
-	if (p->token->token_type == T_GT)//>
+	if (p->token->token_type == T_GT)// ls > test , ls > , ls >1 , ls >2, ls > 
+	{
+		next_token(p);
 		change_state(p, ST_REDIRECT);
+	}
 }
 
 void	parser_first_word(t_parse_arg *p)
@@ -133,22 +137,29 @@ void	parser_env(t_parse_arg *p)
 	change_state(p, p->previous_state);
 }
 
-void	parser_redirect(t_parse_arg *p)
+void	parser_redirect(t_parse_arg *p)// > と >>で入れる
 {
-	// (void)p;
-	// p->command->argv;
-	// p->command->input_file = p->command->
-	// printf("redirect %s\n", p->command->argv[0]);
-	// printf("redirect %s\n", p->command->argv[1]);
-	t_list	*tmp_list;
+	int		fd;
 
-	tmp_list = g_data.command_table;
-	while (tmp_list)
+	fd = 0;
+	printf("p->previous_token->word = %s\n", p->previous_token->word);
+	printf("p->token->word = %s\n", p->token->word);
+	printf("ft_strcmp(p->token->word, '>') %d\n", ft_strcmp(p->previous_token->word, ">"));
+	if (access(p->token->word, W_OK) == -1)//">",">>"の場合、writeする権限がないとエラーになる
 	{
-		printf("tmp_list %s\n", (char *)tmp_list->content);
-		tmp_list = tmp_list->next;
+		p->is_exit = true;//親プロセスの場合ここでexit()すると./minishell自体が終了するのでフラグを持たせる。
 	}
-	printf("redirect %s\n", (char *)p->command_table->content);
-	
+	else
+	{
+		printf("redirect_open_out\n");
+		if (!ft_strcmp(p->previous_token->word, ">"))
+			fd = redirect_open_out(p->token->word, false, &fd);
+		else if (!ft_strcmp(p->previous_token->word, ">>"))
+			fd = redirect_open_out(p->token->word, true, &fd);
+	}
+	printf("fd = %d\n", fd);
+	printf("p->count_cmds %zu\n", p->count_cmds);
+	g_data.exec_fds[1][0] = fd;
 	change_state(p, ST_NEUTRAL);
+	return ;
 }

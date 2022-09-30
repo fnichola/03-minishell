@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 13:54:14 by fnichola          #+#    #+#             */
-/*   Updated: 2022/09/28 17:54:22 by akihito          ###   ########.fr       */
+/*   Updated: 2022/09/30 23:12:11 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,4 +41,6 @@ void	init_parse_arg(t_parse_arg *p, t_list *tokens, t_envlist *e_list)
 	p->command = NULL;
 	p->index = 0;
 	p->e_list = e_list;
+	p->count_cmds = 0;
+	p->is_exit = false;
 }

@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 10:58:36 by fnichola          #+#    #+#             */
-/*   Updated: 2022/09/28 20:43:42 by akihito          ###   ########.fr       */
+/*   Updated: 2022/09/30 23:43:29 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,11 +63,14 @@ static void	create_pipes(void)
 
 	(g_data.exec_fds[0])[0] = STDIN_FILENO;
 	i = 1;
+	printf("create_pipes\n");
 	while (i < g_data.num_cmds)
 	{
 		ft_wpipe(pipe_fd);
-		(g_data.exec_fds[i - 1])[1] = pipe_fd[1];
-		(g_data.exec_fds[i])[0] = pipe_fd[0];
+		if (g_data.exec_fds[i - 1][1] != STDOUT_FILENO)//parser_functionsでopenしたファイルのfdが入っている時は初期化したくないので、
+			(g_data.exec_fds[i - 1])[1] = pipe_fd[1];//ここで代入しなかったfdはcloseしなければでは？
+		if (g_data.exec_fds[i][0] != STDIN_FILENO)
+			(g_data.exec_fds[i])[0] = pipe_fd[0];
 		i++;
 	}
 	i--;
@@ -79,6 +82,7 @@ void	init_exec_fds(void)
 	alloc_exec_fds();
 	if (g_data.num_cmds == 1)
 	{
+		printf("init_exec_fds\n");
 		(g_data.exec_fds[0])[0] = STDIN_FILENO;
 		(g_data.exec_fds[0])[1] = STDOUT_FILENO;
 	}

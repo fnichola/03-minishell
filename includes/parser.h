@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 15:11:01 by fnichola          #+#    #+#             */
-/*   Updated: 2022/09/28 22:49:29 by akihito          ###   ########.fr       */
+/*   Updated: 2022/09/30 23:20:12 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ typedef struct s_parse_arg {
 	t_command		*command;//ここでコマンド
 	size_t			index;
 	t_envlist		*e_list;
+	size_t			count_cmds;
+	bool			is_exit;// parser_redirectでファイルの権限がない場合は、exitしないといけないが、もし親プロセス（パイプなしbuiltin)だったらminishell自体が終了してしまうのでこのメンバ変数を追加。使い所はわからない
 }	t_parse_arg;
 
 /**

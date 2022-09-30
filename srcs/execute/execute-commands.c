@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 09:22:05 by fnichola          #+#    #+#             */
-/*   Updated: 2022/09/28 22:16:49 by akihito          ###   ########.fr       */
+/*   Updated: 2022/09/30 23:57:05 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ bool	execute_built_in(char **argv)
 
 	old_fd[0] = dup(STDIN_FILENO);
 	old_fd[1] = dup(STDOUT_FILENO);
-	dup2((g_data.exec_fds[g_data.cmd_index])[0], STDIN_FILENO);
+	dup2((g_data.exec_fds[g_data.cmd_index])[0], STDIN_FILENO);//redirectはここの第一引数がopenしたfdである必要
 	dup2((g_data.exec_fds[g_data.cmd_index])[1], STDOUT_FILENO);
 	is_builtin = lookup_and_exec_built_in(argv);
 	dup2(old_fd[0], STDIN_FILENO);
@@ -60,7 +60,6 @@ void	search_path_and_exec(char **argv, char **envp)
 	char	*temp;
 	size_t	i;
 
-	printf("search\n");
 	paths = ft_split(getenv("PATH"), ':');
 	i = 0;
 	while (paths[i])
@@ -99,7 +98,6 @@ int		execute_external(char **argv, char **envp)
 		if (g_data.cmd_index == g_data.num_cmds - 1)
 		{
 			close_exec_fds();
-			// waitpid(pid, &status, WUNTRACED);
 		}
 	}
 	return (pid);
@@ -131,7 +129,7 @@ static void	execute_commands_loop(t_list *command_table_ptr)
 	int			status;
 	// pids = (pid_t *)malloc_error_check(g_data.num_cmds);
 	printf("g_data.num_cmds %zu\n", g_data.num_cmds);
-	pids = (pid_t *)malloc(sizeof(pid_t) * (g_data.num_cmds + 1));
+	pids = (pid_t *)malloc_error_check(sizeof(pid_t) * (g_data.num_cmds + 1));
 	g_data.cmd_index = 0;
 	while (g_data.cmd_index < g_data.num_cmds)//num_cmdsはパイプがあれば、増えていく
 	{//ここでfork()しなければでは？builtInでもパイプの時はプロセスを分ける必要があると思う
@@ -143,6 +141,7 @@ static void	execute_commands_loop(t_list *command_table_ptr)
 		execute_simple_command(argv, pids, g_data.cmd_index);
 		command_table_ptr = command_table_ptr->next;
 		g_data.cmd_index++;
+		printf("g_data.cmd_index %zu\n", g_data.cmd_index);
 	}
 	i = 0;
 	while (i < g_data.num_cmds + 1)

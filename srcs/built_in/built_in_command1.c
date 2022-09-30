@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 17:23:49 by akihito           #+#    #+#             */
-/*   Updated: 2022/09/28 22:16:27 by akihito          ###   ########.fr       */
+/*   Updated: 2022/09/30 22:58:29 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,13 @@ void	built_in_cd(char **argv)
 	}
 	else if (!argv[1] && chdir(home_dir) == -1)//cdの引数がなかったら、環境変数HOMEのディレクトリに移動する
 	{//status=0
+		ft_perror("cd");
+		free(old_pwd);
+		return ;
+	}
+	else if (argv[1] && chdir(old_pwd) == -1)
+	{
+		printf("else if\n");
 		ft_perror("cd");
 		free(old_pwd);
 		return ;
