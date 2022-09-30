@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 09:22:05 by fnichola          #+#    #+#             */
-/*   Updated: 2022/09/28 17:31:33 by akihito          ###   ########.fr       */
+/*   Updated: 2022/09/28 22:16:49 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,23 +96,18 @@ int		execute_external(char **argv, char **envp)
 	}
 	else // 親プロセス
 	{
-		// printf("external\n");
 		if (g_data.cmd_index == g_data.num_cmds - 1)
 		{
 			close_exec_fds();
 			// waitpid(pid, &status, WUNTRACED);
 		}
-		// printf("external2\n");
-		// printf("pid %d\n", pid);
 	}
-	// printf("pid %d\n", pid);
 	return (pid);
 }
 
 static void	execute_simple_command(char **argv, pid_t *pids, int i)
 {
 	char	**envp;
-	// pid_t	tmp;
 
 	(void)pids;
 	(void)i;
@@ -121,13 +116,8 @@ static void	execute_simple_command(char **argv, pid_t *pids, int i)
 		return ;
 	else
 	{
-		printf("test\n");
 		envp = export_to_envp();
-		printf("test2\n");
-		// tmp = execute_external(argv, envp);
 		pids[i] = execute_external(argv, envp);
-		// printf("tmp = %d\n", tmp);
-		// printf("pids[i] %d \n", pids[i]);
 		free_envp(envp);
 	}
 }
@@ -144,8 +134,9 @@ static void	execute_commands_loop(t_list *command_table_ptr)
 	pids = (pid_t *)malloc(sizeof(pid_t) * (g_data.num_cmds + 1));
 	g_data.cmd_index = 0;
 	while (g_data.cmd_index < g_data.num_cmds)//num_cmdsはパイプがあれば、増えていく
-	{
+	{//ここでfork()しなければでは？builtInでもパイプの時はプロセスを分ける必要があると思う
 		command = (t_command *)command_table_ptr->content;
+		printf("%s\n", command->argv[0]);
 		argv = command->argv;//ここでargvにcommandのargvが代入されているので、built_inにはargvを渡せばいい。
 		if (!argv || !argv[0])
 			return ;
@@ -156,7 +147,6 @@ static void	execute_commands_loop(t_list *command_table_ptr)
 	i = 0;
 	while (i < g_data.num_cmds + 1)
 	{
-		printf("while %d \n", pids[i]);
 		waitpid(pids[i], &status, WUNTRACED);
 		i++;
 	}
@@ -166,7 +156,7 @@ static void	execute_commands_loop(t_list *command_table_ptr)
 int	execute_commands(void)
 {
 	g_data.num_cmds = ft_lstsize(g_data.command_table);
-	init_exec_fds();
+	init_exec_fds();//fd管理
 	execute_commands_loop(g_data.command_table);
 	free_exec_fds();
 	return (0);

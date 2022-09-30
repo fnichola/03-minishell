@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/26 16:46:58 by fnichola          #+#    #+#             */
-/*   Updated: 2022/09/26 21:10:46 by akihito          ###   ########.fr       */
+/*   Updated: 2022/09/28 23:03:20 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	minishell(char **envp)
 		g_data.command_table = parser(tokens, g_data.env_list);
 		// printf("g_data.command_table %s\n", (char *)g_data.command_table->content->);
 		free(line);
-			status = execute_commands();
+			status = execute_commands();//ここでパイプ生成
 		ft_lstclear(&g_data.command_table, free_command_table);
 	}
 	return (0);

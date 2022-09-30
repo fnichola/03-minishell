@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/09/26 01:48:18 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/09/28 21:11:46 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,12 +75,20 @@ typedef struct s_str_func_table {
  * output_file, input_file, and error_file are for redirection. If there is
  * no redirection, they should be set to NULL.
  */
+
+typedef struct s_redirect {
+	char				*file_name;
+	int					redirect_type;
+	struct s_redirect	*next;
+}	t_redirect;
+
 typedef struct s_command {
 	char		**argv; // = {"grep", "c", 0}
 	char		*output_file; // = "test.txt"
 	char		*input_file;
 	char		*error_file;
 	t_envlist	*env_list;
+	t_redirect	*redirect;
 }	t_command;
 
 typedef struct s_exec_fds {//command１つ１つに対して依存するべき
@@ -98,6 +106,7 @@ typedef struct s_minishell_data {
 	size_t				cmd_index;
 	int					exit_satus;
 	t_envlist			*env_list;
+	t_redirect			*redirect;//parserでリダイレクトが来たら、この構造体にファイル名とタイプを入れていく。
 }	t_minishell_data;
 
 extern t_minishell_data	g_data;

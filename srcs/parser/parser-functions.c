@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser-functions.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 14:58:17 by fnichola          #+#    #+#             */
-/*   Updated: 2022/09/26 00:41:48 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/09/28 22:57:48 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,8 @@ void	parser_neutral(t_parse_arg *p)
 	}
 	else if (p->token->token_type == T_PIPE)
 		next_token(p);
+	if (p->token->token_type == T_GT)//>
+		change_state(p, ST_REDIRECT);
 }
 
 void	parser_first_word(t_parse_arg *p)
@@ -98,6 +100,13 @@ void	parser_simple_command(t_parse_arg *p)
 		next_token(p);
 		change_state(p, ST_NEUTRAL);
 	}
+	else if (p->token->token_type == T_GT)
+	{
+		p->command->argv[p->index] = NULL;
+		ft_lstadd_back(&p->command_table, ft_lstnew(p->command));
+		next_token(p);
+		change_state(p, ST_REDIRECT);
+	}
 }
 
 //ここでexpandしてT_WORDに変更する。　
@@ -122,4 +131,24 @@ void	parser_env(t_parse_arg *p)
 	else
 		next_token(p); // if no env is found, skip this token
 	change_state(p, p->previous_state);
+}
+
+void	parser_redirect(t_parse_arg *p)
+{
+	// (void)p;
+	// p->command->argv;
+	// p->command->input_file = p->command->
+	// printf("redirect %s\n", p->command->argv[0]);
+	// printf("redirect %s\n", p->command->argv[1]);
+	t_list	*tmp_list;
+
+	tmp_list = g_data.command_table;
+	while (tmp_list)
+	{
+		printf("tmp_list %s\n", (char *)tmp_list->content);
+		tmp_list = tmp_list->next;
+	}
+	printf("redirect %s\n", (char *)p->command_table->content);
+	
+	change_state(p, ST_NEUTRAL);
 }

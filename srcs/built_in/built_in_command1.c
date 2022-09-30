@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_in_command1.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 17:23:49 by akihito           #+#    #+#             */
-/*   Updated: 2022/09/26 03:35:03 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/09/28 22:16:27 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,6 @@ void	built_in_echo(char **argv)//環境変数はまだ、echo ?$も無限ルー�
 	}
 	while (argv[arg_i])
 	{
-		// printf("while\n");
-		// put_str = ft_echo_env(argv[arg_i], e_list);//echoで文字列中にシェル変数があったら、そのシェル変数を展開してあげた文字列を返してあげる。
-		// printf("arg_i = %zu\n", arg_i);
 		ft_putstr_fd(argv[arg_i], STDOUT_FILENO);
 		if (argv[arg_i + 1] != NULL)
 			ft_putstr_fd(" ", STDOUT_FILENO);
