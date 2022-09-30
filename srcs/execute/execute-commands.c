@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 09:22:05 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/24 11:39:12 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/09/30 02:14:50 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ void	search_path_and_exec(char **argv, char **envp)
 	exit_error("Can't find command.");
 }
 
-void	execute_external(char **argv, char **envp)
+pid_t	execute_external(char **argv, char **envp)
 {
 	pid_t	pid;
 	int		status;
@@ -95,23 +95,21 @@ void	execute_external(char **argv, char **envp)
 		else
 			search_path_and_exec(argv, envp);
 	}
-	else // 親プロセス
-	{
-		if (g_data.cmd_index == g_data.num_cmds - 1)
-		{
-
-			close_exec_fds();
-			waitpid(pid, &status, WUNTRACED);
-		}
-	}
+	return (pid);
 }
 
 static void	execute_simple_command(char **argv, char **envp)
 {
-	if (execute_built_in(argv))
-		return ;
-	else
-		execute_external(argv, envp);
+	static pid_t	pid;
+	int				status;
+
+	if (!execute_built_in(argv))
+		pid = execute_external(argv, envp);
+	if (g_data.cmd_index == g_data.num_cmds - 1)
+	{
+		close_exec_fds();
+		waitpid(pid, &status, WUNTRACED);
+	}
 }
 
 static void	execute_commands_loop(t_list *command_table_ptr, char **envp)
