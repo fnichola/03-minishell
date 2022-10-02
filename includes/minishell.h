@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/09/30 18:26:58 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/02 14:59:51 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,9 +78,11 @@ typedef struct s_str_func_table {
  */
 
 typedef struct s_redirect {
-	char				*file_name;
 	int					redirect_type;
+	int					fd;
+	size_t				count_cmds;//ここでexecfdsと一致させる
 	struct s_redirect	*next;
+	struct s_redirect	*prev;
 }	t_redirect;
 
 typedef struct s_command {

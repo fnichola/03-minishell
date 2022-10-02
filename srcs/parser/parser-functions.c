@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 14:58:17 by fnichola          #+#    #+#             */
-/*   Updated: 2022/09/30 23:47:19 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/03 00:30:53 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ void	parser_first_word(t_parse_arg *p)
 
 void	parser_simple_command(t_parse_arg *p)
 {
+	p->count_cmds++;//parser_redirect()で何こめのコマンドのfdを入れ替えるべきかを取得したいのでここで++
 	if (!p->token)
 	{
 		p->command->argv[p->index] = NULL;
@@ -142,24 +143,53 @@ void	parser_redirect(t_parse_arg *p)// > と >>で入れる
 	int		fd;
 
 	fd = 0;
-	printf("p->previous_token->word = %s\n", p->previous_token->word);
-	printf("p->token->word = %s\n", p->token->word);
-	printf("ft_strcmp(p->token->word, '>') %d\n", ft_strcmp(p->previous_token->word, ">"));
+	if (!ft_strcmp(p->previous_token->word, ">"))
+		fd = redirect_open_out(p->token->word, false, &fd);
+	else if (!ft_strcmp(p->previous_token->word, ">>"))
+		fd = redirect_open_out(p->token->word, true, &fd);
 	if (access(p->token->word, W_OK) == -1)//">",">>"の場合、writeする権限がないとエラーになる
 	{
 		p->is_exit = true;//親プロセスの場合ここでexit()すると./minishell自体が終了するのでフラグを持たせる。
 	}
-	else
-	{
-		printf("redirect_open_out\n");
-		if (!ft_strcmp(p->previous_token->word, ">"))
-			fd = redirect_open_out(p->token->word, false, &fd);
-		else if (!ft_strcmp(p->previous_token->word, ">>"))
-			fd = redirect_open_out(p->token->word, true, &fd);
-	}
-	printf("fd = %d\n", fd);
-	printf("p->count_cmds %zu\n", p->count_cmds);
-	g_data.exec_fds[1][0] = fd;
+	printf("p->count_cmds %zu\n", p->count_cmds);//parser_simple_commandsでインクリメントしている
+	add_list(fd, p->count_cmds, g_data.redirect);
+	printf("g_data.redirect->count_cmds %zu\n", g_data.redirect->count_cmds);
 	change_state(p, ST_NEUTRAL);
 	return ;
+}
+
+void	set_redirect(t_parse_arg *p, int fd)
+{
+	t_redirect	*tmp;
+
+	tmp = (t_redirect *)malloc(sizeof(g_data.redirect));
+	tmp->count_cmds = p->count_cmds;//先にインクリメントしてしまっているので、
+	tmp->fd = fd;
+	tmp->redirect_type = 0;
+	tmp->next = NULL;
+	return ;
+}
+
+int	add_list(int value, size_t count_cmds, t_redirect *nil)
+{
+	t_redirect	*node;
+	t_redirect	*prev;
+
+	// if (is_duplicated(nil, value))
+		// ft_error();
+	prev = nil->prev;
+	node = (t_redirect *)malloc(sizeof(t_redirect));
+	if (!node)
+		exit(1);
+	node = nil;
+	while (node->next != nil)
+		node = node->next;
+	node->fd = value;
+	nil->prev = node;
+	prev->next = node;
+	node->count_cmds = count_cmds;
+	node->fd = value;
+	node->next = nil;
+	node->prev = prev;
+	return (0);
 }

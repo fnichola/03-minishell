@@ -6,12 +6,11 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 09:22:05 by fnichola          #+#    #+#             */
-/*   Updated: 2022/09/30 23:57:05 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/03 00:29:30 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
 
 bool	lookup_and_exec_built_in(char **argv)
 {
@@ -127,7 +126,7 @@ static void	execute_commands_loop(t_list *command_table_ptr)
 	size_t		i;
 	pid_t		*pids;
 	int			status;
-	// pids = (pid_t *)malloc_error_check(g_data.num_cmds);
+
 	printf("g_data.num_cmds %zu\n", g_data.num_cmds);
 	pids = (pid_t *)malloc_error_check(sizeof(pid_t) * (g_data.num_cmds + 1));
 	g_data.cmd_index = 0;
@@ -141,7 +140,6 @@ static void	execute_commands_loop(t_list *command_table_ptr)
 		execute_simple_command(argv, pids, g_data.cmd_index);
 		command_table_ptr = command_table_ptr->next;
 		g_data.cmd_index++;
-		printf("g_data.cmd_index %zu\n", g_data.cmd_index);
 	}
 	i = 0;
 	while (i < g_data.num_cmds + 1)

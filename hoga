@@ -1,16 +1,12 @@
 Makefile
 a.out
-asfasd
 bigtxt
 hoga
 hoge
 hoge2
 hoge3
 hoge5
-hogeghoge
-hogehoeg
 hogehoge
-hogehogehogehoge
 hogeohge
 includes
 libft
@@ -23,4 +19,3 @@ test_file
 tester
 tset
 tst
-yeah

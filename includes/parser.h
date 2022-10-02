@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 15:11:01 by fnichola          #+#    #+#             */
-/*   Updated: 2022/09/30 23:20:12 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/02 16:24:45 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,4 +63,6 @@ void	parser_redirect(t_parse_arg *p);
 void	parser_env (t_parse_arg *p);
 void	parser_in_dquote (t_parse_arg *p);
 void	expand_quoted_text(t_parse_arg *p);
+int		add_list(int value, size_t count_cmds, t_redirect *nil);
+t_redirect	*init_redirect_nil();
 #endif

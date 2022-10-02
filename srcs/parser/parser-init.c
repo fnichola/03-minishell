@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 13:54:14 by fnichola          #+#    #+#             */
-/*   Updated: 2022/09/30 23:12:11 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/02 16:13:08 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,4 +43,18 @@ void	init_parse_arg(t_parse_arg *p, t_list *tokens, t_envlist *e_list)
 	p->e_list = e_list;
 	p->count_cmds = 0;
 	p->is_exit = false;
+	g_data.redirect = init_redirect_nil();
+}
+
+t_redirect	*init_redirect_nil()
+{
+	t_redirect	*nil;
+
+	nil = (t_redirect *)malloc(sizeof(t_redirect));
+	nil->next = nil;
+	nil->prev = nil;
+	nil->fd = 0;
+	nil->redirect_type = 0;
+	nil->count_cmds = 0;
+	return (nil);
 }

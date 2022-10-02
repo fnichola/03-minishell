@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 10:58:36 by fnichola          #+#    #+#             */
-/*   Updated: 2022/09/30 23:43:29 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/03 00:33:40 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static void	alloc_exec_fds(void)
 	i = 0;
 	while (i < g_data.num_cmds)
 	{
-		g_data.exec_fds[i] = malloc_error_check(sizeof(int) * 2);
+			g_data.exec_fds[i] = malloc_error_check(sizeof(int) * 2);
 		i++;
 	}
 	g_data.exec_fds[i] = NULL;
@@ -31,14 +31,13 @@ void	free_exec_fds(void)
 	size_t	i;
 
 	i = 0;
-	while(g_data.exec_fds[i])
+	while (g_data.exec_fds[i])
 	{
 		free(g_data.exec_fds[i]);
 		i++;
 	}
 	free(g_data.exec_fds);
 	g_data.exec_fds = NULL;
-
 }
 
 void	close_exec_fds(void)
@@ -62,15 +61,22 @@ static void	create_pipes(void)
 	int		pipe_fd[2];
 
 	(g_data.exec_fds[0])[0] = STDIN_FILENO;
-	i = 1;
-	printf("create_pipes\n");
+	i = 1;//1つ目のSTDINはいらないから
 	while (i < g_data.num_cmds)
 	{
+		printf("create_pipe\n\n\n");
 		ft_wpipe(pipe_fd);
-		if (g_data.exec_fds[i - 1][1] != STDOUT_FILENO)//parser_functionsでopenしたファイルのfdが入っている時は初期化したくないので、
+		if (g_data.exec_fds[i - 1][1] == STDOUT_FILENO)//parser_functionsでopenしたファイルのfdが入っている時は初期化したくないので、
 			(g_data.exec_fds[i - 1])[1] = pipe_fd[1];//ここで代入しなかったfdはcloseしなければでは？
-		if (g_data.exec_fds[i][0] != STDIN_FILENO)
+		else
+		{//parser_redirect()でopen()したfdを割り当てる時に入る.
+			printf("g_data.redirect->fd; %d\n", g_data.redirect->fd);
+			g_data.exec_fds[g_data.redirect->count_cmds - 1][1] = g_data.redirect->fd;
+			g_data.redirect = g_data.redirect->next;
+		}
+		if (g_data.exec_fds[i][0] == STDIN_FILENO)
 			(g_data.exec_fds[i])[0] = pipe_fd[0];
+		printf("g_data.exec_fds[i - 1][1] %d\n", g_data.exec_fds[i - 1][1]);
 		i++;
 	}
 	i--;

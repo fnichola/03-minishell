@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 18:02:55 by fnichola          #+#    #+#             */
-/*   Updated: 2022/09/30 19:47:41 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/01 19:11:27 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ t_list	*parser(t_list *tokens, t_envlist *e_list)
 	while (p.state != ST_FINISHED)
 	{
 		state_func_table[p.state].parse_func(&p);//構造体ないの関数ポインタを実行している
-		p.count_cmds++;
+		// p.count_cmds++;
 	}
 	free(state_func_table);
 	ft_lstclear(&tokens, del_token);
