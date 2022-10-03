@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/26 16:46:58 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/24 08:19:48 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/09/30 21:17:22 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	minishell(char **envp)
 		g_data.command_table = parser(tokens, g_data.env_list);
 		// printf("g_data.command_table %s\n", (char *)g_data.command_table->content->);
 		free(line);
-			status = execute_commands(envp);
+		status = execute_commands();//ここでパイプ生成
 		ft_lstclear(&g_data.command_table, free_command_table);
 	}
 	return (0);
@@ -51,6 +51,7 @@ int	main(int argc, char **argv, char **envp)
 	(void)argv;
 	if (argc == 1)
 	{
+		// printf("environ: %s\n", __environ[0]);
 		minishell(envp);
 	}
 	else

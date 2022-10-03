@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_in_command1.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 17:23:49 by akihito           #+#    #+#             */
-/*   Updated: 2022/09/02 02:53:01 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/09/30 22:58:29 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,6 @@ void	built_in_echo(char **argv)//環境変数はまだ、echo ?$も無限ルー�
 	}
 	while (argv[arg_i])
 	{
-		// printf("while\n");
-		// put_str = ft_echo_env(argv[arg_i], e_list);//echoで文字列中にシェル変数があったら、そのシェル変数を展開してあげた文字列を返してあげる。
-		// printf("arg_i = %zu\n", arg_i);
 		ft_putstr_fd(argv[arg_i], STDOUT_FILENO);
 		if (argv[arg_i + 1] != NULL)
 			ft_putstr_fd(" ", STDOUT_FILENO);
@@ -74,10 +71,8 @@ void	built_in_cd(char **argv)
 {
 	char		*old_pwd;
 	char		*now_pwd;
-	t_envlist	*tmp;
 	char		*home_dir;
 
-	tmp = NULL;
 	old_pwd = getcwd(NULL, 0);
 	home_dir = ft_getenv("HOME");
 	if (argv[1] && argv[1][0] && chdir(argv[1]) == -1)
@@ -88,6 +83,13 @@ void	built_in_cd(char **argv)
 	}
 	else if (!argv[1] && chdir(home_dir) == -1)//cdの引数がなかったら、環境変数HOMEのディレクトリに移動する
 	{//status=0
+		ft_perror("cd");
+		free(old_pwd);
+		return ;
+	}
+	else if (argv[1] && chdir(old_pwd) == -1)
+	{
+		printf("else if\n");
 		ft_perror("cd");
 		free(old_pwd);
 		return ;
@@ -155,13 +157,15 @@ void	built_in_export(char **argv)
 	size_t		i;
 	t_envlist	new_var;
 	t_envlist	*found_env;
+	t_envlist	*sorted_env;
+	t_envlist	*ptr;
 
 	if (!argv || !argv[0])
 		exit_error("Export");
 	else if (!argv[1])
 	{
-		env_list_sort();
-		t_envlist	*ptr = g_data.env_list;
+		sorted_env = env_list_sort(env_list_copy_all(g_data.env_list));
+		ptr = sorted_env;
 		while(ptr)
 		{
 			if (ptr->export && ptr->value)
@@ -170,6 +174,7 @@ void	built_in_export(char **argv)
 				printf("declare -x %s\n", ptr->name);
 			ptr = ptr->next;
 		}
+		free_env_list(&sorted_env);
 	}
 	else
 	{

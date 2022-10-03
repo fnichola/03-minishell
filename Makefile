@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+         #
+#    By: akihito <akihito@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/09 18:01:32 by fnichola          #+#    #+#              #
-#    Updated: 2022/08/24 12:04:51 by fnichola         ###   ########.fr        #
+#    Updated: 2022/09/30 17:17:06 by akihito          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ LIBFT_DIR = libft
 LIBFT_LIB = $(LIBFT_DIR)/libft.a
 
 CC = gcc
-CFLAGS = -g -fsanitize=address
+CFLAGS = -Wextra -Werror -Wall -g -fsanitize=address
 
 SRCS = srcs/main.c \
 	srcs/execute/execute-commands.c \
@@ -40,7 +40,8 @@ SRCS = srcs/main.c \
 	srcs/utilities/is_str_match.c \
 	srcs/utilities/malloc_error_check.c \
 	srcs/utilities/str_tolower.c \
-	srcs/utilities/wrapper.c
+	srcs/utilities/wrapper.c \
+	srcs/expand/redirect_expand.c \
 
 ifdef WITH_BONUS
 endif
