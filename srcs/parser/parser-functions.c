@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 14:58:17 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/03 00:30:53 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/11 00:16:41 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void	parser_neutral(t_parse_arg *p)
 	if (p->token->token_type == T_GT)// ls > test , ls > , ls >1 , ls >2, ls > 
 	{
 		next_token(p);
-		change_state(p, ST_REDIRECT);
+		change_state(p, ST_REDIRECT_OUT);
 	}
 }
 
@@ -80,6 +80,11 @@ void	parser_first_word(t_parse_arg *p)
 
 void	parser_simple_command(t_parse_arg *p)
 {
+	g_data.num_cmds++;
+	if (p->token)
+		printf("parser_simple_command 内 token = %s\n", p->token->word);
+	// if (!!p->previous_token)
+		// printf("parser_simple_command 内 token = %s\n", p->previous_token->word);
 	p->count_cmds++;//parser_redirect()で何こめのコマンドのfdを入れ替えるべきかを取得したいのでここで++
 	if (!p->token)
 	{
@@ -100,6 +105,8 @@ void	parser_simple_command(t_parse_arg *p)
 		change_state(p, ST_IN_DQUOTE);
 	else if (p->token->token_type == T_PIPE)
 	{
+		// g_data.num_cmds++;
+		// p->count_cmds++;//parser_redirect()で何こめのコマンドのfdを入れ替えるべきかを取得したいのでここで++
 		p->command->argv[p->index] = NULL;
 		ft_lstadd_back(&p->command_table, ft_lstnew(p->command));
 		next_token(p);
@@ -110,7 +117,7 @@ void	parser_simple_command(t_parse_arg *p)
 		p->command->argv[p->index] = NULL;
 		ft_lstadd_back(&p->command_table, ft_lstnew(p->command));
 		next_token(p);
-		change_state(p, ST_REDIRECT);
+		change_state(p, ST_REDIRECT_OUT);
 	}
 }
 
@@ -138,7 +145,7 @@ void	parser_env(t_parse_arg *p)
 	change_state(p, p->previous_state);
 }
 
-void	parser_redirect(t_parse_arg *p)// > と >>で入れる
+void	parser_redirect_out(t_parse_arg *p)// > と >>で入れる
 {
 	int		fd;
 

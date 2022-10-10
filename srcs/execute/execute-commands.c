@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 09:22:05 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/03 00:29:30 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/06 23:06:26 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,7 +152,7 @@ static void	execute_commands_loop(t_list *command_table_ptr)
 
 int	execute_commands(void)
 {
-	g_data.num_cmds = ft_lstsize(g_data.command_table);
+	// g_data.num_cmds = ft_lstsize(g_data.command_table);
 	init_exec_fds();//fd管理
 	execute_commands_loop(g_data.command_table);
 	free_exec_fds();

@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 15:11:01 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/02 16:24:45 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/06 19:51:02 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ typedef enum e_state {
 	ST_NEUTRAL = 0,
 	ST_FIRST_WORD,
 	ST_SIMPLE_COMMAND,
-	ST_REDIRECT,
+	ST_REDIRECT_OUT,
 	ST_ENV,
 	ST_IN_DQUOTE,
 	ST_FINISHED,
@@ -59,7 +59,7 @@ void	init_parse_arg(t_parse_arg *p, t_list *tokens, t_envlist *e_list);
 void	parser_neutral(t_parse_arg *p);
 void	parser_first_word(t_parse_arg *p);
 void	parser_simple_command(t_parse_arg *p);
-void	parser_redirect(t_parse_arg *p);
+void	parser_redirect_out(t_parse_arg *p);
 void	parser_env (t_parse_arg *p);
 void	parser_in_dquote (t_parse_arg *p);
 void	expand_quoted_text(t_parse_arg *p);

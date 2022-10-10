@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 10:58:36 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/03 00:33:40 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/10 23:58:41 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ static void	create_pipes(void)
 
 	(g_data.exec_fds[0])[0] = STDIN_FILENO;
 	i = 1;//1つ目のSTDINはいらないから
+	printf("num_cmds %zu\n", g_data.num_cmds);
 	while (i < g_data.num_cmds)
 	{
 		printf("create_pipe\n\n\n");
@@ -70,8 +71,8 @@ static void	create_pipes(void)
 			(g_data.exec_fds[i - 1])[1] = pipe_fd[1];//ここで代入しなかったfdはcloseしなければでは？
 		else
 		{//parser_redirect()でopen()したfdを割り当てる時に入る.
-			printf("g_data.redirect->fd; %d\n", g_data.redirect->fd);
-			g_data.exec_fds[g_data.redirect->count_cmds - 1][1] = g_data.redirect->fd;
+			// printf("g_data.redirect->fd; %d\n\n\n", g_data.redirect->fd);
+			g_data.exec_fds[g_data.redirect->count_cmds - 1][1] = g_data.redirect->fd;// ここで
 			g_data.redirect = g_data.redirect->next;
 		}
 		if (g_data.exec_fds[i][0] == STDIN_FILENO)
@@ -79,6 +80,12 @@ static void	create_pipes(void)
 		printf("g_data.exec_fds[i - 1][1] %d\n", g_data.exec_fds[i - 1][1]);
 		i++;
 	}
+	// i = 0;
+    // while (i < g_data.num_cmds)
+    // {
+    //     printf("exec_fds[%zu]: (%d, %d)\n", i, (g_data.exec_fds[i])[0], (g_data.exec_fds[i])[1]);
+    //     i++;
+    // }
 	i--;
 	(g_data.exec_fds[i])[1] = STDOUT_FILENO;
 }

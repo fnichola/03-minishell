@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/26 16:46:58 by fnichola          #+#    #+#             */
-/*   Updated: 2022/09/30 21:17:22 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/10 23:50:55 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ int	minishell(char **envp)
 	while (!status)
 	{
 		line = readline("minishell$ ");
+		g_data.num_cmds = 0;
 		if (line && *line)
 			add_history(line);
 		tokens = tokenizer(line);
