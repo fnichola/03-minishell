@@ -6,12 +6,11 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 09:22:05 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/24 11:39:12 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/11 07:30:44 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
 
 bool	lookup_and_exec_built_in(char **argv)
 {
@@ -43,7 +42,7 @@ bool	execute_built_in(char **argv)
 
 	old_fd[0] = dup(STDIN_FILENO);
 	old_fd[1] = dup(STDOUT_FILENO);
-	dup2((g_data.exec_fds[g_data.cmd_index])[0], STDIN_FILENO);
+	dup2((g_data.exec_fds[g_data.cmd_index])[0], STDIN_FILENO);//redirectはここの第一引数がopenしたfdである必要
 	dup2((g_data.exec_fds[g_data.cmd_index])[1], STDOUT_FILENO);
 	is_builtin = lookup_and_exec_built_in(argv);
 	dup2(old_fd[0], STDIN_FILENO);
@@ -60,7 +59,6 @@ void	search_path_and_exec(char **argv, char **envp)
 	char	*temp;
 	size_t	i;
 
-	printf("search\n");
 	paths = ft_split(getenv("PATH"), ':');
 	i = 0;
 	while (paths[i])
@@ -78,11 +76,10 @@ void	search_path_and_exec(char **argv, char **envp)
 	exit_error("Can't find command.");
 }
 
-void	execute_external(char **argv, char **envp)
+int		execute_external(char **argv, char **envp)
 {
 	pid_t	pid;
-	int		status;
-	size_t	i;
+	// int		status;
 
 	pid = fork();
 	if (pid == 0)// 子プロセス
@@ -99,49 +96,65 @@ void	execute_external(char **argv, char **envp)
 	{
 		if (g_data.cmd_index == g_data.num_cmds - 1)
 		{
-
 			close_exec_fds();
-			waitpid(pid, &status, WUNTRACED);
 		}
 	}
+	return (pid);
 }
 
-static void	execute_simple_command(char **argv, char **envp)
+static void	execute_simple_command(char **argv, pid_t *pids, int i)
 {
+	char	**envp;
+
+	(void)pids;
+	(void)i;
+	// tmp = 0;
 	if (execute_built_in(argv))
 		return ;
 	else
-		execute_external(argv, envp);
-}
-
-static void	execute_commands_loop(t_list *command_table_ptr, char **envp)
-{
-	t_command	*command;
-	char		**argv;
-
-	g_data.cmd_index = 0;
-	while (g_data.cmd_index < g_data.num_cmds)//num_cmdsはパイプがあれば、増えていく
 	{
-		// printf("num_cmds = %d\n", num_cmds);
-		command = (t_command *)command_table_ptr->content;
-		argv = command->argv;//ここでargvにcommandのargvが代入されているので、built_inにはargvを渡せばいい。
-		if (!argv || !argv[0])
-			return ;
-		execute_simple_command(argv, envp);
-		command_table_ptr = command_table_ptr->next;
-		g_data.cmd_index++;
+		envp = export_to_envp();
+		pids[i] = execute_external(argv, envp);
+		free_envp(envp);
 	}
 }
 
-int	execute_commands(char **envp)
+static void	execute_commands_loop(t_list *command_table_ptr)
 {
 	t_command	*command;
 	char		**argv;
-	int			**exec_fds;
+	size_t		i;
+	pid_t		*pids;
+	int			status;
 
+	debug_log("execute_commands_loop: g_data.num_cmds %zu\n", g_data.num_cmds);
+	pids = (pid_t *)malloc_error_check(sizeof(pid_t) * (g_data.num_cmds + 1));
+	g_data.cmd_index = 0;
+	while (g_data.cmd_index < g_data.num_cmds)//num_cmdsはパイプがあれば、増えていく
+	{//ここでfork()しなければでは？builtInでもパイプの時はプロセスを分ける必要があると思う
+		command = (t_command *)command_table_ptr->content;
+		debug_log("execute_commands_loop: %s\n", command->argv[0]);
+		argv = command->argv;//ここでargvにcommandのargvが代入されているので、built_inにはargvを渡せばいい。
+		if (!argv || !argv[0])
+			return ;
+		execute_simple_command(argv, pids, g_data.cmd_index);
+		command_table_ptr = command_table_ptr->next;
+		g_data.cmd_index++;
+	}
+	i = 0;
+	while (i < g_data.num_cmds + 1)
+	{
+		waitpid(pids[i], &status, WUNTRACED);
+		i++;
+	}
+	free(pids);
+}
+
+int	execute_commands(void)
+{
 	g_data.num_cmds = ft_lstsize(g_data.command_table);
-	init_exec_fds();
-	execute_commands_loop(g_data.command_table, envp);
+	init_exec_fds();//fd管理
+	execute_commands_loop(g_data.command_table);
 	free_exec_fds();
 	return (0);
 }

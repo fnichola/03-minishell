@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 14:58:17 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/18 17:18:36 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/11 07:38:41 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,17 @@ void	next_token(t_parse_arg *p)
 
 void	change_state(t_parse_arg *p, t_state new_state)
 {
+	const char *state_strs[8] = {
+		"ST_NEUTRAL",
+		"ST_FIRST_WORD",
+		"ST_SIMPLE_COMMAND",
+		"ST_REDIRECT",
+		"ST_ENV",
+		"ST_IN_DQUOTE",
+		"ST_FINISHED",
+		NULL
+	};
+	debug_log("change_state: changing to %s\n", state_strs[new_state]);
 	p->previous_state = p->state;
 	p->state = new_state;
 }
@@ -34,14 +45,24 @@ void	init_command(t_parse_arg *p)
 	p->index = 0;
 	p->command = malloc_error_check(sizeof(t_command));
 	p->command->argv = malloc_error_check(sizeof(char *) * 32); // 32 is max length of a single command, this should be changed!
-	p->command->output_file = NULL;
-	p->command->input_file = NULL;
-	p->command->error_file = NULL;
 	p->command->argv[p->index] = NULL;
+	p->command->input_redirect = NULL;
+	p->command->output_redirect = NULL;
+}
+
+bool is_redirect_token(t_token_type t)
+{
+	if (t == T_GT ||
+		t == T_GTGT ||
+		t == T_LT ||
+		t == T_LTLT)
+		return (true);
+	return (false);
 }
 
 void	parser_neutral(t_parse_arg *p)
 {
+	debug_log("parser_neutral: p->token = %s\n", p->token->word);
 	if (!p->token)
 	{
 		change_state(p, ST_FINISHED);
@@ -62,6 +83,10 @@ void	parser_neutral(t_parse_arg *p)
 	}
 	else if (p->token->token_type == T_PIPE)
 		next_token(p);
+	if (is_redirect_token(p->token->token_type))
+	{
+		change_state(p, ST_REDIRECT);
+	}
 }
 
 void	parser_first_word(t_parse_arg *p)
@@ -98,16 +123,15 @@ void	parser_simple_command(t_parse_arg *p)
 		next_token(p);
 		change_state(p, ST_NEUTRAL);
 	}
+	else if (is_redirect_token(p->token->token_type))
+	{
+		change_state(p, ST_REDIRECT);
+	}
 }
 
 //ここでexpandしてT_WORDに変更する。　
 void	parser_in_dquote(t_parse_arg *p)
 {
-	t_envlist	*tmp;
-	char		*found_index;
-	char		*found_env;
-	char		*joined_str;
-
 	expand_quoted_text(p);
 	p->token->token_type = T_WORD;
 	change_state(p, p->previous_state);
@@ -128,3 +152,76 @@ void	parser_env(t_parse_arg *p)
 		next_token(p); // if no env is found, skip this token
 	change_state(p, p->previous_state);
 }
+
+void	parser_redirect(t_parse_arg *p)// > と >>で入れる
+{
+	if (p->token->token_type == T_GT || p->token->token_type == T_GTGT)
+	{
+		p->command->output_redirect = malloc_error_check(sizeof(t_redirect));
+		p->command->output_redirect->append = p->token->token_type == T_GTGT;
+		next_token(p);
+		if (p->token && p->token->token_type == T_WORD)
+		{
+			p->command->output_redirect->filename = ft_strdup(p->token->word);
+			debug_log("parser_redirect: setting output redirect to %s\n", p->token->word);
+		}
+		next_token(p);
+	}
+	else if (p->token->token_type == T_LT || p->token->token_type == T_LTLT)
+	{
+		p->command->input_redirect = malloc_error_check(sizeof(t_redirect));
+		p->command->input_redirect->append = p->token->token_type == T_LTLT;
+		next_token(p);
+		if (p->token && p->token->token_type == T_WORD)
+		{
+			debug_log("parser_redirect: setting input redirect to %s\n", p->token->word);
+			p->command->input_redirect->filename = ft_strdup(p->token->word);
+		}
+		next_token(p);
+	}
+
+	// if (access(p->token->word, W_OK) == -1)//">",">>"の場合、writeする権限がないとエラーになる
+	// {
+	// 	p->is_exit = true;//親プロセスの場合ここでexit()すると./minishell自体が終了するのでフラグを持たせる。
+	// }
+	// debug_log("p->count_cmds %zu\n", p->count_cmds);//parser_simple_commandsでインクリメントしている
+	// add_list(fd, p->count_cmds, g_data.redirect);
+	// debug_log("g_data.redirect->count_cmds %zu\n", g_data.redirect->count_cmds);
+	change_state(p, ST_SIMPLE_COMMAND);
+}
+
+// void	set_redirect(t_parse_arg *p, int fd)
+// {
+// 	t_redirect	*tmp;
+
+// 	tmp = (t_redirect *)malloc(sizeof(g_data.redirect));
+// 	tmp->count_cmds = p->count_cmds;//先にインクリメントしてしまっているので、
+// 	tmp->fd = fd;
+// 	tmp->redirect_type = 0;
+// 	tmp->next = NULL;
+// 	return ;
+// }
+
+// int	add_list(int value, size_t count_cmds, t_redirect *nil)
+// {
+// 	t_redirect	*node;
+// 	t_redirect	*prev;
+
+// 	// if (is_duplicated(nil, value))
+// 		// ft_error();
+// 	prev = nil->prev;
+// 	node = (t_redirect *)malloc(sizeof(t_redirect));
+// 	if (!node)
+// 		exit(1);
+// 	node = nil;
+// 	while (node->next != nil)
+// 		node = node->next;
+// 	node->fd = value;
+// 	nil->prev = node;
+// 	prev->next = node;
+// 	node->count_cmds = count_cmds;
+// 	node->fd = value;
+// 	node->next = nil;
+// 	node->prev = prev;
+// 	return (0);
+// }

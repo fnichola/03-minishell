@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/18 16:26:16 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/18 16:28:25 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/09/26 00:44:54 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,7 @@ static void	expand_and_join(t_parse_arg *p, char *pre_str,
 	char	*found_env;
 	char	*tmp_str;
 	char	*joined_str;
-	size_t	env_length;
 
-	env_length = ft_strlen(quoted_var);
 	found_env = ft_getenv(quoted_var);//見つからなかったらNULLを返す
 	if (found_env)
 	{
@@ -67,7 +65,6 @@ static void	split_quoted_text(t_parse_arg *p, size_t i)
 
 void	expand_quoted_text(t_parse_arg *p)
 {
-	char	*tmp_str;
 	size_t	i;
 
 	i = 0;

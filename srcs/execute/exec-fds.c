@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 10:58:36 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/24 11:38:19 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/11 07:06:43 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static void	alloc_exec_fds(void)
 	i = 0;
 	while (i < g_data.num_cmds)
 	{
-		g_data.exec_fds[i] = malloc_error_check(sizeof(int) * 2);
+			g_data.exec_fds[i] = malloc_error_check(sizeof(int) * 2);
 		i++;
 	}
 	g_data.exec_fds[i] = NULL;
@@ -31,14 +31,13 @@ void	free_exec_fds(void)
 	size_t	i;
 
 	i = 0;
-	while(g_data.exec_fds[i])
+	while (g_data.exec_fds[i])
 	{
 		free(g_data.exec_fds[i]);
 		i++;
 	}
 	free(g_data.exec_fds);
 	g_data.exec_fds = NULL;
-
 }
 
 void	close_exec_fds(void)
@@ -56,10 +55,40 @@ void	close_exec_fds(void)
 	}
 }
 
+static void	create_redirects(void)
+{
+	t_list		*cmd_table_ptr;
+	t_command	*cmd;
+	size_t		i;
+
+	cmd_table_ptr = g_data.command_table;
+	i = 0;
+	while (cmd_table_ptr)
+	{
+		cmd = (t_command *)cmd_table_ptr->content;
+		if (cmd->input_redirect)
+		{
+			if ((g_data.exec_fds[i])[0] != STDIN_FILENO)
+				close((g_data.exec_fds[i])[0]);
+			(g_data.exec_fds[i])[0] = open(cmd->input_redirect->filename, O_RDONLY);
+			debug_log("create_redirects: opened %s at fd=%d\n", cmd->input_redirect->filename, (g_data.exec_fds[i])[0]);
+		}
+		if (cmd->output_redirect)
+		{
+			if ((g_data.exec_fds[i])[1] != STDOUT_FILENO)
+				close((g_data.exec_fds[i])[1]);
+			(g_data.exec_fds[i])[1] = open(cmd->output_redirect->filename, O_WRONLY | O_CREAT | O_TRUNC | cmd->output_redirect->append * O_APPEND, 0666);
+			debug_log("create_redirects: opened %s at fd=%d\n", cmd->output_redirect->filename, (g_data.exec_fds[i])[1]);
+		}
+		cmd_table_ptr = cmd_table_ptr->next;
+		i++;
+	}
+}
+
 static void	create_pipes(void)
 {
-	size_t	i;
-	int		pipe_fd[2];
+	size_t		i;
+	int			pipe_fd[2];
 
 	(g_data.exec_fds[0])[0] = STDIN_FILENO;
 	i = 1;
@@ -77,11 +106,6 @@ static void	create_pipes(void)
 void	init_exec_fds(void)
 {
 	alloc_exec_fds();
-	if (g_data.num_cmds == 1)
-	{
-		(g_data.exec_fds[0])[0] = STDIN_FILENO;
-		(g_data.exec_fds[0])[1] = STDOUT_FILENO;
-	}
-	else
-		create_pipes();
+	create_pipes();
+	create_redirects();
 }

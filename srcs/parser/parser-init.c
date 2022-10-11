@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse-init.c                                       :+:      :+:    :+:   */
+/*   parser-init.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 13:54:14 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/17 15:45:46 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/11 04:45:13 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ t_state_func_row	*p_init_state_func_table(void)
 		{ST_NEUTRAL,		&parser_neutral},
 		{ST_FIRST_WORD,		&parser_first_word},
 		{ST_SIMPLE_COMMAND,	&parser_simple_command},
-		{ST_REDIRECT,		NULL},
+		{ST_REDIRECT,		&parser_redirect},
 		{ST_ENV,			&parser_env},
 		{ST_IN_DQUOTE,		&parser_in_dquote},//ここでexpandしてT_WORDに変更する
 		{ST_FINISHED,	NULL}
@@ -41,4 +41,19 @@ void	init_parse_arg(t_parse_arg *p, t_list *tokens, t_envlist *e_list)
 	p->command = NULL;
 	p->index = 0;
 	p->e_list = e_list;
+	p->count_cmds = 0;
+	p->is_exit = false;
 }
+
+// t_redirect	*init_redirect_nil()
+// {
+// 	t_redirect	*nil;
+
+// 	nil = (t_redirect *)malloc(sizeof(t_redirect));
+// 	nil->next = nil;
+// 	nil->prev = nil;
+// 	nil->fd = 0;
+// 	nil->redirect_type = 0;
+// 	nil->count_cmds = 0;
+// 	return (nil);
+// }

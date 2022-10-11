@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/26 16:46:58 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/11 06:44:07 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/11 06:55:01 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,11 @@ int	minishell(char **envp)
 		if (line && *line)
 			add_history(line);
 		tokens = tokenizer(line);
-		// printf("tokens %s\n", (char *)tokens->next->content);
+		// debug_log("tokens %s\n", (char *)tokens->next->content);
 		g_data.command_table = parser(tokens, g_data.env_list);
-		// printf("g_data.command_table %s\n", (char *)g_data.command_table->content->);
+		// debug_log("g_data.command_table %s\n", (char *)g_data.command_table->content->);
 		free(line);
-			status = execute_commands(envp);
+		status = execute_commands();//ここでパイプ生成
 		ft_lstclear(&g_data.command_table, free_command_table);
 	}
 	return (0);
