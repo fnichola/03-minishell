@@ -6,7 +6,7 @@
 #    By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/09 18:01:32 by fnichola          #+#    #+#              #
-#    Updated: 2022/08/24 12:04:51 by fnichola         ###   ########.fr        #
+#    Updated: 2022/10/11 06:32:49 by fnichola         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,6 +19,7 @@ CC = gcc
 CFLAGS = -g -fsanitize=address
 
 SRCS = srcs/main.c \
+	srcs/debug_log.c \
 	srcs/execute/execute-commands.c \
 	srcs/execute/exec-fds.c \
 	srcs/lexer/lexer.c \

@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/29 06:28:10 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/11 06:41:35 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,9 @@ typedef struct s_minishell_data {
 }	t_minishell_data;
 
 extern t_minishell_data	g_data;
+extern bool	g_debug;
 
+void		debug_log(const char *format, ...);
 void		exit_error(char *str);
 void		init_built_in_table(void);
 void		built_in_exit(char **argv);

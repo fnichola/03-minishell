@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/26 16:46:58 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/24 08:19:48 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/11 06:44:07 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include <sys/wait.h>
 
 t_minishell_data	g_data;
+bool				g_debug;
 
 int	minishell(char **envp)
 {
@@ -49,8 +50,16 @@ int	minishell(char **envp)
 int	main(int argc, char **argv, char **envp)
 {
 	(void)argv;
+	// pass an extra argument to enable debug logging
+	g_debug = false;
+	if (argc == 2)
+	{
+		g_debug = true;
+		argc--;
+	}
 	if (argc == 1)
 	{
+		debug_log("Starting Minishell\n");
 		minishell(envp);
 	}
 	else
