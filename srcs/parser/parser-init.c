@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 13:54:14 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/06 23:10:13 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/11 21:48:56 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	init_parse_arg(t_parse_arg *p, t_list *tokens, t_envlist *e_list)
 	p->command = NULL;
 	p->index = 0;
 	p->e_list = e_list;
-	p->count_cmds = 0;
+	p->count_cmds = 1;//parserでpipeが来た時しかインクリメントしないようにする
 	p->is_exit = false;
 	g_data.redirect = init_redirect_nil();
 }
@@ -56,5 +56,6 @@ t_redirect	*init_redirect_nil()
 	nil->fd = 0;
 	nil->redirect_type = 0;
 	nil->count_cmds = 0;
+	g_data.redirect = nil;
 	return (nil);
 }

@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 14:58:17 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/11 00:16:41 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/11 23:48:16 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,9 @@ void	parser_neutral(t_parse_arg *p)
 		change_state(p, ST_FIRST_WORD);
 	}
 	else if (p->token->token_type == T_PIPE)
+	{
 		next_token(p);
+	}
 	if (p->token->token_type == T_GT)// ls > test , ls > , ls >1 , ls >2, ls > 
 	{
 		next_token(p);
@@ -80,12 +82,13 @@ void	parser_first_word(t_parse_arg *p)
 
 void	parser_simple_command(t_parse_arg *p)
 {
-	g_data.num_cmds++;
-	if (p->token)
-		printf("parser_simple_command 内 token = %s\n", p->token->word);
+	printf("parser\n");
+	// g_data.num_cmds++;
+	// if (p->token)
+		// printf("parser_simple_command 内 token = %s\n", p->token->word);
 	// if (!!p->previous_token)
 		// printf("parser_simple_command 内 token = %s\n", p->previous_token->word);
-	p->count_cmds++;//parser_redirect()で何こめのコマンドのfdを入れ替えるべきかを取得したいのでここで++
+	// p->count_cmds++;//parser_redirect()で何こめのコマンドのfdを入れ替えるべきかを取得したいのでここで++
 	if (!p->token)
 	{
 		p->command->argv[p->index] = NULL;
@@ -105,8 +108,9 @@ void	parser_simple_command(t_parse_arg *p)
 		change_state(p, ST_IN_DQUOTE);
 	else if (p->token->token_type == T_PIPE)
 	{
-		// g_data.num_cmds++;
-		// p->count_cmds++;//parser_redirect()で何こめのコマンドのfdを入れ替えるべきかを取得したいのでここで++
+		
+		g_data.num_cmds++;
+		p->count_cmds++;//parser_redirect()で何こめのコマンドのfdを入れ替えるべきかを取得したいのでここで++
 		p->command->argv[p->index] = NULL;
 		ft_lstadd_back(&p->command_table, ft_lstnew(p->command));
 		next_token(p);
@@ -184,18 +188,17 @@ int	add_list(int value, size_t count_cmds, t_redirect *nil)
 
 	// if (is_duplicated(nil, value))
 		// ft_error();
+	printf("add_list\n\n");
 	prev = nil->prev;
 	node = (t_redirect *)malloc(sizeof(t_redirect));
 	if (!node)
 		exit(1);
-	node = nil;
-	while (node->next != nil)
-		node = node->next;
+	// node = nil->next;
+	prev = nil->prev;//ここでheap-buffer-oberflowするようになった
 	node->fd = value;
 	nil->prev = node;
 	prev->next = node;
 	node->count_cmds = count_cmds;
-	node->fd = value;
 	node->next = nil;
 	node->prev = prev;
 	return (0);
