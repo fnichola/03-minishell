@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 10:58:36 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/11 07:06:43 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/12 07:57:41 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ static void	create_redirects(void)
 		{
 			if ((g_data.exec_fds[i])[1] != STDOUT_FILENO)
 				close((g_data.exec_fds[i])[1]);
-			(g_data.exec_fds[i])[1] = open(cmd->output_redirect->filename, O_WRONLY | O_CREAT | O_TRUNC | cmd->output_redirect->append * O_APPEND, 0666);
+			(g_data.exec_fds[i])[1] = open(cmd->output_redirect->filename, O_WRONLY | O_CREAT | !cmd->output_redirect->append * O_TRUNC | cmd->output_redirect->append * O_APPEND, 0666);
 			debug_log("create_redirects: opened %s at fd=%d\n", cmd->output_redirect->filename, (g_data.exec_fds[i])[1]);
 		}
 		cmd_table_ptr = cmd_table_ptr->next;

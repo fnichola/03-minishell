@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 14:58:17 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/11 07:38:41 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/12 07:54:26 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,7 +163,7 @@ void	parser_redirect(t_parse_arg *p)// > と >>で入れる
 		if (p->token && p->token->token_type == T_WORD)
 		{
 			p->command->output_redirect->filename = ft_strdup(p->token->word);
-			debug_log("parser_redirect: setting output redirect to %s\n", p->token->word);
+			debug_log("parser_redirect: setting output redirect to %s, append=%d\n", p->token->word, p->command->output_redirect->append);
 		}
 		next_token(p);
 	}
@@ -174,7 +174,7 @@ void	parser_redirect(t_parse_arg *p)// > と >>で入れる
 		next_token(p);
 		if (p->token && p->token->token_type == T_WORD)
 		{
-			debug_log("parser_redirect: setting input redirect to %s\n", p->token->word);
+			debug_log("parser_redirect: setting input redirect to %s, append=%d\n", p->token->word, p->command->output_redirect->append);
 			p->command->input_redirect->filename = ft_strdup(p->token->word);
 		}
 		next_token(p);
