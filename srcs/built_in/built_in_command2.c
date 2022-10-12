@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/08 01:54:35 by akihito           #+#    #+#             */
-/*   Updated: 2022/08/29 06:56:40 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/11 06:04:15 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,16 @@ void	free_command_table(void *ptr)
 		i++;
 	}
 	free(command->argv);
+	if (command->input_redirect)
+	{
+		free(command->input_redirect->filename);
+		free(command->input_redirect);
+	}
+	if (command->output_redirect)
+	{
+		free(command->output_redirect->filename);
+		free(command->output_redirect);
+	}
 	free(command);
 }
 
@@ -83,7 +93,7 @@ void	built_in_exit(char **argv)
 		argc++;
 
 	ft_lstclear(&g_data.command_table, free_command_table);
-	free_env_list();
+	free_env_list(&g_data.env_list);
 	if (argc == 1)
 	{
 		printf("exit\n");

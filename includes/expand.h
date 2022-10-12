@@ -1,19 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_perror.c                                        :+:      :+:    :+:   */
+/*   expand.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/24 11:59:14 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/12 08:48:23 by fnichola         ###   ########.fr       */
+/*   Created: 2022/09/30 17:17:51 by akihito           #+#    #+#             */
+/*   Updated: 2022/09/30 18:43:23 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#ifndef EXPAND_H
+# define EXPAND_H
 
-void	ft_perror(char *perror_str)
-{
-	ft_putstr_fd("minishell: ", STDERR_FILENO);
-	perror(perror_str);
-}
+# include <sys/types.h>
+# include <sys/stat.h>
+# include <fcntl.h>
+
+int	redirect_open_out(char *filename, bool is_append, int *flg);
+
+# endif

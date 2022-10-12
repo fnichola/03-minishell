@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 18:02:55 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/17 18:25:17 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/01 19:11:27 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,8 @@ t_list	*parser(t_list *tokens, t_envlist *e_list)
 	p.list_ptr = tokens;//ここでtoken(単語)のリストを渡している
 	while (p.state != ST_FINISHED)
 	{
-		// printf("実行");
-		// printf("p.token_type %d\n", p.token->token_type);
-		// printf(" p.state  %u\n", p.state);
 		state_func_table[p.state].parse_func(&p);//構造体ないの関数ポインタを実行している
+		// p.count_cmds++;
 	}
 	free(state_func_table);
 	ft_lstclear(&tokens, del_token);

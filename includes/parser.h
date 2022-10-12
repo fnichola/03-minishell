@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 15:11:01 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/18 16:28:05 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/11 07:22:38 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,15 +30,17 @@ typedef enum e_state {
 }	t_state;
 
 typedef struct s_parse_arg {
-	t_list			*list_ptr;
+	t_list			*list_ptr;//ここ使ってなくないですか？
 	t_token			*token;
 	t_token			*previous_token;
 	t_state			state;
 	t_state			previous_state;
 	t_list			*command_table;
-	t_command		*command;
+	t_command		*command;//ここでコマンド
 	size_t			index;
 	t_envlist		*e_list;
+	size_t			count_cmds;
+	bool			is_exit;// parser_redirectでファイルの権限がない場合は、exitしないといけないが、もし親プロセス（パイプなしbuiltin)だったらminishell自体が終了してしまうのでこのメンバ変数を追加。使い所はわからない
 }	t_parse_arg;
 
 /**
@@ -48,7 +50,7 @@ typedef struct s_parse_arg {
  */
 typedef struct s_state_func_row {
 	t_state		state;
-	void 		(*parse_func)(t_parse_arg *l);
+	void		(*parse_func)(t_parse_arg *l);
 }	t_state_func_row;
 
 // t_list	*parser(t_list *tokens);
@@ -57,7 +59,10 @@ void	init_parse_arg(t_parse_arg *p, t_list *tokens, t_envlist *e_list);
 void	parser_neutral(t_parse_arg *p);
 void	parser_first_word(t_parse_arg *p);
 void	parser_simple_command(t_parse_arg *p);
+void	parser_redirect(t_parse_arg *p);
 void	parser_env (t_parse_arg *p);
 void	parser_in_dquote (t_parse_arg *p);
 void	expand_quoted_text(t_parse_arg *p);
+int		add_list(int value, size_t count_cmds, t_redirect *nil);
+t_redirect	*init_redirect_nil();
 #endif

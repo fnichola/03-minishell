@@ -6,7 +6,7 @@
 #    By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/09 18:01:32 by fnichola          #+#    #+#              #
-#    Updated: 2022/10/11 06:32:49 by fnichola         ###   ########.fr        #
+#    Updated: 2022/10/11 06:49:13 by fnichola         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ LIBFT_DIR = libft
 LIBFT_LIB = $(LIBFT_DIR)/libft.a
 
 CC = gcc
-CFLAGS = -g -fsanitize=address
+CFLAGS = -Wextra -Werror -Wall -g -fsanitize=address
 
 SRCS = srcs/main.c \
 	srcs/debug_log.c \
@@ -41,7 +41,8 @@ SRCS = srcs/main.c \
 	srcs/utilities/is_str_match.c \
 	srcs/utilities/malloc_error_check.c \
 	srcs/utilities/str_tolower.c \
-	srcs/utilities/wrapper.c
+	srcs/utilities/wrapper.c \
+	srcs/expand/redirect_expand.c \
 
 ifdef WITH_BONUS
 endif

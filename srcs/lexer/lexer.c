@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 18:02:55 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/18 17:24:16 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/11 06:55:01 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ t_token	*get_next_token(t_lex_arg *l, const t_state_func_row *state_func_table)
 		state_func_table[l->state].lex_func(l); //構造体の[]はenumでt_stateとインデックスが紐づいている。
 		if (l->found_token)//もうトークンが分かった時点でfound_tokenをtrueにしてあげる。
 		{
-			// printf("l->token_type = %u\n", l->token_type);
+			// debug_log("l->token_type = %u\n", l->token_type);
 			if (l->token_type == T_EOL)
 				return (NULL);
 			token = malloc_error_check(sizeof(t_token));
@@ -69,9 +69,9 @@ t_list	*tokenizer(const char *line)
 	new_token = get_next_token(&l, state_func_table);
 	while (new_token)
 	{
-		// printf("word = %s\n", new_token->word);
+		// debug_log("word = %s\n", new_token->word);
 		ft_lstadd_back(&token_list, ft_lstnew(new_token));
-		// printf("new_token->word %s\n", (char *)token_list->next->content);
+		// debug_log("new_token->word %s\n", (char *)token_list->next->content);
 		new_token = get_next_token(&l, state_func_table);
 	}
 	free(state_func_table);
@@ -87,14 +87,14 @@ t_list	*tokenizer(const char *line)
 //	line = readline("lexer-test$ ");
 //	token_list = tokenizer(line);
 //	list_ptr = token_list;
-//	printf(
+//	debug_log(
 //	"\n\n"
 //	"---------------------------\n"
 //	"Line:\n"
 //	"---------------------------\n"
 //	"%s\n", line
 //	);
-//	printf(
+//	debug_log(
 //		"\n\n"
 //		"---------------------------\n"
 //		"Token List:\n"
@@ -102,7 +102,7 @@ t_list	*tokenizer(const char *line)
 //		);
 //	while (token_list)	
 //	{
-//		printf("<%s> \"%s\"\n", 
+//		debug_log("<%s> \"%s\"\n", 
 //			token_type_to_str(((t_token *)token_list->content)->token_type), 
 //			((t_token *)token_list->content)->word);
 //		token_list = token_list->next;

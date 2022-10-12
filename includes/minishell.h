@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/11 06:41:35 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/12 08:48:41 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include "../libft/libft.h"
 # include "env.h"
+# include "expand.h"
 # include <stdio.h>
 # include <readline/readline.h>
 # include <readline/history.h>
@@ -75,12 +76,16 @@ typedef struct s_str_func_table {
  * output_file, input_file, and error_file are for redirection. If there is
  * no redirection, they should be set to NULL.
  */
+
+typedef struct s_redirect {
+	bool	append;
+	char	*filename;
+}	t_redirect;
+
 typedef struct s_command {
 	char		**argv; // = {"grep", "c", 0}
-	char		*output_file; // = "test.txt"
-	char		*input_file;
-	char		*error_file;
-	t_envlist	*env_list;
+	t_redirect	*input_redirect;
+	t_redirect	*output_redirect;
 }	t_command;
 
 typedef struct s_exec_fds {//command１つ１つに対して依存するべき
@@ -91,13 +96,14 @@ typedef struct s_exec_fds {//command１つ１つに対して依存するべき
 
 typedef struct s_minishell_data {
 	t_str_func_table	*built_ins;
-	int					num_built_ins;
+	size_t				num_built_ins;
 	t_list				*command_table;
 	int					**exec_fds;
 	size_t				num_cmds;
 	size_t				cmd_index;
 	int					exit_satus;
 	t_envlist			*env_list;
+	t_redirect			*redirect;//parserでリダイレクトが来たら、この構造体にファイル名とタイプを入れていく。
 }	t_minishell_data;
 
 extern t_minishell_data	g_data;
@@ -118,14 +124,12 @@ void		*malloc_error_check(size_t size);
 t_list		*parser(t_list *tokens, t_envlist *e_list);
 void		ft_perror(char *perror_str);
 int			ft_strcmp(const char *s1, const char *s2);
-void		ft_perror(char *perror_str);
 char		*ft_wstrjoin(char *str1, char *str2);
 char		*ft_wstrdup(const char *src);
 t_envlist	*ft_set_env(t_envlist *env_list, char *key, char *value, int add);
 t_envlist	*ft_findenv(const char *name);
 void		put_env_ascii_order(void);
 int			check_shell_val(char *src_str);
-void		to_setenv(t_envlist *e_list, char *src_str, size_t i);
 char		*ft_wsubstr(char const *s, unsigned int start, size_t len);
 void		ft_puterror(char *s1, char *s2, char *s3);
 t_envlist	*ft_set_env(t_envlist *env_list, char *key, char *value, int add);
@@ -134,7 +138,7 @@ char		*ft_echo_env(char *str, t_envlist *e_list);
 char		*find_doll_env(t_envlist *e_list, char *after_doll);
 int			ft_wpipe(int fd[2]);
 void		ft_wexecve(char *file, char **argv, char **envp);
-int			execute_commands(char **envp);
+int			execute_commands(void);
 void		init_exec_fds(void);
 void		free_exec_fds(void);
 void		free_command_table(void *ptr);
