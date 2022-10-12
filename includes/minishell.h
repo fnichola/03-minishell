@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/11 06:50:53 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/12 08:48:41 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,6 @@ void		*malloc_error_check(size_t size);
 t_list		*parser(t_list *tokens, t_envlist *e_list);
 void		ft_perror(char *perror_str);
 int			ft_strcmp(const char *s1, const char *s2);
-void		ft_perror(char *perror_str);
 char		*ft_wstrjoin(char *str1, char *str2);
 char		*ft_wstrdup(const char *src);
 t_envlist	*ft_set_env(t_envlist *env_list, char *key, char *value, int add);
