@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/08 01:54:35 by akihito           #+#    #+#             */
-/*   Updated: 2022/10/13 05:44:58 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/13 08:35:35 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,16 +45,7 @@ void	free_command_table(void *ptr)
 		i++;
 	}
 	free(command->argv);
-	if (command->input_redirect)
-	{
-		free(command->input_redirect->filename);
-		free(command->input_redirect);
-	}
-	if (command->output_redirect)
-	{
-		free(command->output_redirect->filename);
-		free(command->output_redirect);
-	}
+	free_redirects(&command->redirects);
 	free(command);
 }
 

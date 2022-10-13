@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/13 05:45:37 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/13 08:43:24 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,15 +77,22 @@ typedef struct s_str_func_table {
  * no redirection, they should be set to NULL.
  */
 
+typedef enum e_redirect_type {
+	UNDEFINED_REDIRECT,
+	OUTPUT_REDIRECT,
+	INPUT_REDIRECT
+}	t_redirect_type;
+
 typedef struct s_redirect {
-	bool	append;
-	char	*filename;
+	t_redirect_type	type;
+	bool				append;
+	char				*filename;
+	struct s_redirect	*next;
 }	t_redirect;
 
 typedef struct s_command {
 	char		**argv; // = {"grep", "c", 0}
-	t_redirect	*input_redirect;
-	t_redirect	*output_redirect;
+	t_redirect	*redirects;
 }	t_command;
 
 typedef struct s_exec_fds {//command１つ１つに対して依存するべき
@@ -157,4 +164,7 @@ char		*get_env_name(char *env);
 char		*get_env_value(char *env);
 void		init_env_list(char **envp);
 t_envlist	split_env(const char *str);
+t_redirect	*redirect_new(void);
+t_redirect	*redirect_add(t_redirect **redirect_list, t_redirect *new_redirect);
+void		free_redirects(t_redirect **redirect_list);
 #endif

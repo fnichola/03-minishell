@@ -6,7 +6,7 @@
 #    By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/09 18:01:32 by fnichola          #+#    #+#              #
-#    Updated: 2022/10/13 05:47:03 by fnichola         ###   ########.fr        #
+#    Updated: 2022/10/13 08:44:29 by fnichola         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -63,7 +63,10 @@ SRCS = srcs/main.c \
 	srcs/utilities/env/get_env_name.c \
 	srcs/utilities/env/get_env_value.c \
 	srcs/utilities/env/init_env_list.c \
-	srcs/utilities/env/split_env.c
+	srcs/utilities/env/split_env.c \
+	srcs/utilities/redirect/free_redirects.c \
+	srcs/utilities/redirect/redirect_add.c \
+	srcs/utilities/redirect/redirect_new.c
 
 ifdef WITH_BONUS
 endif

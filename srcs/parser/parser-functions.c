@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 14:58:17 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/13 02:07:59 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/13 08:29:43 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,7 @@ void	init_command(t_parse_arg *p)
 	p->command = malloc_error_check(sizeof(t_command));
 	p->command->argv = malloc_error_check(sizeof(char *) * 32); // 32 is max length of a single command, this should be changed!
 	p->command->argv[p->index] = NULL;
-	p->command->input_redirect = NULL;
-	p->command->output_redirect = NULL;
+	p->command->redirects = NULL;
 }
 
 bool is_redirect_token(t_token_type t)
@@ -155,38 +154,33 @@ void	parser_env(t_parse_arg *p)
 
 void	parser_redirect(t_parse_arg *p)// > と >>で入れる
 {
+	t_redirect		*new_redirect;
+
+	new_redirect = redirect_new();
 	if (p->token->token_type == T_GT || p->token->token_type == T_GTGT)
 	{
-		p->command->output_redirect = malloc_error_check(sizeof(t_redirect));
-		p->command->output_redirect->append = p->token->token_type == T_GTGT;
+		new_redirect->type = OUTPUT_REDIRECT;
+		new_redirect->append = p->token->token_type == T_GTGT;
 		next_token(p);
 		if (p->token && p->token->token_type == T_WORD)
 		{
-			p->command->output_redirect->filename = ft_strdup(p->token->word);
-			debug_log("parser_redirect: setting output redirect to %s, append=%d\n", p->token->word, p->command->output_redirect->append);
+			new_redirect->filename = ft_strdup(p->token->word);
+			debug_log("parser_redirect: setting output redirect to %s, append=%d\n", p->token->word, new_redirect->append);
 		}
-		next_token(p);
 	}
 	else if (p->token->token_type == T_LT || p->token->token_type == T_LTLT)
 	{
-		p->command->input_redirect = malloc_error_check(sizeof(t_redirect));
-		p->command->input_redirect->append = p->token->token_type == T_LTLT;
+		new_redirect->type = INPUT_REDIRECT;
+		new_redirect->append = p->token->token_type == T_LTLT;
 		next_token(p);
 		if (p->token && p->token->token_type == T_WORD)
 		{
-			debug_log("parser_redirect: setting input redirect to %s, append=%d\n", p->token->word, p->command->input_redirect->append);
-			p->command->input_redirect->filename = ft_strdup(p->token->word);
+			debug_log("parser_redirect: setting input redirect to %s, append=%d\n", p->token->word, new_redirect->append);
+			new_redirect->filename = ft_strdup(p->token->word);
 		}
-		next_token(p);
 	}
-
-	// if (access(p->token->word, W_OK) == -1)//">",">>"の場合、writeする権限がないとエラーになる
-	// {
-	// 	p->is_exit = true;//親プロセスの場合ここでexit()すると./minishell自体が終了するのでフラグを持たせる。
-	// }
-	// debug_log("p->count_cmds %zu\n", p->count_cmds);//parser_simple_commandsでインクリメントしている
-	// add_list(fd, p->count_cmds, g_data.redirect);
-	// debug_log("g_data.redirect->count_cmds %zu\n", g_data.redirect->count_cmds);
+	redirect_add(&p->command->redirects, new_redirect);
+	next_token(p);
 	change_state(p, ST_SIMPLE_COMMAND);
 }
 

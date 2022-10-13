@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 10:58:36 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/12 09:00:06 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/13 09:19:07 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,54 +90,77 @@ t_list *del_command(t_list *item)
 	return (new_ptr);
 }
 
+static int	add_input_redirect(t_redirect *r, size_t i)
+{
+	int	fd;
+
+	fd = open(r->filename, O_RDONLY);
+	if (fd >= 0)
+	{
+		if ((g_data.exec_fds[i])[0] != STDIN_FILENO)
+			close((g_data.exec_fds[i])[0]);
+		debug_log("create_redirects: opened %s at fd=%d\n", r->filename, fd);
+		(g_data.exec_fds[i])[0] = fd;
+	}
+	return (fd);
+}
+
+static int	add_output_redirect(t_redirect *r, size_t i)
+{
+	int	fd;
+
+	fd = open(r->filename, O_WRONLY | O_CREAT | !r->append * O_TRUNC | r->append * O_APPEND, 0666);
+	if (fd >= 0)
+	{
+		if ((g_data.exec_fds[i])[1] != STDOUT_FILENO)
+			close((g_data.exec_fds[i])[1]);
+		debug_log("create_redirects: opened %s at fd=%d\n", r->filename, fd);
+		(g_data.exec_fds[i])[1] = fd;
+	}
+	return (fd);
+}
+
 static void	create_redirects(void)
 {
 	t_list		*cmd_table_ptr;
 	t_command	*cmd;
 	size_t		i;
 	int			fd;
+	t_redirect	*r;
+	bool		redirect_error;
 
 	cmd_table_ptr = g_data.command_table;
 	i = 0;
 	while (cmd_table_ptr)
 	{
+		redirect_error = false;
 		cmd = (t_command *)cmd_table_ptr->content;
-		if (cmd->input_redirect)
+		r = cmd->redirects;
+		while (r)
 		{
-			if ((g_data.exec_fds[i])[0] != STDIN_FILENO)
-				close((g_data.exec_fds[i])[0]);
-			fd = open(cmd->input_redirect->filename, O_RDONLY);
-			if (fd >= 0)
+			if (r->type == INPUT_REDIRECT)
+				fd = add_input_redirect(r, i);
+			else if (r->type == OUTPUT_REDIRECT)
+				fd = add_output_redirect(r, i);
+			if (fd < 0)
 			{
-				debug_log("create_redirects: opened %s at fd=%d\n", cmd->input_redirect->filename, fd);
-				(g_data.exec_fds[i])[0] = fd;
+				redirect_error = true;
+				break ;
 			}
-			else
-			{
-				ft_perror(cmd->input_redirect->filename);
-				cmd_table_ptr = del_command(cmd_table_ptr);
-				continue ;
-			}
+			r = r->next;
 		}
-		if (cmd->output_redirect)
+		if (redirect_error)
 		{
-			if ((g_data.exec_fds[i])[1] != STDOUT_FILENO)
-				close((g_data.exec_fds[i])[1]);
-			fd = open(cmd->output_redirect->filename, O_WRONLY | O_CREAT | !cmd->output_redirect->append * O_TRUNC | cmd->output_redirect->append * O_APPEND, 0666);
-			if (fd >= 0)
-			{
-				debug_log("create_redirects: opened %s at fd=%d\n", cmd->output_redirect->filename, fd);
-				(g_data.exec_fds[i])[1] = fd;
-			}
-			else
-			{
-				ft_perror(cmd->output_redirect->filename);
-				cmd_table_ptr = del_command(cmd_table_ptr);
-				continue ;
-			}
+			ft_perror(r->filename);
+			cmd_table_ptr = del_command(cmd_table_ptr);
+			// need to delete exec_fd too!!!
+			// might be best to just move exec_fds into command struct
 		}
-		cmd_table_ptr = cmd_table_ptr->next;
-		i++;
+		else
+		{
+			cmd_table_ptr = cmd_table_ptr->next;
+			i++;
+		}
 	}
 }
 
