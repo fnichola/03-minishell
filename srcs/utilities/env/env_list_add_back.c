@@ -1,25 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   is_str_match.c                                     :+:      :+:    :+:   */
+/*   env_list_add_back.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/23 15:04:22 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/13 03:47:56 by fnichola         ###   ########.fr       */
+/*   Created: 2022/10/13 04:00:35 by fnichola          #+#    #+#             */
+/*   Updated: 2022/10/13 05:59:42 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*
- * Compare two strings, return true if they're an exact match. 
- * Length and case-sensitive.
- */
-bool	is_str_match(const char *s1, const char *s2)
+t_envlist	*env_list_add_back(t_envlist **env_list, t_envlist *new_node)
 {
-	if (!ft_strcmp(s1, s2) && ft_strlen(s1) == ft_strlen(s2))
-		return (true);
+	t_envlist	*last_node;
+
+	if (!*env_list)
+		*env_list = new_node;
 	else
-		return (false);
+	{
+		last_node = env_list_last(*env_list);
+		new_node->prev = last_node;
+		last_node->next = new_node;
+	}
+	return (new_node);
 }

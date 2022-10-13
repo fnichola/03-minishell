@@ -1,25 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   is_str_match.c                                     :+:      :+:    :+:   */
+/*   get_env_value.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/23 15:04:22 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/13 03:47:56 by fnichola         ###   ########.fr       */
+/*   Created: 2022/10/13 04:06:50 by fnichola          #+#    #+#             */
+/*   Updated: 2022/10/13 05:36:57 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*
- * Compare two strings, return true if they're an exact match. 
- * Length and case-sensitive.
+/**
+ * Extract value from an env string ("NAME=VALUE")
+ * Allocates and returns a new string.
  */
-bool	is_str_match(const char *s1, const char *s2)
+char	*get_env_value(char *env)
 {
-	if (!ft_strcmp(s1, s2) && ft_strlen(s1) == ft_strlen(s2))
-		return (true);
-	else
-		return (false);
+	char	*value;
+
+	value = ft_strchr(env, '=');
+	(value)++;//ここで　'='を消すERM_PROGRAM=vscodeでfind_indexが23になる
+	return (ft_wstrdup(value));
 }

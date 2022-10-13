@@ -1,25 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   is_str_match.c                                     :+:      :+:    :+:   */
+/*   env_list_dup.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/23 15:04:22 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/13 03:47:56 by fnichola         ###   ########.fr       */
+/*   Created: 2022/10/13 04:10:54 by fnichola          #+#    #+#             */
+/*   Updated: 2022/10/13 05:48:45 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*
- * Compare two strings, return true if they're an exact match. 
- * Length and case-sensitive.
- */
-bool	is_str_match(const char *s1, const char *s2)
+t_envlist	*env_list_dup(t_envlist *node)
 {
-	if (!ft_strcmp(s1, s2) && ft_strlen(s1) == ft_strlen(s2))
-		return (true);
-	else
-		return (false);
+	t_envlist	*new_node;
+	char		*name;
+	char		*value;
+	char		*string;
+
+	name = ft_wstrdup(node->name);
+	value = ft_wstrdup(node->value);
+	string = ft_wstrdup(node->string);
+	new_node = env_list_new(name, value, string);
+	new_node->export = node->export;
+	return (new_node);
 }

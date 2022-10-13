@@ -1,25 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   is_str_match.c                                     :+:      :+:    :+:   */
+/*   env_to_string.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/23 15:04:22 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/13 03:47:56 by fnichola         ###   ########.fr       */
+/*   Created: 2022/10/13 04:07:58 by fnichola          #+#    #+#             */
+/*   Updated: 2022/10/13 05:36:57 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*
- * Compare two strings, return true if they're an exact match. 
- * Length and case-sensitive.
+/**
+ * Makes a new string in envp format ("NAME=VALUE").
  */
-bool	is_str_match(const char *s1, const char *s2)
+char	*env_to_string(const char *name, const char *value)
 {
-	if (!ft_strcmp(s1, s2) && ft_strlen(s1) == ft_strlen(s2))
-		return (true);
-	else
-		return (false);
+	char	*tmp_str;
+	char	*env_string;
+
+	if (!name)
+		return (NULL);
+	tmp_str = ft_strjoin(name, "=");
+	env_string = ft_strjoin(tmp_str, value);
+	free(tmp_str);
+	return (env_string);
 }

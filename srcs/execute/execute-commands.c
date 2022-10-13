@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute-commands.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
+/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 09:22:05 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/13 02:07:01 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/13 02:17:33 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,18 +109,12 @@ static void	execute_simple_command(char **argv, pid_t *pids, int i)
 
 	(void)pids;
 	(void)i;
-	// tmp = 0;
 	if (execute_built_in(argv))
 		return ;
 	else
 	{
-		printf("test\n");
 		envp = export_to_envp();
-		printf("test2\n");
-		// tmp = execute_external(argv, envp);
 		pids[i] = execute_external(argv, envp);
-		// printf("tmp = %d\n", tmp);
-		// printf("pids[i] %d \n", pids[i]);
 		free_envp(envp);
 	}
 }
@@ -149,7 +143,6 @@ static void	execute_commands_loop(t_list *command_table_ptr)
 	i = 0;
 	while (i < g_data.num_cmds + 1)
 	{
-		printf("while %d \n", pids[i]);
 		waitpid(pids[i], &status, WUNTRACED);
 		i++;
 	}

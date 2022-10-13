@@ -1,25 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   is_str_match.c                                     :+:      :+:    :+:   */
+/*   ft_strncpy.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/23 15:04:22 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/13 03:47:56 by fnichola         ###   ########.fr       */
+/*   Created: 2022/10/13 03:52:54 by fnichola          #+#    #+#             */
+/*   Updated: 2022/10/13 03:53:21 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*
- * Compare two strings, return true if they're an exact match. 
- * Length and case-sensitive.
- */
-bool	is_str_match(const char *s1, const char *s2)
+int	ft_strncpy(char *dest, char *src, size_t cpy_len)
 {
-	if (!ft_strcmp(s1, s2) && ft_strlen(s1) == ft_strlen(s2))
-		return (true);
-	else
-		return (false);
+	size_t	i;
+
+	i = 0;
+	if (!src)
+	{
+		exit_error("strncpy error\n");
+		return (-1);
+	}
+	while (i < cpy_len)
+	{
+		dest[i] = src[i];
+		i++;
+	}
+	dest[i] = '\0';
+	return (0);
 }

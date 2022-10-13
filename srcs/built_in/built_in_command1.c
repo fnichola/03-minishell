@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 17:23:49 by akihito           #+#    #+#             */
-/*   Updated: 2022/10/13 01:55:45 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/13 02:43:57 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,6 @@ void	built_in_cd(char **argv)
 	}
 	else if (argv[1] && chdir(old_pwd) == -1)
 	{
-		debug_log("else if\n");
 		ft_perror("cd");
 		free(old_pwd);
 		return ;
@@ -124,122 +123,6 @@ void	built_in_pwd(char **argv)
 	return ;
 }
 
-void	printf_env_ascii(void)
-{
-
-}
-
-t_envlist	split_env(const char *str)
-{
-	size_t		i;
-	t_envlist	new_var;
-
-	debug_log("split_env\n");
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == '=')
-		{
-			new_var.name = ft_wsubstr(str, 0, i);
-			new_var.value = ft_wstrdup(&str[i+1]);
-			debug_log("new_var.name = %s\nnew_var.value = %s\n", new_var.name, new_var.value);
-			return (new_var);
-		}
-		i++;
-	}
-	new_var.name = NULL;
-	new_var.value = NULL;
-	return (new_var);
-}
-
-void	built_in_export(char **argv)
-{
-	size_t		i;
-	t_envlist	new_var;
-	t_envlist	*found_env;
-	t_envlist	*sorted_env;
-	t_envlist	*ptr;
-
-	if (!argv || !argv[0])
-		exit_error("Export");
-	else if (!argv[1])
-	{
-		sorted_env = env_list_sort(env_list_copy_all(g_data.env_list));
-		ptr = sorted_env;
-		while(ptr)
-		{
-			if (ptr->export && ptr->value)
-				debug_log("declare -x %s=\"%s\"\n", ptr->name, ptr->value);
-			else if (ptr->export)
-				debug_log("declare -x %s\n", ptr->name);
-			ptr = ptr->next;
-		}
-		free_env_list(&sorted_env);
-	}
-	else
-	{
-		i = 1;
-		while (argv[i])
-		{
-			if (ft_strlen(argv[i]) > 1 && ft_strchr(argv[i], '='))
-			{
-				new_var = split_env(argv[i]);
-				ft_setenv(new_var.name, new_var.value, 1);
-				found_env = ft_findenv(new_var.name);
-				found_env->export = true;
-				free(new_var.name);
-				free(new_var.value);
-			}
-			else
-			{
-				found_env = ft_findenv(argv[i]);
-				if (found_env)
-					found_env->export = true;
-				else
-				{
-					ft_setenv(argv[i], NULL, 0);
-					found_env = ft_findenv(argv[i]);
-					if (found_env)
-						found_env->export = true;
-				}
-			}
-			i++;
-		}
-	}
-}
-
-// void	built_in_export(char **argv)
-// {//ascii順に並べる
-// 	ssize_t		split_index;
-// 	ssize_t		arg_i;
-// 	t_envlist	*tmp;
-
-// 	arg_i = 1;
-// 	if (argv[arg_i] == NULL)
-// 		put_env_asci_order(g_data.env_list, NULL);
-// 	else//環境変数の追加または変更の処理
-// 	{
-// 		while (argv[arg_i])
-// 		{
-// 			split_index = check_shell_val(argv[arg_i]);
-// 			if (split_index != -1)
-// 			{
-// 				to_setenv(g_data.env_list, argv[arg_i], split_index);
-// 			}
-// 			else//エラー文　bash: export: `TEST++': not a valid identifier
-// 				ft_puterror("export", argv[arg_i], "not a valid identifier");
-// 			arg_i++;
-// 		}
-// 	}
-// 	tmp = g_data.env_list->next;
-// 	while (tmp)
-// 	{
-// 		printf("%s : %s\n", tmp->key, tmp->value);
-// 		tmp = tmp->next;
-// 	}
-// 	return ;
-// }
-
 void	built_in_env(char **argv)
 {
 	t_envlist	*per_env;
@@ -249,7 +132,7 @@ void	built_in_env(char **argv)
 	while (per_env)
 	{
 		if (per_env->value)
-			debug_log("%s=%s\n", per_env->name, per_env->value);
+			printf("%s=%s\n", per_env->name, per_env->value);
 		per_env = per_env->next;
 	}
 }

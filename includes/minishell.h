@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/13 02:11:20 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/13 05:45:37 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,16 +126,10 @@ void		ft_perror(char *perror_str);
 int			ft_strcmp(const char *s1, const char *s2);
 char		*ft_wstrjoin(char *str1, char *str2);
 char		*ft_wstrdup(const char *src);
-t_envlist	*ft_set_env(t_envlist *env_list, char *key, char *value, int add);
-t_envlist	*ft_findenv(const char *name);
-void		put_env_ascii_order(void);
-int			check_shell_val(char *src_str);
 char		*ft_wsubstr(char const *s, unsigned int start, size_t len);
+int			ft_strncpy(char *dest, char *src, size_t cpy_len);
 void		ft_puterror(char *s1, char *s2, char *s3);
-t_envlist	*ft_set_env(t_envlist *env_list, char *key, char *value, int add);
-t_envlist	*ft_unsetenv(t_envlist *e_list, char *unset_key);
 char		*ft_echo_env(char *str, t_envlist *e_list);
-char		*find_doll_env(t_envlist *e_list, char *after_doll);
 int			ft_wpipe(int fd[2]);
 void		ft_wexecve(char *file, char **argv, char **envp);
 int			execute_commands(void);
@@ -143,4 +137,24 @@ void		init_exec_fds(void);
 void		free_exec_fds(void);
 void		free_command_table(void *ptr);
 void		close_exec_fds(void);
+t_envlist	*env_list_copy_all(t_envlist *node);
+t_envlist	*env_list_dup(t_envlist *node);
+t_envlist	*env_list_first(t_envlist *ptr);
+t_envlist	*env_list_last(t_envlist *ptr);
+t_envlist	*env_list_new(char *name, char *value, char *string);
+size_t		env_list_size(t_envlist *node);
+t_envlist	*env_list_sort(t_envlist *env_list);
+void		env_list_swap_next(t_envlist *node);
+char		*env_to_string(const char *name, const char *value);
+char		**export_to_envp(void);
+void		free_env_list(t_envlist **env_list);
+void		free_envp(char **envp);
+t_envlist	*ft_findenv(const char *name);
+char		*ft_getenv(char *name);
+int			ft_setenv(const char *name, const char *value, int overwrite);
+t_envlist	*ft_unsetenv(t_envlist *e_list, char *unset_key);
+char		*get_env_name(char *env);
+char		*get_env_value(char *env);
+void		init_env_list(char **envp);
+t_envlist	split_env(const char *str);
 #endif
