@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 17:23:49 by akihito           #+#    #+#             */
-/*   Updated: 2022/10/11 06:55:01 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/13 01:30:08 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ void	built_in_pwd(char **argv)
 	}
 	else
 	{//正常
-		debug_log("%s\n", path_name);
+		printf("%s\n", path_name);
 		free(path_name);
 	}
 	// return (path_name);
