@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/30 22:27:20 by akihito           #+#    #+#             */
-/*   Updated: 2022/09/26 03:34:17 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/13 02:09:01 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -223,7 +223,7 @@ int	ft_setenv(const char *name, const char *value, int overwrite)
 	node = ft_findenv(name);
 	if (!name || !ft_strlen(name) || ft_strchr(name, '='))
 	{
-		printf("ft_setenv: error!\n");
+		debug_log("ft_setenv: error!\n");
 		errno = EINVAL;
 		return (-1);
 	}

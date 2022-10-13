@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/26 16:46:58 by fnichola          #+#    #+#             */
-/*   Updated: 2022/09/26 21:10:46 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/13 02:07:31 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include <sys/wait.h>
 
 t_minishell_data	g_data;
+bool				g_debug;
 
 int	minishell(char **envp)
 {
@@ -36,11 +37,11 @@ int	minishell(char **envp)
 		if (line && *line)
 			add_history(line);
 		tokens = tokenizer(line);
-		// printf("tokens %s\n", (char *)tokens->next->content);
+		// debug_log("tokens %s\n", (char *)tokens->next->content);
 		g_data.command_table = parser(tokens, g_data.env_list);
-		// printf("g_data.command_table %s\n", (char *)g_data.command_table->content->);
+		// debug_log("g_data.command_table %s\n", (char *)g_data.command_table->content->);
 		free(line);
-			status = execute_commands();
+		status = execute_commands();//ここでパイプ生成
 		ft_lstclear(&g_data.command_table, free_command_table);
 	}
 	return (0);
@@ -49,9 +50,10 @@ int	minishell(char **envp)
 int	main(int argc, char **argv, char **envp)
 {
 	(void)argv;
+	g_debug = true;
 	if (argc == 1)
 	{
-		// printf("environ: %s\n", __environ[0]);
+		debug_log("Starting Minishell\n");
 		minishell(envp);
 	}
 	else

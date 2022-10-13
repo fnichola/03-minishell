@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 15:11:01 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/15 17:54:37 by akihito          ###   ########.fr       */
+/*   Updated: 2022/09/28 20:11:00 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ typedef struct s_lex_arg {
 	const char			*line;
 	size_t				i;
 	size_t				start_index;//tokenの開始インデックスで最初の空白は無視
-	t_state				state;//
+	t_state				state;
 	t_token_type		token_type;//関数ポインタの中で設定してあげる。
 	bool				found_token;
 }	t_lex_arg;

@@ -1,19 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_perror.c                                        :+:      :+:    :+:   */
+/*   debug_log.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/24 11:59:14 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/12 08:48:23 by fnichola         ###   ########.fr       */
+/*   Created: 2022/10/11 06:24:10 by fnichola          #+#    #+#             */
+/*   Updated: 2022/10/12 09:07:02 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdarg.h>
 #include "minishell.h"
 
-void	ft_perror(char *perror_str)
+void	debug_log(const char *format, ...)
 {
-	ft_putstr_fd("minishell: ", STDERR_FILENO);
-	perror(perror_str);
+	if (!g_debug)
+		return ;
+	va_list args;
+	va_start(args, format);
+	printf("\033[0;33m");
+	vprintf(format, args);
+	printf("\033[0m");
+	fflush(stdout);
+	va_end(args);
 }

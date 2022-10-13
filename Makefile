@@ -6,7 +6,7 @@
 #    By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/09 18:01:32 by fnichola          #+#    #+#              #
-#    Updated: 2022/09/26 00:37:46 by fnichola         ###   ########.fr        #
+#    Updated: 2022/10/13 01:49:30 by fnichola         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,6 +19,7 @@ CC = gcc
 CFLAGS = -Wextra -Werror -Wall -g -fsanitize=address
 
 SRCS = srcs/main.c \
+	srcs/debug_log.c \
 	srcs/execute/execute-commands.c \
 	srcs/execute/exec-fds.c \
 	srcs/lexer/lexer.c \
@@ -40,7 +41,8 @@ SRCS = srcs/main.c \
 	srcs/utilities/is_str_match.c \
 	srcs/utilities/malloc_error_check.c \
 	srcs/utilities/str_tolower.c \
-	srcs/utilities/wrapper.c
+	srcs/utilities/wrapper.c \
+	srcs/expand/redirect_expand.c \
 
 ifdef WITH_BONUS
 endif

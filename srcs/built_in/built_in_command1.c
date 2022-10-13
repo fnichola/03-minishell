@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 17:23:49 by akihito           #+#    #+#             */
-/*   Updated: 2022/09/26 03:35:03 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/13 01:55:45 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,6 @@ void	built_in_echo(char **argv)//環境変数はまだ、echo ?$も無限ルー�
 	}
 	while (argv[arg_i])
 	{
-		// printf("while\n");
-		// put_str = ft_echo_env(argv[arg_i], e_list);//echoで文字列中にシェル変数があったら、そのシェル変数を展開してあげた文字列を返してあげる。
-		// printf("arg_i = %zu\n", arg_i);
 		ft_putstr_fd(argv[arg_i], STDOUT_FILENO);
 		if (argv[arg_i + 1] != NULL)
 			ft_putstr_fd(" ", STDOUT_FILENO);
@@ -86,6 +83,13 @@ void	built_in_cd(char **argv)
 	}
 	else if (!argv[1] && chdir(home_dir) == -1)//cdの引数がなかったら、環境変数HOMEのディレクトリに移動する
 	{//status=0
+		ft_perror("cd");
+		free(old_pwd);
+		return ;
+	}
+	else if (argv[1] && chdir(old_pwd) == -1)
+	{
+		debug_log("else if\n");
 		ft_perror("cd");
 		free(old_pwd);
 		return ;
@@ -130,7 +134,7 @@ t_envlist	split_env(const char *str)
 	size_t		i;
 	t_envlist	new_var;
 
-	printf("split_env\n");
+	debug_log("split_env\n");
 	i = 0;
 	while (str[i])
 	{
@@ -138,7 +142,7 @@ t_envlist	split_env(const char *str)
 		{
 			new_var.name = ft_wsubstr(str, 0, i);
 			new_var.value = ft_wstrdup(&str[i+1]);
-			printf("new_var.name = %s\nnew_var.value = %s\n", new_var.name, new_var.value);
+			debug_log("new_var.name = %s\nnew_var.value = %s\n", new_var.name, new_var.value);
 			return (new_var);
 		}
 		i++;
@@ -165,9 +169,9 @@ void	built_in_export(char **argv)
 		while(ptr)
 		{
 			if (ptr->export && ptr->value)
-				printf("declare -x %s=\"%s\"\n", ptr->name, ptr->value);
+				debug_log("declare -x %s=\"%s\"\n", ptr->name, ptr->value);
 			else if (ptr->export)
-				printf("declare -x %s\n", ptr->name);
+				debug_log("declare -x %s\n", ptr->name);
 			ptr = ptr->next;
 		}
 		free_env_list(&sorted_env);
@@ -245,7 +249,7 @@ void	built_in_env(char **argv)
 	while (per_env)
 	{
 		if (per_env->value)
-			printf("%s=%s\n", per_env->name, per_env->value);
+			debug_log("%s=%s\n", per_env->name, per_env->value);
 		per_env = per_env->next;
 	}
 }

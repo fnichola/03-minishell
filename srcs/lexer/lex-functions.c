@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 14:58:17 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/18 17:19:37 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/11 06:55:01 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 void	lex_neutral(t_lex_arg *l)
 {
-	// printf("[ST_NEUTRAL]\n");
+	// debug_log("[ST_NEUTRAL]\n");
 	if (!(l->line)[l->i])
 		l->state = ST_END_OF_LINE;
 	else if (is_space((l->line)[l->i]))
@@ -38,14 +38,14 @@ void	lex_neutral(t_lex_arg *l)
 
 void	lex_pipe(t_lex_arg *l)
 {
-	// printf("[ST_PIPE]");
+	// debug_log("[ST_PIPE]");
 	l->token_type = T_PIPE;
 	l->found_token = true;
 }
 
 void	lex_gt(t_lex_arg *l)
 {
-	// printf("[ST_GT]\n");
+	// debug_log("[ST_GT]\n");
 	if ((l->line)[l->i] == '>')
 		l->state = ST_GTGT;
 	else
@@ -57,14 +57,14 @@ void	lex_gt(t_lex_arg *l)
 
 void	lex_gtgt(t_lex_arg *l)
 {
-	// printf("[ST_GTGT]\n");
+	// debug_log("[ST_GTGT]\n");
 	l->token_type = T_GTGT;
 	l->found_token = true;
 }
 
 void	lex_lt(t_lex_arg *l)
 {
-	// printf("[ST_LT]\n");
+	// debug_log("[ST_LT]\n");
 	if ((l->line)[l->i] == '<')
 		l->state = ST_LTLT;
 	else
@@ -76,14 +76,14 @@ void	lex_lt(t_lex_arg *l)
 
 void	lex_ltlt(t_lex_arg *l)
 {
-	// printf("[ST_LTLT]\n");
+	// debug_log("[ST_LTLT]\n");
 	l->token_type = T_LTLT;
 	l->found_token = true;
 }
 
 void	lex_begin_single_quote(t_lex_arg *l)
 {
-	// printf("[ST_BEGIN_SINGLE_QUOTE]\n");
+	// debug_log("[ST_BEGIN_SINGLE_QUOTE]\n");
 	l->start_index = l->i;
 	l->i--;
 	l->state = ST_IN_SINGLE_QUOTE;
@@ -91,7 +91,7 @@ void	lex_begin_single_quote(t_lex_arg *l)
 
 void	lex_in_single_quote(t_lex_arg *l)
 {
-	// printf("[ST_IN_SINGLE_QUOTE]\n");
+	// debug_log("[ST_IN_SINGLE_QUOTE]\n");
 	if ((l->line)[l->i] == '\'')
 	{
 		l->token_type = T_WORD;
@@ -101,7 +101,7 @@ void	lex_in_single_quote(t_lex_arg *l)
 
 void	lex_begin_double_quote(t_lex_arg *l)
 {
-	// printf("[ST_BEGIN_DOUBLE_QUOTE]\n");
+	// debug_log("[ST_BEGIN_DOUBLE_QUOTE]\n");
 	l->start_index = l->i;
 	l->i--;
 	l->state = ST_IN_DOUBLE_QUOTE;
@@ -109,7 +109,7 @@ void	lex_begin_double_quote(t_lex_arg *l)
 
 void	lex_in_double_quote(t_lex_arg *l)
 {
-	// printf("[ST_IN_DOUBLE_QUOTE]\n");
+	// debug_log("[ST_IN_DOUBLE_QUOTE]\n");
 	if ((l->line)[l->i] == '"')
 	{
 		l->token_type = T_DOUBLE_QUOTED;//T_WORDではなくT_DQUOTEDというタイプにした
@@ -119,7 +119,7 @@ void	lex_in_double_quote(t_lex_arg *l)
 
 void	lex_dollar(t_lex_arg *l)
 {
-	// printf("[ST_DOLLAR]\n");
+	// debug_log("[ST_DOLLAR]\n");
 	if (is_delimeter((l->line)[l->i]))
 	{
 		l->token_type = T_WORD;
@@ -136,14 +136,14 @@ void	lex_dollar(t_lex_arg *l)
 
 void	lex_exit_status(t_lex_arg *l)
 {
-	// printf("[ST_EXIT_STATUS]");
+	// debug_log("[ST_EXIT_STATUS]");
 	l->token_type = T_EXIT_STATUS;
 	l->found_token = true;
 }
 
 void	lex_variable(t_lex_arg *l)
 {
-	// printf("[ST_VARIABLE]\n");
+	// debug_log("[ST_VARIABLE]\n");
 	if (is_delimeter((l->line)[l->i]))
 	{
 		l->token_type = T_VAR;
@@ -153,7 +153,7 @@ void	lex_variable(t_lex_arg *l)
 
 void	lex_in_word(t_lex_arg *l)
 {
-	// printf("[ST_IN_WORD]\n");
+	// debug_log("[ST_IN_WORD]\n");
 	if (is_delimeter((l->line)[l->i]))
 	{
 		l->token_type = T_WORD;
@@ -163,7 +163,7 @@ void	lex_in_word(t_lex_arg *l)
 
 void	lex_end_of_line(t_lex_arg *l)
 {
-	// printf("[ST_END_OF_LINE]\n");
+	// debug_log("[ST_END_OF_LINE]\n");
 	l->token_type = T_EOL;
 	l->found_token = true;
 }

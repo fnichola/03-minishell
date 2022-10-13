@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/09/26 01:48:18 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/13 02:11:20 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 # include <errno.h>
 # include <unistd.h>
 # include <stdlib.h>
+# include <fcntl.h>
 
 /**
  * Token types returned by tokenizer(). Input from readline is broken into
@@ -75,12 +76,16 @@ typedef struct s_str_func_table {
  * output_file, input_file, and error_file are for redirection. If there is
  * no redirection, they should be set to NULL.
  */
+
+typedef struct s_redirect {
+	bool	append;
+	char	*filename;
+}	t_redirect;
+
 typedef struct s_command {
 	char		**argv; // = {"grep", "c", 0}
-	char		*output_file; // = "test.txt"
-	char		*input_file;
-	char		*error_file;
-	t_envlist	*env_list;
+	t_redirect	*input_redirect;
+	t_redirect	*output_redirect;
 }	t_command;
 
 typedef struct s_exec_fds {//command１つ１つに対して依存するべき
@@ -98,10 +103,13 @@ typedef struct s_minishell_data {
 	size_t				cmd_index;
 	int					exit_satus;
 	t_envlist			*env_list;
+	t_redirect			*redirect;//parserでリダイレクトが来たら、この構造体にファイル名とタイプを入れていく。
 }	t_minishell_data;
 
 extern t_minishell_data	g_data;
+extern bool	g_debug;
 
+void		debug_log(const char *format, ...);
 void		exit_error(char *str);
 void		init_built_in_table(void);
 void		built_in_exit(char **argv);
@@ -116,7 +124,6 @@ void		*malloc_error_check(size_t size);
 t_list		*parser(t_list *tokens, t_envlist *e_list);
 void		ft_perror(char *perror_str);
 int			ft_strcmp(const char *s1, const char *s2);
-void		ft_perror(char *perror_str);
 char		*ft_wstrjoin(char *str1, char *str2);
 char		*ft_wstrdup(const char *src);
 t_envlist	*ft_set_env(t_envlist *env_list, char *key, char *value, int add);

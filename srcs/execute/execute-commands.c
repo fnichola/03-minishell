@@ -6,12 +6,11 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 09:22:05 by fnichola          #+#    #+#             */
-/*   Updated: 2022/09/28 17:31:33 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/13 02:07:01 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
 
 bool	lookup_and_exec_built_in(char **argv)
 {
@@ -43,7 +42,7 @@ bool	execute_built_in(char **argv)
 
 	old_fd[0] = dup(STDIN_FILENO);
 	old_fd[1] = dup(STDOUT_FILENO);
-	dup2((g_data.exec_fds[g_data.cmd_index])[0], STDIN_FILENO);
+	dup2((g_data.exec_fds[g_data.cmd_index])[0], STDIN_FILENO);//redirectはここの第一引数がopenしたfdである必要
 	dup2((g_data.exec_fds[g_data.cmd_index])[1], STDOUT_FILENO);
 	is_builtin = lookup_and_exec_built_in(argv);
 	dup2(old_fd[0], STDIN_FILENO);
@@ -60,7 +59,6 @@ void	search_path_and_exec(char **argv, char **envp)
 	char	*temp;
 	size_t	i;
 
-	printf("search\n");
 	paths = ft_split(getenv("PATH"), ':');
 	i = 0;
 	while (paths[i])
@@ -100,19 +98,14 @@ int		execute_external(char **argv, char **envp)
 		if (g_data.cmd_index == g_data.num_cmds - 1)
 		{
 			close_exec_fds();
-			// waitpid(pid, &status, WUNTRACED);
 		}
-		// printf("external2\n");
-		// printf("pid %d\n", pid);
 	}
-	// printf("pid %d\n", pid);
 	return (pid);
 }
 
 static void	execute_simple_command(char **argv, pid_t *pids, int i)
 {
 	char	**envp;
-	// pid_t	tmp;
 
 	(void)pids;
 	(void)i;
@@ -139,9 +132,9 @@ static void	execute_commands_loop(t_list *command_table_ptr)
 	size_t		i;
 	pid_t		*pids;
 	int			status;
-	// pids = (pid_t *)malloc_error_check(g_data.num_cmds);
-	printf("g_data.num_cmds %zu\n", g_data.num_cmds);
-	pids = (pid_t *)malloc(sizeof(pid_t) * (g_data.num_cmds + 1));
+
+	debug_log("execute_commands_loop: g_data.num_cmds %zu\n", g_data.num_cmds);
+	pids = (pid_t *)malloc_error_check(sizeof(pid_t) * (g_data.num_cmds + 1));
 	g_data.cmd_index = 0;
 	while (g_data.cmd_index < g_data.num_cmds)//num_cmdsはパイプがあれば、増えていく
 	{
