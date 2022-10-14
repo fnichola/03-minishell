@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 14:58:17 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/13 08:29:43 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/14 02:27:19 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,11 @@ void	init_command(t_parse_arg *p)
 	p->command->argv = malloc_error_check(sizeof(char *) * 32); // 32 is max length of a single command, this should be changed!
 	p->command->argv[p->index] = NULL;
 	p->command->redirects = NULL;
+	p->command->pid = 0;
+	p->command->input_fd = STDIN_FILENO;
+	p->command->output_fd = STDOUT_FILENO;
+	p->command->prev = NULL;
+	p->command->next = NULL;
 }
 
 bool is_redirect_token(t_token_type t)
@@ -101,7 +106,7 @@ void	parser_simple_command(t_parse_arg *p)
 	if (!p->token)
 	{
 		p->command->argv[p->index] = NULL;
-		ft_lstadd_back(&p->command_table, ft_lstnew(p->command));
+		command_add_back(p->command);
 		change_state(p, ST_FINISHED);
 	}
 	else if (p->token->token_type == T_WORD)
@@ -118,7 +123,7 @@ void	parser_simple_command(t_parse_arg *p)
 	else if (p->token->token_type == T_PIPE)
 	{
 		p->command->argv[p->index] = NULL;
-		ft_lstadd_back(&p->command_table, ft_lstnew(p->command));
+		command_add_back(p->command);
 		next_token(p);
 		change_state(p, ST_NEUTRAL);
 	}

@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/08 01:54:35 by akihito           #+#    #+#             */
-/*   Updated: 2022/10/13 08:35:35 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/14 02:56:28 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,23 +32,6 @@ void	builtin_unset(char **argv)
 	return ;
 }
 
-void	free_command_table(void *ptr)
-{
-	size_t		i;
-	t_command	*command;
-
-	command = (t_command *)ptr;
-	i = 0;
-	while (command->argv && command->argv[i])
-	{
-		free(command->argv[i]);
-		i++;
-	}
-	free(command->argv);
-	free_redirects(&command->redirects);
-	free(command);
-}
-
 void	built_in_exit(char **argv)
 {
 	int	ret;
@@ -58,7 +41,7 @@ void	built_in_exit(char **argv)
 	while (argv[argc])
 		argc++;
 
-	ft_lstclear(&g_data.command_table, free_command_table);
+	free_command_table();
 	free_env_list(&g_data.env_list);
 	if (argc == 1)
 	{

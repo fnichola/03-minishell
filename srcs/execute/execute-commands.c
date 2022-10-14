@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 09:22:05 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/13 02:17:33 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/14 02:54:56 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,16 +35,16 @@ bool	lookup_and_exec_built_in(char **argv)
 	return (is_builtin);
 }
 
-bool	execute_built_in(char **argv)
+bool	execute_built_in(t_command *cmd)
 {
 	bool	is_builtin;
 	int		old_fd[2];
 
 	old_fd[0] = dup(STDIN_FILENO);
 	old_fd[1] = dup(STDOUT_FILENO);
-	dup2((g_data.exec_fds[g_data.cmd_index])[0], STDIN_FILENO);//redirectはここの第一引数がopenしたfdである必要
-	dup2((g_data.exec_fds[g_data.cmd_index])[1], STDOUT_FILENO);
-	is_builtin = lookup_and_exec_built_in(argv);
+	dup2(cmd->input_fd, STDIN_FILENO);//redirectはここの第一引数がopenしたfdである必要
+	dup2(cmd->output_fd, STDOUT_FILENO);
+	is_builtin = lookup_and_exec_built_in(cmd->argv);
 	dup2(old_fd[0], STDIN_FILENO);
 	close(old_fd[0]);
 	dup2(old_fd[1], STDOUT_FILENO);
@@ -76,7 +76,7 @@ void	search_path_and_exec(char **argv, char **envp)
 	exit_error("Can't find command.");
 }
 
-int		execute_external(char **argv, char **envp)
+int		execute_external(t_command *cmd, char **envp)
 {
 	pid_t	pid;
 	// int		status;
@@ -84,76 +84,64 @@ int		execute_external(char **argv, char **envp)
 	pid = fork();
 	if (pid == 0)// 子プロセス
 	{
-		dup2((g_data.exec_fds[g_data.cmd_index])[0], STDIN_FILENO);
-		dup2((g_data.exec_fds[g_data.cmd_index])[1], STDOUT_FILENO);
+		dup2(cmd->input_fd, STDIN_FILENO);
+		dup2(cmd->output_fd, STDOUT_FILENO);
 		close_exec_fds();
-		if (ft_strchr(argv[0], '/'))
-			execve(argv[0], argv, envp);
+		if (ft_strchr(cmd->argv[0], '/'))
+			execve(cmd->argv[0], cmd->argv, envp);
 		else
-			search_path_and_exec(argv, envp);
-	}
-	else // 親プロセス
-	{
-		// printf("external\n");
-		if (g_data.cmd_index == g_data.num_cmds - 1)
-		{
-			close_exec_fds();
-		}
+			search_path_and_exec(cmd->argv, envp);
 	}
 	return (pid);
 }
 
-static void	execute_simple_command(char **argv, pid_t *pids, int i)
+static void	execute_simple_command(t_command *cmd)
 {
 	char	**envp;
 
-	(void)pids;
-	(void)i;
-	if (execute_built_in(argv))
+	debug_log("execute_simple_command: ");
+	for (int i=0; cmd->argv[i]; i++)
+		debug_log("%s ", cmd->argv[i]);
+	debug_log("\n");
+
+	if (execute_built_in(cmd))
 		return ;
 	else
 	{
 		envp = export_to_envp();
-		pids[i] = execute_external(argv, envp);
+		cmd->pid = execute_external(cmd, envp);
 		free_envp(envp);
 	}
 }
 
-static void	execute_commands_loop(t_list *command_table_ptr)
+static void	execute_commands_loop(void)
 {
-	t_command	*command;
-	char		**argv;
-	size_t		i;
-	pid_t		*pids;
+	t_command	*ct;
 	int			status;
 
-	debug_log("execute_commands_loop: g_data.num_cmds %zu\n", g_data.num_cmds);
-	pids = (pid_t *)malloc_error_check(sizeof(pid_t) * (g_data.num_cmds + 1));
-	g_data.cmd_index = 0;
-	while (g_data.cmd_index < g_data.num_cmds)//num_cmdsはパイプがあれば、増えていく
+	ct = g_data.command_table;
+	while (ct)//num_cmdsはパイプがあれば、増えていく
 	{
-		command = (t_command *)command_table_ptr->content;
-		argv = command->argv;//ここでargvにcommandのargvが代入されているので、built_inにはargvを渡せばいい。
-		if (!argv || !argv[0])
+		if (!ct->argv || !ct->argv[0])
 			return ;
-		execute_simple_command(argv, pids, g_data.cmd_index);
-		command_table_ptr = command_table_ptr->next;
-		g_data.cmd_index++;
+		execute_simple_command(ct);
+		ct = ct->next;
 	}
-	i = 0;
-	while (i < g_data.num_cmds + 1)
+	close_exec_fds();
+	ct = g_data.command_table;
+	while (ct)
 	{
-		waitpid(pids[i], &status, WUNTRACED);
-		i++;
+		if (ct->pid)
+			waitpid(ct->pid, &status, WUNTRACED);
+		ct = ct->next;
 	}
-	free(pids);
 }
 
 int	execute_commands(void)
 {
-	g_data.num_cmds = ft_lstsize(g_data.command_table);
-	init_exec_fds();
-	execute_commands_loop(g_data.command_table);
-	free_exec_fds();
+	prepare_exec_fds();
+	execute_commands_loop();
+	close_exec_fds();
+	free_command_table();
 	return (0);
 }

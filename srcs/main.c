@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/26 16:46:58 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/13 02:15:21 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/14 02:18:36 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,11 +38,10 @@ int	minishell(char **envp)
 			add_history(line);
 		tokens = tokenizer(line);
 		// debug_log("tokens %s\n", (char *)tokens->next->content);
-		g_data.command_table = parser(tokens, g_data.env_list);
+		parser(tokens);
 		// debug_log("g_data.command_table %s\n", (char *)g_data.command_table->content->);
 		free(line);
 		status = execute_commands();//ここでパイプ生成
-		ft_lstclear(&g_data.command_table, free_command_table);
 	}
 	return (0);
 }
