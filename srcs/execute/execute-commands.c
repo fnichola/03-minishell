@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute-commands.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 09:22:05 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/14 02:54:56 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/14 15:25:36 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ bool	lookup_and_exec_built_in(char **argv)
 	{
 		if (is_str_match(str, g_data.built_ins[i].name))
 		{
+			debug_log("is_str_match\n");
 			g_data.built_ins[i].func(argv);
 			is_builtin = true;
 			break ;

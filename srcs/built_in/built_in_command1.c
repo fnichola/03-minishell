@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_in_command1.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 17:23:49 by akihito           #+#    #+#             */
-/*   Updated: 2022/10/13 02:43:57 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/14 23:12:39 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,12 +87,12 @@ void	built_in_cd(char **argv)
 		free(old_pwd);
 		return ;
 	}
-	else if (argv[1] && chdir(old_pwd) == -1)
-	{
-		ft_perror("cd");
-		free(old_pwd);
-		return ;
-	}
+	// else if (argv[1] && chdir(old_pwd) == -1)
+	// {
+	// 	ft_perror("cd");
+	// 	free(old_pwd);
+	// 	return ;
+	// }
 	now_pwd = getcwd(NULL, 0);
 	ft_setenv("PWD", now_pwd, 1);
 	free(now_pwd);
