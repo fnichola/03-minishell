@@ -6,7 +6,11 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
+<<<<<<< Updated upstream
 /*   Updated: 2022/10/13 08:43:24 by fnichola         ###   ########.fr       */
+=======
+/*   Updated: 2022/10/14 00:32:07 by fnichola         ###   ########.fr       */
+>>>>>>> Stashed changes
 /*                                                                            */
 /* ************************************************************************** */
 
