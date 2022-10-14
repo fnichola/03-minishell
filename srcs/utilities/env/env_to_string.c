@@ -1,31 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   redirect_expand.c                                  :+:      :+:    :+:   */
+/*   env_to_string.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/09/30 17:15:34 by akihito           #+#    #+#             */
-/*   Updated: 2022/10/11 06:55:01 by fnichola         ###   ########.fr       */
+/*   Created: 2022/10/13 04:07:58 by fnichola          #+#    #+#             */
+/*   Updated: 2022/10/13 05:36:57 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-
-int	redirect_open_out(char *filename, bool is_append, int *flg)
+/**
+ * Makes a new string in envp format ("NAME=VALUE").
+ */
+char	*env_to_string(const char *name, const char *value)
 {
-	int	fd;
+	char	*tmp_str;
+	char	*env_string;
 
-	debug_log("filename = %s\n", filename);
-	if (is_append)
-		fd = open(filename, O_WRONLY | O_CREAT | O_APPEND, 0644);//0666は作成時の権限
-	else
-		fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (fd == -1)
-	{
-		ft_perror(filename);
-		*flg = 1;
-	}
-	return (fd);
+	if (!name)
+		return (NULL);
+	tmp_str = ft_strjoin(name, "=");
+	env_string = ft_strjoin(tmp_str, value);
+	free(tmp_str);
+	return (env_string);
 }

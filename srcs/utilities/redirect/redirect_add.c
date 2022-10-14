@@ -1,25 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   is_str_match.c                                     :+:      :+:    :+:   */
+/*   redirect_add.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/23 15:04:22 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/13 03:47:56 by fnichola         ###   ########.fr       */
+/*   Created: 2022/10/13 08:12:38 by fnichola          #+#    #+#             */
+/*   Updated: 2022/10/13 08:17:24 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*
- * Compare two strings, return true if they're an exact match. 
- * Length and case-sensitive.
- */
-bool	is_str_match(const char *s1, const char *s2)
+t_redirect *redirect_add(t_redirect **redirect_list, t_redirect *new_redirect)
 {
-	if (!ft_strcmp(s1, s2) && ft_strlen(s1) == ft_strlen(s2))
-		return (true);
+	t_redirect	*ptr;
+
+	if (!*redirect_list)
+		*redirect_list = new_redirect;
 	else
-		return (false);
+	{
+		ptr = *redirect_list;
+		while (ptr && ptr->next)
+			ptr = ptr->next;
+		ptr->next = new_redirect;
+	}
+	return (new_redirect);
 }

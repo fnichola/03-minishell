@@ -1,25 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   is_str_match.c                                     :+:      :+:    :+:   */
+/*   free_command_table.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/23 15:04:22 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/13 03:47:56 by fnichola         ###   ########.fr       */
+/*   Created: 2022/10/14 02:54:07 by fnichola          #+#    #+#             */
+/*   Updated: 2022/10/14 02:54:18 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*
- * Compare two strings, return true if they're an exact match. 
- * Length and case-sensitive.
- */
-bool	is_str_match(const char *s1, const char *s2)
+void	free_command_table(void)
 {
-	if (!ft_strcmp(s1, s2) && ft_strlen(s1) == ft_strlen(s2))
-		return (true);
-	else
-		return (false);
+	t_command	*ct;
+	t_command	*tmp;
+
+	ct = g_data.command_table;
+	while(ct)
+	{
+		tmp = ct->next;
+		free_command(ct);
+		ct = tmp;
+	}
+	g_data.command_table = NULL;
 }

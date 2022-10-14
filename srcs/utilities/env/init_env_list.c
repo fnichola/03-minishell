@@ -1,25 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   is_str_match.c                                     :+:      :+:    :+:   */
+/*   init_env_list.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/23 15:04:22 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/13 03:47:56 by fnichola         ###   ########.fr       */
+/*   Created: 2022/10/13 04:02:02 by fnichola          #+#    #+#             */
+/*   Updated: 2022/10/13 05:36:57 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*
- * Compare two strings, return true if they're an exact match. 
- * Length and case-sensitive.
- */
-bool	is_str_match(const char *s1, const char *s2)
+void	init_env_list(char **envp)
 {
-	if (!ft_strcmp(s1, s2) && ft_strlen(s1) == ft_strlen(s2))
-		return (true);
-	else
-		return (false);
+	size_t		i;
+	char		*name;
+	char		*value;
+	t_envlist	*new_var;
+
+	i = 0;
+	while (envp[i])
+	{
+		name = get_env_name(envp[i]);
+		value = get_env_value(envp[i]);
+		new_var = env_list_new(name, value, ft_strdup(envp[i]));
+		env_list_add_back(&g_data.env_list, new_var);
+		new_var->export = true;
+		i++;
+	}
 }

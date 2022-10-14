@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 15:11:01 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/11 07:22:38 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/14 02:20:11 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ typedef struct s_parse_arg {
 	t_token			*previous_token;
 	t_state			state;
 	t_state			previous_state;
-	t_list			*command_table;
 	t_command		*command;//ここでコマンド
 	size_t			index;
 	t_envlist		*e_list;
@@ -55,7 +54,7 @@ typedef struct s_state_func_row {
 
 // t_list	*parser(t_list *tokens);
 t_state_func_row	*p_init_state_func_table(void);
-void	init_parse_arg(t_parse_arg *p, t_list *tokens, t_envlist *e_list);
+void	init_parse_arg(t_parse_arg *p, t_list *tokens);
 void	parser_neutral(t_parse_arg *p);
 void	parser_first_word(t_parse_arg *p);
 void	parser_simple_command(t_parse_arg *p);

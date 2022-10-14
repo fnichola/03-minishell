@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/12 08:48:41 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/14 03:05:01 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 
 # include "../libft/libft.h"
 # include "env.h"
-# include "expand.h"
 # include <stdio.h>
 # include <readline/readline.h>
 # include <readline/history.h>
@@ -24,6 +23,7 @@
 # include <errno.h>
 # include <unistd.h>
 # include <stdlib.h>
+# include <fcntl.h>
 
 /**
  * Token types returned by tokenizer(). Input from readline is broken into
@@ -77,15 +77,27 @@ typedef struct s_str_func_table {
  * no redirection, they should be set to NULL.
  */
 
+typedef enum e_redirect_type {
+	UNDEFINED_REDIRECT,
+	OUTPUT_REDIRECT,
+	INPUT_REDIRECT
+}	t_redirect_type;
+
 typedef struct s_redirect {
-	bool	append;
-	char	*filename;
+	t_redirect_type	type;
+	bool				append;
+	char				*filename;
+	struct s_redirect	*next;
 }	t_redirect;
 
 typedef struct s_command {
-	char		**argv; // = {"grep", "c", 0}
-	t_redirect	*input_redirect;
-	t_redirect	*output_redirect;
+	char				**argv; // = {"grep", "c", 0}
+	t_redirect			*redirects;
+	pid_t				pid;
+	int					input_fd;
+	int					output_fd;
+	struct s_command	*prev;
+	struct s_command	*next;
 }	t_command;
 
 typedef struct s_exec_fds {//command１つ１つに対して依存するべき
@@ -97,13 +109,10 @@ typedef struct s_exec_fds {//command１つ１つに対して依存するべき
 typedef struct s_minishell_data {
 	t_str_func_table	*built_ins;
 	size_t				num_built_ins;
-	t_list				*command_table;
-	int					**exec_fds;
-	size_t				num_cmds;
+	t_command			*command_table;
 	size_t				cmd_index;
 	int					exit_satus;
 	t_envlist			*env_list;
-	t_redirect			*redirect;//parserでリダイレクトが来たら、この構造体にファイル名とタイプを入れていく。
 }	t_minishell_data;
 
 extern t_minishell_data	g_data;
@@ -121,26 +130,48 @@ void		built_in_export(char **argv);
 bool		is_str_match(const char *s1, const char *s2);
 char		*str_tolower(char *str);
 void		*malloc_error_check(size_t size);
-t_list		*parser(t_list *tokens, t_envlist *e_list);
+void		parser(t_list *tokens);
 void		ft_perror(char *perror_str);
 int			ft_strcmp(const char *s1, const char *s2);
 char		*ft_wstrjoin(char *str1, char *str2);
 char		*ft_wstrdup(const char *src);
-t_envlist	*ft_set_env(t_envlist *env_list, char *key, char *value, int add);
-t_envlist	*ft_findenv(const char *name);
-void		put_env_ascii_order(void);
-int			check_shell_val(char *src_str);
 char		*ft_wsubstr(char const *s, unsigned int start, size_t len);
+int			ft_strncpy(char *dest, char *src, size_t cpy_len);
 void		ft_puterror(char *s1, char *s2, char *s3);
-t_envlist	*ft_set_env(t_envlist *env_list, char *key, char *value, int add);
-t_envlist	*ft_unsetenv(t_envlist *e_list, char *unset_key);
 char		*ft_echo_env(char *str, t_envlist *e_list);
-char		*find_doll_env(t_envlist *e_list, char *after_doll);
 int			ft_wpipe(int fd[2]);
 void		ft_wexecve(char *file, char **argv, char **envp);
 int			execute_commands(void);
-void		init_exec_fds(void);
+void		prepare_exec_fds(void);
 void		free_exec_fds(void);
-void		free_command_table(void *ptr);
+void		free_command(t_command *cmd);
 void		close_exec_fds(void);
+t_envlist	*env_list_copy_all(t_envlist *node);
+t_envlist	*env_list_dup(t_envlist *node);
+t_envlist	*env_list_first(t_envlist *ptr);
+t_envlist	*env_list_last(t_envlist *ptr);
+t_envlist	*env_list_new(char *name, char *value, char *string);
+size_t		env_list_size(t_envlist *node);
+t_envlist	*env_list_sort(t_envlist *env_list);
+void		env_list_swap_next(t_envlist *node);
+char		*env_to_string(const char *name, const char *value);
+char		**export_to_envp(void);
+void		free_env_list(t_envlist **env_list);
+void		free_envp(char **envp);
+t_envlist	*ft_findenv(const char *name);
+char		*ft_getenv(char *name);
+int			ft_setenv(const char *name, const char *value, int overwrite);
+t_envlist	*ft_unsetenv(t_envlist *e_list, char *unset_key);
+char		*get_env_name(char *env);
+char		*get_env_value(char *env);
+void		init_env_list(char **envp);
+t_envlist	split_env(const char *str);
+t_redirect	*redirect_new(void);
+t_redirect	*redirect_add(t_redirect **redirect_list, t_redirect *new_redirect);
+void		free_redirects(t_redirect **redirect_list);
+void		command_add_back(t_command *new_command);
+void		free_command(t_command *cmd);
+void		free_command_table(void);
+t_command	*del_command(t_command *cmd);
+
 #endif

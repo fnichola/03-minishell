@@ -1,22 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expand.h                                           :+:      :+:    :+:   */
+/*   env_list_copy_all.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
+/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/09/30 17:17:51 by akihito           #+#    #+#             */
-/*   Updated: 2022/09/30 18:43:23 by akihito          ###   ########.fr       */
+/*   Created: 2022/10/13 04:10:36 by fnichola          #+#    #+#             */
+/*   Updated: 2022/10/13 05:48:55 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef EXPAND_H
-# define EXPAND_H
+#include "minishell.h"
 
-# include <sys/types.h>
-# include <sys/stat.h>
-# include <fcntl.h>
+t_envlist	*env_list_copy_all(t_envlist *node)
+{
+	t_envlist	*new_list;
 
-int	redirect_open_out(char *filename, bool is_append, int *flg);
-
-# endif
+	new_list = NULL;
+	while (node)
+	{
+		env_list_add_back(&new_list, env_list_dup(node));
+		node = node->next;
+	}
+	return (new_list);
+}

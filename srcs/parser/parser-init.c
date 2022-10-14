@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 13:54:14 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/11 04:45:13 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/14 02:19:25 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,17 +30,15 @@ t_state_func_row	*p_init_state_func_table(void)
 	return (state_func_table);
 }
 
-void	init_parse_arg(t_parse_arg *p, t_list *tokens, t_envlist *e_list)
+void	init_parse_arg(t_parse_arg *p, t_list *tokens)
 {
 	p->list_ptr = tokens;
 	p->token = (t_token *)tokens->content;
 	p->previous_token = NULL;
 	p->state = ST_NEUTRAL;
 	p->previous_state = ST_NEUTRAL;
-	p->command_table = NULL;
 	p->command = NULL;
 	p->index = 0;
-	p->e_list = e_list;
 	p->count_cmds = 0;
 	p->is_exit = false;
 }

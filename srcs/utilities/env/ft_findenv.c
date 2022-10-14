@@ -1,25 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   is_str_match.c                                     :+:      :+:    :+:   */
+/*   ft_findenv.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/23 15:04:22 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/13 03:47:56 by fnichola         ###   ########.fr       */
+/*   Created: 2022/10/13 04:06:34 by fnichola          #+#    #+#             */
+/*   Updated: 2022/10/13 05:36:57 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*
- * Compare two strings, return true if they're an exact match. 
- * Length and case-sensitive.
+/**
+ * Find an env variable and return a pointer to it's node.
+ * Use ft_getenv to retrieve the value directly.
  */
-bool	is_str_match(const char *s1, const char *s2)
+t_envlist	*ft_findenv(const char *name)
 {
-	if (!ft_strcmp(s1, s2) && ft_strlen(s1) == ft_strlen(s2))
-		return (true);
-	else
-		return (false);
+	t_envlist	*tmp;
+
+	tmp = g_data.env_list;
+	while (tmp)
+	{
+		if (is_str_match(tmp->name, name))
+		{
+			return (tmp);
+		}
+		tmp = tmp->next;
+	}
+	return (NULL);
 }
