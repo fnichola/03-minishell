@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 02:30:14 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/13 06:03:20 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/15 17:58:04 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,13 @@ static void	export_new_var(char **argv)
 	i = 1;
 	while (argv[i])
 	{
+		debug_log("\n%s\n", argv[i]);
+		if (!is_valid_variable(argv[1]))
+		{
+			error_command("export", argv[1], "not a valid identifier");
+			g_data.exit_satus = 1;
+			return ;
+		}
 		if (ft_strlen(argv[i]) > 1 && ft_strchr(argv[i], '='))
 			export_split_set(argv[i]);
 		else
