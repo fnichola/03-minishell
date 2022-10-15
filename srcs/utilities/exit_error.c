@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 11:57:21 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/15 17:58:23 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/15 18:22:33 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,9 @@ void	error_command(char *str1, char *str2, char *str3)
 	if (str2)
 	{
 		ft_putstr_fd(": ", STDERR_FILENO);
+		ft_putstr_fd("`", STDERR_FILENO);
 		ft_putstr_fd(str2, STDERR_FILENO);
+		ft_putstr_fd("'", STDERR_FILENO);
 	}
 	if (str3)
 	{
