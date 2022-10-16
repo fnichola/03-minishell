@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand-quoted-text.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
+/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/18 16:26:16 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/16 20:54:32 by akihito          ###   ########.fr       */
+/*   Updated: 2022/09/26 00:44:54 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,6 @@ static void	split_quoted_text(t_parse_arg *p, size_t i)
 	char	*pre_str;
 	char	*post_str;
 
-	debug_log("split_quoted_text\n");
 	pre_str = ft_substr(p->token->word, 0, i);
 	i++;
 	start_index = i;
@@ -68,9 +67,8 @@ void	expand_quoted_text(t_parse_arg *p)
 {
 	size_t	i;
 
-	// debug_log("p->token->word %s\n", p->token->word);
 	i = 0;
-	while (!!p->token && !!p->token->word[i])
+	while (p->token->word[i])
 	{
 		if (p->token->word[i] == '$')
 		{

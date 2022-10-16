@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
+/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 18:02:55 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/16 20:16:35 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/11 06:55:01 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,8 @@ t_token	*get_next_token(t_lex_arg *l, const t_state_func_row *state_func_table)
 			token = malloc_error_check(sizeof(t_token));
 			token->word = ft_substr(l->line, l->start_index, (l->i - l->start_index));
 			token->token_type = l->token_type;
-			// debug_log("token->word %s\n", token->word);
-			// if (l->state == ST_IN_DOUBLE_QUOTE || l->state == ST_IN_SINGLE_QUOTE)
-			// 	(l->i)++;
+			if (l->state == ST_IN_DOUBLE_QUOTE || l->state == ST_IN_SINGLE_QUOTE)
+				(l->i)++;
 			l->found_token = false;
 			return (token);
 		}

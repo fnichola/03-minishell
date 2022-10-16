@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   split_env.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
+/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 02:43:15 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/15 22:08:07 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/13 03:47:14 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,6 @@ t_envlist	split_env(const char *str)
 	{
 		if (str[i] == '=')
 		{
-
-			if (str[i+1] == '\'')
-				printf("\n\n\n\n\n");
 			new_var.name = ft_wsubstr(str, 0, i);
 			new_var.value = ft_wstrdup(&str[i + 1]);
 			debug_log("split_env: new_var.name = %s\nnew_var.value = %s\n", new_var.name, new_var.value);

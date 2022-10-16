@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 17:23:49 by akihito           #+#    #+#             */
-/*   Updated: 2022/10/15 20:37:07 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/14 23:12:39 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,16 +75,15 @@ void	built_in_cd(char **argv)
 
 	old_pwd = getcwd(NULL, 0);
 	home_dir = ft_getenv("HOME");
-	printf("home_dir %s\n", home_dir);
 	if (argv[1] && argv[1][0] && chdir(argv[1]) == -1)
 	{//status=1
-		error_command("cd", argv[1], "Not a directory");
+		ft_perror("cd");//エラーのステータス更新
 		free(old_pwd);
 		return ;
 	}
 	else if (!argv[1] && chdir(home_dir) == -1)//cdの引数がなかったら、環境変数HOMEのディレクトリに移動する
 	{//status=0
-		error_command("cd", home_dir, "Not a directory");
+		ft_perror("cd");
 		free(old_pwd);
 		return ;
 	}

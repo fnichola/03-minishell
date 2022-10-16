@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser-functions.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
+/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 14:58:17 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/16 20:54:39 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/14 02:27:19 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,46 +95,14 @@ void	parser_neutral(t_parse_arg *p)
 
 void	parser_first_word(t_parse_arg *p)
 {
-	debug_log("parser_first_word\n");
 	next_token(p);
 	p->command->argv[p->index] = ft_strdup(p->previous_token->word); // duplicate token string so we can free all tokens later
 	(p->index)++;
 	change_state(p, ST_SIMPLE_COMMAND);
 }
 
-bool	is_double_quote(char	*token)
-{
-	size_t	i;
-
-	i = 0;
-	while (token[i] != '\0')
-	{
-		if (token[i] == '\"')
-			return (true);
-		debug_log("%c\n", token[i]);
-		i++;
-	}
-	return (false);
-}
-
-bool	is_single_quote(char	*token)
-{
-	size_t	i;
-
-	i = 0;
-	while (token[i] != '\0')
-	{
-		if (token[i] == '\'')
-			return (true);
-		debug_log("%c\n", token[i]);
-		i++;
-	}
-	return (false);
-}
 void	parser_simple_command(t_parse_arg *p)
 {
-	if (!!p->token)
-		debug_log("p->token->word %s\n ", p->token->word);
 	if (!p->token)
 	{
 		p->command->argv[p->index] = NULL;
@@ -143,24 +111,10 @@ void	parser_simple_command(t_parse_arg *p)
 	}
 	else if (p->token->token_type == T_WORD)
 	{
-		debug_log("p->token->word %s\n\n\n", p->token->word);
-		if (is_double_quote(p->token->word))
-		{
-			// p->command->argv[p->index] = ft_strdup(p->token->word);
-			// p->token = NULL;
-			// (p->index)++;
-			// next_token(p);
-			change_state(p, ST_IN_DQUOTE);
-		// if (is_single_quote(p->token->word))
-		// 	change_state(p,ST_IN_);
-		}
-		else
-		{
-			p->command->argv[p->index] = ft_strdup(p->token->word);
-			p->token = NULL;
-			(p->index)++;
-			next_token(p);
-		}
+		p->command->argv[p->index] = ft_strdup(p->token->word);
+		p->token = NULL;
+		(p->index)++;
+		next_token(p);
 	}
 	else if (p->token->token_type == T_VAR)
 		change_state(p, ST_ENV);
@@ -182,14 +136,8 @@ void	parser_simple_command(t_parse_arg *p)
 //ここでexpandしてT_WORDに変更する。　
 void	parser_in_dquote(t_parse_arg *p)
 {
-	debug_log("parser_in_dquote\n");
-	// debug_log("p->token->word %s\n", p->token->word);
 	expand_quoted_text(p);
-
-	// debug_log("previous_state %s\n", p->previous_state);
 	p->token->token_type = T_WORD;
-	// debug_log("p->state %s\n", p->state);
-	// debug_log(" p->previous_state %s\n",  p->previous_state);
 	change_state(p, p->previous_state);
 }
 

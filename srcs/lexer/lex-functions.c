@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lex-functions.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
+/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 14:58:17 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/16 19:49:08 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/11 06:55:01 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 void	lex_neutral(t_lex_arg *l)
 {
 	// debug_log("[ST_NEUTRAL]\n");
-	// debug_log("l->lines %s\n", l->line);
 	if (!(l->line)[l->i])
 		l->state = ST_END_OF_LINE;
 	else if (is_space((l->line)[l->i]))
@@ -84,7 +83,7 @@ void	lex_ltlt(t_lex_arg *l)
 
 void	lex_begin_single_quote(t_lex_arg *l)
 {
-	debug_log("[ST_BEGIN_SINGLE_QUOTE]\n");
+	// debug_log("[ST_BEGIN_SINGLE_QUOTE]\n");
 	l->start_index = l->i;
 	l->i--;
 	l->state = ST_IN_SINGLE_QUOTE;
@@ -92,7 +91,7 @@ void	lex_begin_single_quote(t_lex_arg *l)
 
 void	lex_in_single_quote(t_lex_arg *l)
 {
-	debug_log("[ST_IN_SINGLE_QUOTE]\n");
+	// debug_log("[ST_IN_SINGLE_QUOTE]\n");
 	if ((l->line)[l->i] == '\'')
 	{
 		l->token_type = T_WORD;
