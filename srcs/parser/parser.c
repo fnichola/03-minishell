@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 18:02:55 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/14 02:19:31 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/16 20:15:32 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ void parser(t_list *tokens)
 	p.list_ptr = tokens;//ここでtoken(単語)のリストを渡している
 	while (p.state != ST_FINISHED)
 	{
+		// debug_log("p.state %s\n\n", p.state);
 		state_func_table[p.state].parse_func(&p);//構造体ないの関数ポインタを実行している
 	}
 	free(state_func_table);

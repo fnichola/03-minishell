@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 02:30:14 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/15 17:58:04 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/15 21:45:49 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ static void	export_new_var(char **argv)
 	size_t	i;
 
 	i = 1;
+	printf("argv[1] %s\n", argv[1]);
 	while (argv[i])
 	{
 		debug_log("\n%s\n", argv[i]);
