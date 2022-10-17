@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 15:11:01 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/17 13:19:51 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/17 14:32:10 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,5 +86,6 @@ void	lex_in_word(t_lex_arg *l);
 void	lex_end_of_line(t_lex_arg *l);
 void	join_substr_to_token(t_lex_arg *l);
 void	next_char(t_lex_arg *l);
+void	expand_var(t_lex_arg *l);
 
 #endif

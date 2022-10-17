@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 14:58:17 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/17 13:46:25 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/17 14:38:45 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,11 +155,9 @@ void	lex_in_double_quote(t_lex_arg *l)
 void	lex_dollar(t_lex_arg *l)
 {
 	debug_log("[ST_DOLLAR]\n");
+	next_char(l);
 	if (is_delimeter(l->current_char))
-	{
-		l->token->type = T_WORD;
-		l->found_token = true;
-	}
+		l->state = ST_IN_WORD;
 	else if (l->current_char == '?')
 		l->state = ST_EXIT_STATUS;
 	else
@@ -179,11 +177,17 @@ void	lex_exit_status(t_lex_arg *l)
 void	lex_variable(t_lex_arg *l)
 {
 	debug_log("[ST_VARIABLE]\n");
-	if (is_delimeter(l->current_char))
-	{
-		l->token->type = T_VAR;
-		l->found_token = true;
-	}
+	if (is_delimeter(l->current_char) ||
+		l->current_char == '\'' ||
+		l->current_char == '\"' ||
+		!is_valid_var_char(l->current_char))
+		{
+			expand_var(l);
+			l->start_index = l->index;
+			l->state = ST_IN_WORD;
+		}
+	else
+		next_char(l);
 }
 
 void	lex_in_word(t_lex_arg *l)
@@ -206,7 +210,10 @@ void	lex_in_word(t_lex_arg *l)
 		l->state = ST_BEGIN_DOUBLE_QUOTE;
 	}
 	else if (l->current_char == '$')
+	{
+		join_substr_to_token(l);
 		l->state = ST_DOLLAR;
+	}
 	else
 		next_char(l);
 }

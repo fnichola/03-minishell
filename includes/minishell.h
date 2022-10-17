@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/16 14:14:11 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/17 14:17:04 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,5 +175,6 @@ void		command_add_back(t_command *new_command);
 void		free_command(t_command *cmd);
 void		free_command_table(void);
 t_command	*del_command(t_command *cmd);
+bool		is_valid_var_char(const char c);
 
 #endif

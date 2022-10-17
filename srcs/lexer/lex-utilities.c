@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/19 16:28:58 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/17 13:19:51 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/17 14:44:06 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,31 @@ void	join_substr_to_token(t_lex_arg *l)
 		l->token->word = tmp;
 	free(old_word);
 	debug_log("join_substr_to_token: l->token->word=%s\n", l->token->word);
+}
+
+void	expand_var(t_lex_arg *l)
+{
+	char	*var_name;
+	char	*found_env;
+	char	*old_word;
+
+	var_name = ft_substr(l->line, l->start_index, (l->index - l->start_index));
+
+	found_env = ft_getenv(var_name);//見つからなかったらNULLを返す
+	if (found_env)
+	{
+		if (l->token->word)
+		{
+			old_word = l->token->word;
+			l->token->word = ft_strjoin(l->token->word, found_env);
+			free(old_word);
+		}
+		else
+			l->token->word = ft_strdup(found_env);
+		debug_log("expand_var: var_name=%s, found_env=%s\n", var_name, found_env);
+	}
+	free(var_name);
+	var_name = NULL;
 }
 
 void	next_char(t_lex_arg *l)

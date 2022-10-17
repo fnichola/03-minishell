@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: akihito <akihito@student.42.fr>            +#+  +:+       +#+         #
+#    By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/09 18:01:32 by fnichola          #+#    #+#              #
-#    Updated: 2022/10/15 02:07:03 by akihito          ###   ########.fr        #
+#    Updated: 2022/10/17 14:18:15 by fnichola         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -40,6 +40,7 @@ SRCS = srcs/main.c \
 	srcs/utilities/ft_strncpy.c \
 	srcs/utilities/ft_strcmp.c \
 	srcs/utilities/is_str_match.c \
+	srcs/utilities/is_valid_var_char.c \
 	srcs/utilities/malloc_error_check.c \
 	srcs/utilities/str_tolower.c \
 	srcs/utilities/wrapper.c \
