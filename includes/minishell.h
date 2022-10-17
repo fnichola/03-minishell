@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
+/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/15 17:00:38 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/16 14:14:11 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ typedef enum e_token_type {
 
 typedef struct s_token {
 	char			*word;
-	t_token_type	token_type;
+	t_token_type	type;
 }	t_token;
 
 typedef struct s_str_func_table {

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
+/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 15:11:01 by fnichola          #+#    #+#             */
-/*   Updated: 2022/09/28 20:11:00 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/17 13:19:51 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 
 typedef enum e_state {
 	ST_NEUTRAL = 0,
+	ST_START_TOKEN,
 	ST_PIPE,
 	ST_GT,
 	ST_GTGT,
@@ -42,11 +43,12 @@ typedef enum e_state {
 
 typedef struct s_lex_arg {
 	const char			*line;
-	size_t				i;
+	char				current_char;
+	size_t				index;
 	size_t				start_index;//tokenの開始インデックスで最初の空白は無視
 	t_state				state;
-	t_token_type		token_type;//関数ポインタの中で設定してあげる。
 	bool				found_token;
+	t_token				*token;
 }	t_lex_arg;
 
 /**
@@ -67,6 +69,7 @@ bool	is_space(char c);
 char	*token_type_to_str(t_token_type token_type);
 
 void	lex_neutral(t_lex_arg *l);
+void	lex_start_word(t_lex_arg *l);
 void	lex_pipe(t_lex_arg *l);
 void	lex_gt(t_lex_arg *l);
 void	lex_gtgt(t_lex_arg *l);
@@ -81,5 +84,7 @@ void	lex_exit_status(t_lex_arg *l);
 void	lex_variable(t_lex_arg *l);
 void	lex_in_word(t_lex_arg *l);
 void	lex_end_of_line(t_lex_arg *l);
+void	join_substr_to_token(t_lex_arg *l);
+void	next_char(t_lex_arg *l);
 
 #endif

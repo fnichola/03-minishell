@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 18:02:55 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/11 06:55:01 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/17 13:07:18 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,28 +20,35 @@
  */
 t_token	*get_next_token(t_lex_arg *l, const t_state_func_row *state_func_table)
 {
-	t_token	*token;
-
 	l->state = ST_NEUTRAL;
-	l->start_index = l->i;
+	l->start_index = l->index;
+	l->current_char = (l->line)[l->index];
+	l->found_token = false;
+
+	l->token = malloc_error_check(sizeof(t_token));
+	l->token->type = T_ERROR;
+	l->token->word = NULL;
 	while (1)
 	{
+		debug_log("get_next_token: char=%c, index=%zu\n", l->current_char, l->index);
 		state_func_table[l->state].lex_func(l); //構造体の[]はenumでt_stateとインデックスが紐づいている。
-		if (l->found_token)//もうトークンが分かった時点でfound_tokenをtrueにしてあげる。
-		{
-			// debug_log("l->token_type = %u\n", l->token_type);
-			if (l->token_type == T_EOL)
-				return (NULL);
-			token = malloc_error_check(sizeof(t_token));
-			token->word = ft_substr(l->line, l->start_index, (l->i - l->start_index));
-			token->token_type = l->token_type;
-			if (l->state == ST_IN_DOUBLE_QUOTE || l->state == ST_IN_SINGLE_QUOTE)
-				(l->i)++;
-			l->found_token = false;
-			return (token);
-		}
-		if ((l->line)[l->i]) //tokenができてなかったら一文字進める
-			(l->i)++;
+		if (l->found_token)
+			return (l->token);
+		// if (l->found_token)//もうトークンが分かった時点でfound_tokenをtrueにしてあげる。
+		// {
+		// 	// debug_log("l->token->type = %u\n", l->token->type);
+		// 	if (l->token->type == T_EOL)
+		// 		return (NULL);
+		// 	token = malloc_error_check(sizeof(t_token));
+		// 	token->word = ft_substr(l->line, l->start_index, (l->index - l->start_index));
+		// 	token->token_type = l->token->type;
+		// 	if (l->state == ST_IN_DOUBLE_QUOTE || l->state == ST_IN_SINGLE_QUOTE)
+		// 		(l->index)++;
+		// 	l->found_token = false;
+		// 	return (token);
+		// }
+		// if ((l->line)[l->index]) //tokenができてなかったら一文字進める
+		// 	(l->index)++;
 	}
 	return (NULL);
 }

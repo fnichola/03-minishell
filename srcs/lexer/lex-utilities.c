@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/19 16:28:58 by fnichola          #+#    #+#             */
-/*   Updated: 2022/04/19 16:29:10 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/17 13:19:51 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,4 +57,34 @@ char	*token_type_to_str(t_token_type token_type)
 		return ("T_ERROR");
 	else
 		return ("bad type!");
+}
+
+void	join_substr_to_token(t_lex_arg *l)
+{
+	char	*tmp;
+	char	*old_word;
+
+	tmp = ft_substr(l->line, l->start_index, (l->index - l->start_index));
+	old_word = l->token->word;
+	if (l->token->word)
+	{
+		l->token->word = ft_strjoin(l->token->word, tmp);
+		free(tmp);
+	}
+	else
+		l->token->word = tmp;
+	free(old_word);
+	debug_log("join_substr_to_token: l->token->word=%s\n", l->token->word);
+}
+
+void	next_char(t_lex_arg *l)
+{
+	if ((l->line)[l->index])
+	{
+		(l->index)++;
+		l->current_char = (l->line)[l->index];
+		debug_log("next_char: %c\n", l->current_char);
+	}
+	else
+		debug_log("next_char: tried to go past end of line\n");
 }
