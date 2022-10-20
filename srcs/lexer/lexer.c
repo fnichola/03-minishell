@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 18:02:55 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/17 13:07:18 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/20 10:29:27 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 t_token	*get_next_token(t_lex_arg *l, const t_state_func_row *state_func_table)
 {
 	l->state = ST_NEUTRAL;
+	l->previous_state = ST_NEUTRAL;
 	l->start_index = l->index;
 	l->current_char = (l->line)[l->index];
 	l->found_token = false;

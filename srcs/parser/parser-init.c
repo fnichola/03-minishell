@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 13:54:14 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/14 02:19:25 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/20 09:50:25 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,10 @@ t_state_func_row	*p_init_state_func_table(void)
 void	init_parse_arg(t_parse_arg *p, t_list *tokens)
 {
 	p->list_ptr = tokens;
-	p->token = (t_token *)tokens->content;
+	if (tokens && tokens->content)
+		p->token = (t_token *)tokens->content;
+	else
+		p->token = NULL;
 	p->previous_token = NULL;
 	p->state = ST_NEUTRAL;
 	p->previous_state = ST_NEUTRAL;

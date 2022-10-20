@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 18:02:55 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/14 02:19:31 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/20 09:52:24 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ void parser(t_list *tokens)
 	t_state_func_row	*state_func_table;
 	t_parse_arg			p;
 
+	if (!tokens)
+		return ;
 	state_func_table = p_init_state_func_table();//stateと関数ポインタを作成している。
 	init_parse_arg(&p, tokens);
 	p.list_ptr = tokens;//ここでtoken(単語)のリストを渡している

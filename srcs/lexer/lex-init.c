@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 13:54:14 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/17 12:32:55 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/20 10:09:32 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ t_state_func_row	*init_state_func_table(void)
 	{ST_BEGIN_DOUBLE_QUOTE,	&lex_begin_double_quote},
 	{ST_IN_DOUBLE_QUOTE,	&lex_in_double_quote},
 	{ST_DOLLAR,				&lex_dollar},
-	{ST_EXIT_STATUS,		&lex_exit_status},
 	{ST_VARIABLE,			&lex_variable},
 	{ST_IN_WORD,			*lex_in_word},
 	{ST_END_OF_LINE,		*lex_end_of_line},

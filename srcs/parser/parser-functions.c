@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 14:58:17 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/17 12:53:16 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/20 09:47:39 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,8 @@
 
 void	next_token(t_parse_arg *p)
 {
-	p->list_ptr = p->list_ptr->next;
+	if (p->list_ptr)
+		p->list_ptr = p->list_ptr->next;
 	p->previous_token = p->token;
 	if (p->list_ptr)
 		p->token = (t_token *)p->list_ptr->content;

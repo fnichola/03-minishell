@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 14:58:17 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/17 14:38:45 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/20 10:47:23 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,11 @@ void	lex_neutral(t_lex_arg *l)
 {
 	debug_log("[ST_NEUTRAL]\n");
 	if (!l->current_char)
-		l->state = ST_END_OF_LINE;
+		change_lex_state(l, ST_END_OF_LINE);
 	else if (is_space(l->current_char))
 		next_char(l);
 	else
-		l->state = ST_START_TOKEN;
+		change_lex_state(l, ST_START_TOKEN);
 }
 
 void	lex_start_word(t_lex_arg *l)
@@ -29,19 +29,19 @@ void	lex_start_word(t_lex_arg *l)
 	debug_log("[ST_START_WORD]\n");
 	l->start_index = l->index;
 	if (l->current_char == '|')
-		l->state = ST_PIPE;
+		change_lex_state(l, ST_PIPE);
 	else if (l->current_char == '>')
-		l->state = ST_GT;
+		change_lex_state(l, ST_GT);
 	else if (l->current_char == '<')
-		l->state = ST_LT;
+		change_lex_state(l, ST_LT);
 	else if (l->current_char == '\'')
-		l->state = ST_BEGIN_SINGLE_QUOTE;
+		change_lex_state(l, ST_BEGIN_SINGLE_QUOTE);
 	else if (l->current_char == '"')
-		l->state = ST_BEGIN_DOUBLE_QUOTE;
+		change_lex_state(l, ST_BEGIN_DOUBLE_QUOTE);
 	else if (l->current_char == '$')
-		l->state = ST_DOLLAR;
+		change_lex_state(l, ST_DOLLAR);
 	else
-		l->state = ST_IN_WORD;
+		change_lex_state(l, ST_IN_WORD);
 }
 
 void	lex_pipe(t_lex_arg *l)
@@ -57,7 +57,7 @@ void	lex_gt(t_lex_arg *l)
 	// debug_log("[ST_GT]\n");
 	next_char(l);
 	if (l->current_char == '>')
-		l->state = ST_GTGT;
+		change_lex_state(l, ST_GTGT);
 	else
 	{
 		l->token->type = T_GT;
@@ -78,7 +78,7 @@ void	lex_lt(t_lex_arg *l)
 	// debug_log("[ST_LT]\n");
 	next_char(l);
 	if (l->current_char == '<')
-		l->state = ST_LTLT;
+		change_lex_state(l, ST_LTLT);
 	else
 	{
 		l->token->type = T_LT;
@@ -99,7 +99,7 @@ void	lex_begin_single_quote(t_lex_arg *l)
 	debug_log("[ST_BEGIN_SINGLE_QUOTE]\n");
 	next_char(l);
 	l->start_index = l->index;
-	l->state = ST_IN_SINGLE_QUOTE;
+	change_lex_state(l, ST_IN_SINGLE_QUOTE);
 }
 
 void	lex_in_single_quote(t_lex_arg *l)
@@ -111,7 +111,7 @@ void	lex_in_single_quote(t_lex_arg *l)
 		join_substr_to_token(l);
 		next_char(l);
 		l->start_index = l->index;
-		l->state = ST_IN_WORD;
+		change_lex_state(l, ST_IN_WORD);
 	}
 	else if (is_delimeter(l->current_char))
 	{
@@ -128,7 +128,7 @@ void	lex_begin_double_quote(t_lex_arg *l)
 	debug_log("[ST_BEGIN_DOUBLE_QUOTE]\n");
 	next_char(l);
 	l->start_index = l->index;
-	l->state = ST_IN_DOUBLE_QUOTE;
+	change_lex_state(l, ST_IN_DOUBLE_QUOTE);
 }
 
 void	lex_in_double_quote(t_lex_arg *l)
@@ -140,9 +140,17 @@ void	lex_in_double_quote(t_lex_arg *l)
 		join_substr_to_token(l);
 		next_char(l);
 		l->start_index = l->index;
-		l->state = ST_IN_WORD;
+		change_lex_state(l, ST_IN_WORD);
 	}
-	else if (is_delimeter(l->current_char))
+	else if (l->current_char == '$')
+	{
+		join_substr_to_token(l);
+		next_char(l);
+		l->start_index = l->index;
+		if (l->current_char && ft_isalnum(l->current_char))
+			change_lex_state(l, ST_VARIABLE);
+	}
+	else if (!l->current_char)
 	{
 		printf("SYNTAX ERROR\n");
 		l->token->type = T_ERROR;
@@ -157,35 +165,45 @@ void	lex_dollar(t_lex_arg *l)
 	debug_log("[ST_DOLLAR]\n");
 	next_char(l);
 	if (is_delimeter(l->current_char))
-		l->state = ST_IN_WORD;
-	else if (l->current_char == '?')
-		l->state = ST_EXIT_STATUS;
+		change_lex_state(l, ST_IN_WORD);
 	else
-	{
-		l->start_index = l->index;
-		l->state = ST_VARIABLE;
-	}
-}
-
-void	lex_exit_status(t_lex_arg *l)
-{
-	debug_log("[ST_EXIT_STATUS]");
-	l->token->type = T_EXIT_STATUS;
-	l->found_token = true;
+		change_lex_state(l, ST_VARIABLE);
 }
 
 void	lex_variable(t_lex_arg *l)
 {
+	char	*old_word;
+	char	*exit_str;
+
 	debug_log("[ST_VARIABLE]\n");
-	if (is_delimeter(l->current_char) ||
-		l->current_char == '\'' ||
-		l->current_char == '\"' ||
-		!is_valid_var_char(l->current_char))
+	if (l->current_char == '?')
+	{
+		exit_str = ft_itoa(g_data.exit_satus);
+		if (l->token->word)
 		{
-			expand_var(l);
-			l->start_index = l->index;
-			l->state = ST_IN_WORD;
+			old_word = l->token->word;
+			l->token->word = ft_strjoin(l->token->word, exit_str);
+			free(old_word);
+			free(exit_str);
 		}
+		else
+			l->token->word = exit_str;
+		next_char(l);
+		l->start_index = l->index;
+		if (l->previous_state == ST_IN_DOUBLE_QUOTE)
+			change_lex_state(l, ST_IN_DOUBLE_QUOTE);
+		else
+			change_lex_state(l, ST_IN_WORD);
+	}
+	else if (!ft_isalnum(l->current_char))
+	{
+		expand_var(l);
+		l->start_index = l->index;
+		if (l->previous_state == ST_IN_DOUBLE_QUOTE)
+			change_lex_state(l, ST_IN_DOUBLE_QUOTE);
+		else
+			change_lex_state(l, ST_IN_WORD);
+	}
 	else
 		next_char(l);
 }
@@ -202,17 +220,17 @@ void	lex_in_word(t_lex_arg *l)
 	else if (l->current_char == '\'')
 	{
 		join_substr_to_token(l);
-		l->state = ST_BEGIN_SINGLE_QUOTE;
+		change_lex_state(l, ST_BEGIN_SINGLE_QUOTE);
 	}
 	else if (l->current_char == '"')
 	{
 		join_substr_to_token(l);
-		l->state = ST_BEGIN_DOUBLE_QUOTE;
+		change_lex_state(l, ST_BEGIN_DOUBLE_QUOTE);
 	}
 	else if (l->current_char == '$')
 	{
 		join_substr_to_token(l);
-		l->state = ST_DOLLAR;
+		change_lex_state(l, ST_DOLLAR);
 	}
 	else
 		next_char(l);

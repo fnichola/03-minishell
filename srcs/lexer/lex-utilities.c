@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/19 16:28:58 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/17 14:44:06 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/20 10:35:19 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,4 +112,12 @@ void	next_char(t_lex_arg *l)
 	}
 	else
 		debug_log("next_char: tried to go past end of line\n");
+}
+
+
+void	change_lex_state(t_lex_arg *l, t_state new_state)
+{
+	if (new_state != l->previous_state)
+		l->previous_state = l->state;
+	l->state = new_state;
 }

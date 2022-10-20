@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute-commands.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
+/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 09:22:05 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/14 15:25:36 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/20 09:53:19 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,6 +140,8 @@ static void	execute_commands_loop(void)
 
 int	execute_commands(void)
 {
+	if (!g_data.command_table)
+		return (0);
 	prepare_exec_fds();
 	execute_commands_loop();
 	close_exec_fds();
