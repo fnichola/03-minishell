@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit_error.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 11:57:21 by fnichola          #+#    #+#             */
-/*   Updated: 2022/08/24 11:57:38 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/15 18:22:33 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,4 +22,25 @@ void	exit_error(char *str)
 	else
 		perror(err_str);
 	exit(EXIT_FAILURE);
+}
+
+void	error_command(char *str1, char *str2, char *str3)
+{
+	ft_putstr_fd("minishell: ", STDERR_FILENO);
+	ft_putstr_fd(str1, STDERR_FILENO);
+	if (str2)
+	{
+		ft_putstr_fd(": ", STDERR_FILENO);
+		ft_putstr_fd("`", STDERR_FILENO);
+		ft_putstr_fd(str2, STDERR_FILENO);
+		ft_putstr_fd("'", STDERR_FILENO);
+	}
+	if (str3)
+	{
+		ft_putstr_fd(": ", STDERR_FILENO);
+		ft_putstr_fd(str3, STDERR_FILENO);
+	}
+	ft_putstr_fd("\n", STDERR_FILENO);
+	// if (error_command)
+	// 	perror(error_command);
 }

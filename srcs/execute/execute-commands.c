@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 09:22:05 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/14 02:54:56 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/20 09:53:19 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ bool	lookup_and_exec_built_in(char **argv)
 	{
 		if (is_str_match(str, g_data.built_ins[i].name))
 		{
+			debug_log("is_str_match\n");
 			g_data.built_ins[i].func(argv);
 			is_builtin = true;
 			break ;
@@ -139,6 +140,8 @@ static void	execute_commands_loop(void)
 
 int	execute_commands(void)
 {
+	if (!g_data.command_table)
+		return (0);
 	prepare_exec_fds();
 	execute_commands_loop();
 	close_exec_fds();

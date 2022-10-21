@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/14 03:05:01 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/17 14:17:04 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ typedef enum e_token_type {
 
 typedef struct s_token {
 	char			*word;
-	t_token_type	token_type;
+	t_token_type	type;
 }	t_token;
 
 typedef struct s_str_func_table {
@@ -120,6 +120,7 @@ extern bool	g_debug;
 
 void		debug_log(const char *format, ...);
 void		exit_error(char *str);
+void		error_command(char *str1, char *str2, char *str3);
 void		init_built_in_table(void);
 void		built_in_exit(char **argv);
 void		built_in_cd(char **argv);
@@ -127,6 +128,7 @@ void		built_in_echo(char **argv);
 void		built_in_pwd(char **argv);
 void		built_in_env(char **argv);
 void		built_in_export(char **argv);
+bool		is_valid_variable(char *variable);
 bool		is_str_match(const char *s1, const char *s2);
 char		*str_tolower(char *str);
 void		*malloc_error_check(size_t size);
@@ -173,5 +175,6 @@ void		command_add_back(t_command *new_command);
 void		free_command(t_command *cmd);
 void		free_command_table(void);
 t_command	*del_command(t_command *cmd);
+bool		is_valid_var_char(const char c);
 
 #endif
