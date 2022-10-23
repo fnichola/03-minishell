@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 01:00:00 by akihito           #+#    #+#             */
-/*   Updated: 2022/10/23 15:00:13 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/23 20:08:42 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	set_status_from_child_status(int wstatus)
 	{
 		debug_log("exited %d\n\n", wstatus);
 		g_data.exit_status = WEXITSTATUS(wstatus);
-		debug_log("g_data.exit_status %d\n", g_data.exit_status);
+		debug_log(" set_status_from_child_status g_data.exit_status %d\n", g_data.exit_status);
 	}
 	else if (!WIFSIGNALED(wstatus))
 	{

@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 09:22:05 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/23 14:55:25 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/23 21:07:27 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,8 @@ int		execute_external(t_command *cmd, char **envp)
 	pid = fork();
 	if (pid == 0)// 子プロセス
 	{
+		ft_wsignal(SIGINT, SIG_DFL);
+		ft_wsignal(SIGQUIT, SIG_DFL);
 		dup2(cmd->input_fd, STDIN_FILENO);
 		dup2(cmd->output_fd, STDOUT_FILENO);
 		close_exec_fds();
@@ -113,6 +115,7 @@ static void	execute_simple_command(t_command *cmd)
 		cmd->pid = execute_external(cmd, envp);
 		free_envp(envp);
 	}
+	ft_wsignal(SIGINT, signal_handler);
 }
 
 static void	execute_commands_loop(int *e_status)
@@ -120,7 +123,6 @@ static void	execute_commands_loop(int *e_status)
 	t_command	*ct;
 
 	ct = g_data.command_table;
-	ft_wsignal(SIGINT, SIG_IGN);
 	while (ct)//num_cmdsはパイプがあれば、増えていく
 	{
 		if (!ct->argv || !ct->argv[0])
@@ -136,7 +138,7 @@ static void	execute_commands_loop(int *e_status)
 		{
 			debug_log("waitpid\n");
 			waitpid(ct->pid, e_status, WUNTRACED);
-			signal(SIGINT, signal_handler);
+			ft_wsignal(SIGINT, signal_handler);
 		}
 		debug_log("execute_command_loop %d\n", *e_status);
 		ct = ct->next;

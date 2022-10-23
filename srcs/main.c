@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/26 16:46:58 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/23 16:20:05 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/23 21:05:36 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,8 @@ int	main(int argc, char **argv, char **envp)
 {
 	(void)argv;
 
-	ft_wsignal(SIGINT, signal_handler);
-	ft_wsignal(SIGQUIT, SIG_IGN);
+	ft_wsignal(SIGINT, signal_handler);// ctrlC
+	ft_wsignal(SIGQUIT, SIG_IGN);// ctrl 
 	g_debug = true;
 	if (argc == 1)
 	{
