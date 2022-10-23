@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 13:54:14 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/20 09:50:25 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/23 09:29:53 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ t_state_func_row	*p_init_state_func_table(void)
 {
 	const t_state_func_row	temp[] = {
 		{ST_NEUTRAL,		&parser_neutral},
-		{ST_FIRST_WORD,		&parser_first_word},
+		{ST_START_WORD,		&parser_start_word},
 		{ST_SIMPLE_COMMAND,	&parser_simple_command},
 		{ST_REDIRECT,		&parser_redirect},
 		{ST_ENV,			&parser_env},

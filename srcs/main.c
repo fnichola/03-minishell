@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/26 16:46:58 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/23 02:20:38 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/23 09:23:00 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	minishell(char **envp)
 int	main(int argc, char **argv, char **envp)
 {
 	(void)argv;
-	g_debug = false;
+	g_debug = true;
 	if (argc == 1)
 	{
 		debug_log("Starting Minishell\n");

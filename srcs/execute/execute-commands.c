@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 09:22:05 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/20 09:53:19 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/23 09:58:48 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,17 @@ static void	execute_simple_command(t_command *cmd)
 		envp = export_to_envp();
 		cmd->pid = execute_external(cmd, envp);
 		free_envp(envp);
+	}
+	size_t i = 0;
+	if (cmd->heredoc)
+	{
+		while(cmd->heredoc[i])
+		{
+			write(cmd->input_fd, cmd->heredoc[i], ft_strlen(cmd->heredoc[i]));
+			write(cmd->input_fd, "\n", 1);
+			i++;
+		}
+		close(cmd->input_fd);
 	}
 }
 

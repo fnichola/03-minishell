@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 10:58:36 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/14 02:51:17 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/23 10:28:52 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,19 +27,82 @@ void	close_exec_fds(void)
 	}
 }
 
+void	heredoc_add_line(t_command *cmd, char *line)
+{
+	static size_t	size = 8;
+	size_t			i;
+	size_t			j;
+	char			**new_heredoc;
+
+	if (!cmd->heredoc)
+	{
+		cmd->heredoc = malloc_error_check(sizeof(char *) * size);
+		cmd->heredoc[0] = NULL;
+	}
+	i = 0;
+	while (cmd->heredoc[i])
+		i++;
+	if (i >= size - 1)
+	{
+		size *= 2;
+		new_heredoc = malloc_error_check(sizeof(char *) * size);
+		j = 0;
+		while (j < i)
+		{
+			new_heredoc[j] = cmd->heredoc[j];
+			j++;
+		}
+		free (cmd->heredoc);
+		cmd->heredoc = new_heredoc;
+	}
+	cmd->heredoc[i] = line;
+	cmd->heredoc[i + 1] = NULL;
+}
+
 static int	update_input_redirect(t_redirect *r, t_command *cmd)
 {
-	int	fd;
+	int		fd;
+	char	*line;
+	int		pipe_fd[2];
+	int		i;
 
-	fd = open(r->filename, O_RDONLY);
-	if (fd >= 0)
+	if (r->append)
 	{
+		pipe(pipe_fd);
 		if (cmd->input_fd != STDIN_FILENO)
 			close(cmd->input_fd);
-		cmd->input_fd = fd;
-		debug_log("connect_redirects: opened %s at fd=%d\n", r->filename, fd);
+		cmd->input_fd = pipe_fd[0];
+		while (1)
+		{
+			line = readline("> ");
+			if (!line || is_str_match(line, r->filename))
+				break ;
+			heredoc_add_line(cmd, line);
+		}
+		debug_log("update_input_redirect: heredoc end\n");
+
+		i = 0;
+		while(cmd->heredoc[i])
+		{
+			write(pipe_fd[1], cmd->heredoc[i], ft_strlen(cmd->heredoc[i]));
+			write(pipe_fd[1], "\n", 1);
+			i++;
+		}
+		close(pipe_fd[1]);
+		return (cmd->input_fd);
 	}
-	return (fd);
+	else
+	{
+		fd = open(r->filename, O_RDONLY);
+		if (fd >= 0)
+		{
+			if (cmd->input_fd != STDIN_FILENO)
+				close(cmd->input_fd);
+			cmd->input_fd = fd;
+			debug_log("connect_redirects: opened %s at fd=%d\n", r->filename, fd);
+		}
+		return (fd);
+	}
 }
 
 static int	update_output_redirect(t_redirect *r, t_command *cmd)

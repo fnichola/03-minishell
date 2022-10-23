@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 14:58:17 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/23 01:21:59 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/23 09:26:45 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,10 @@ void	lex_gt(t_lex_arg *l)
 {
 	next_char(l);
 	if (l->current_char == '>')
+	{
 		l->token->type = T_GTGT;
+		next_char(l);
+	}
 	else
 		l->token->type = T_GT;
 	l->found_token = true;
@@ -73,7 +76,10 @@ void	lex_lt(t_lex_arg *l)
 {
 	next_char(l);
 	if (l->current_char == '<')
+	{
 		l->token->type = T_LTLT;
+		next_char(l);
+	}
 	else
 		l->token->type = T_LT;
 	l->found_token = true;

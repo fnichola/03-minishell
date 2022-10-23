@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 14:58:17 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/23 02:27:45 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/23 09:33:02 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	change_state(t_parse_arg *p, t_state new_state)
 {
 	const char *state_strs[8] = {
 		"ST_NEUTRAL",
-		"ST_FIRST_WORD",
+		"ST_START_WORD",
 		"ST_SIMPLE_COMMAND",
 		"ST_REDIRECT",
 		"ST_ENV",
@@ -48,6 +48,7 @@ void	init_command(t_parse_arg *p)
 	p->command->argv = malloc_error_check(sizeof(char *) * 32); // 32 is max length of a single command, this should be changed!
 	p->command->argv[p->index] = NULL;
 	p->command->redirects = NULL;
+	p->command->heredoc = NULL;
 	p->command->pid = 0;
 	p->command->input_fd = STDIN_FILENO;
 	p->command->output_fd = STDOUT_FILENO;
@@ -72,20 +73,19 @@ void	parser_neutral(t_parse_arg *p)
 		change_state(p, ST_FINISHED);
 		return ;
 	}
-	debug_log("parser_neutral: p->token = %s\n", p->token->word);
+	debug_log("parser_neutral: p->token->word = %s\n", p->token->word);
 	init_command(p);
-	if (p->token->type == T_WORD)
-		change_state(p, ST_FIRST_WORD);
+	change_state(p, ST_SIMPLE_COMMAND);
 	// else if (p->token->type == T_PIPE)
 	// 	next_token(p);
 	// else if (is_redirect_token(p->token->type))
 	// 	change_state(p, ST_REDIRECT);
 }
 
-void	parser_first_word(t_parse_arg *p)
+void	parser_start_word(t_parse_arg *p)
 {
+	p->command->argv[p->index] = ft_strdup(p->token->word); // duplicate token string so we can free all tokens later
 	next_token(p);
-	p->command->argv[p->index] = ft_strdup(p->previous_token->word); // duplicate token string so we can free all tokens later
 	(p->index)++;
 	change_state(p, ST_SIMPLE_COMMAND);
 }
@@ -113,9 +113,7 @@ void	parser_simple_command(t_parse_arg *p)
 		change_state(p, ST_NEUTRAL);
 	}
 	else if (is_redirect_token(p->token->type))
-	{
 		change_state(p, ST_REDIRECT);
-	}
 }
 
 //ここでexpandしてT_WORDに変更する。　
