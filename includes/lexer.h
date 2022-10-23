@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 15:11:01 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/20 10:23:59 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/22 14:06:57 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,25 +24,16 @@
 
 typedef enum e_state {
 	ST_NEUTRAL = 0,
-	ST_START_TOKEN,
-	ST_PIPE,
-	ST_GT,
-	ST_GTGT,
-	ST_LT,
-	ST_LTLT,
-	ST_BEGIN_SINGLE_QUOTE,
+	ST_SPECIAL,
 	ST_IN_SINGLE_QUOTE,
-	ST_BEGIN_DOUBLE_QUOTE,
 	ST_IN_DOUBLE_QUOTE,
-	ST_DOLLAR,
-	ST_VARIABLE,//$
-	ST_IN_WORD,//alphabet
-	ST_END_OF_LINE
+	ST_IN_WORD
 }	t_state;
 
 typedef struct s_lex_arg {
 	const char			*line;
 	char				current_char;
+	char				next_char;
 	size_t				index;
 	size_t				start_index;//tokenの開始インデックスで最初の空白は無視
 	t_state				state;
@@ -70,21 +61,14 @@ char	*token_type_to_str(t_token_type token_type);
 void	change_lex_state(t_lex_arg *l, t_state new_state);
 
 void	lex_neutral(t_lex_arg *l);
-void	lex_start_word(t_lex_arg *l);
+void	lex_special(t_lex_arg *l);
+void	lex_in_single_quote(t_lex_arg *l);
+void	lex_in_double_quote(t_lex_arg *l);
+void	lex_in_word(t_lex_arg *l);
 void	lex_pipe(t_lex_arg *l);
 void	lex_gt(t_lex_arg *l);
-void	lex_gtgt(t_lex_arg *l);
 void	lex_lt(t_lex_arg *l);
-void	lex_ltlt(t_lex_arg *l);
-void	lex_begin_single_quote(t_lex_arg *l);
-void	lex_in_single_quote(t_lex_arg *l);
-void	lex_begin_double_quote(t_lex_arg *l);
-void	lex_in_double_quote(t_lex_arg *l);
-void	lex_dollar(t_lex_arg *l);
-void	lex_variable(t_lex_arg *l);
-void	lex_in_word(t_lex_arg *l);
-void	lex_end_of_line(t_lex_arg *l);
-void	join_substr_to_token(t_lex_arg *l);
+void	flush_to_token(t_lex_arg *l);
 void	next_char(t_lex_arg *l);
 void	expand_var(t_lex_arg *l);
 

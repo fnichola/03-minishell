@@ -6,7 +6,7 @@
 #    By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/09 18:01:32 by fnichola          #+#    #+#              #
-#    Updated: 2022/10/17 14:18:15 by fnichola         ###   ########.fr        #
+#    Updated: 2022/10/21 13:20:42 by fnichola         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,6 +34,7 @@ SRCS = srcs/main.c \
 	srcs/built_in/built_in_command2.c \
 	srcs/built_in/export.c \
 	srcs/built_in/export2.c \
+	srcs/utilities/del_token.c \
 	srcs/utilities/exit_error.c \
 	srcs/utilities/ft_perror.c \
 	srcs/utilities/ft_puterror.c \

@@ -6,26 +6,12 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 18:02:55 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/20 09:52:24 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/23 02:22:42 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "parser.h"
-
-void	del_token(void *token_ptr)
-{
-	t_token	*token;
-
-	token = (t_token *)token_ptr;
-	if (token)
-	{
-		free(token->word);
-		token->word = NULL;
-		free(token);
-		token = NULL;
-	}
-}
 
 /**
  * Take a list of tokens (from tokenizer) and create a command table.
@@ -48,5 +34,15 @@ void parser(t_list *tokens)
 		state_func_table[p.state].parse_func(&p);//構造体ないの関数ポインタを実行している
 	}
 	free(state_func_table);
+	if (p.previous_token)
+		if (p.previous_token->type == T_GT ||
+			p.previous_token->type == T_GTGT ||
+			p.previous_token->type == T_LT ||
+			p.previous_token->type == T_LTLT ||
+			p.previous_token->type == T_PIPE)
+		{
+			ft_putstr_fd("minishell: syntax error\n", STDERR_FILENO);
+			free_command_table();
+		}
 	ft_lstclear(&tokens, del_token);
 }
