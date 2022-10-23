@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 14:58:17 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/20 09:47:39 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/23 02:27:45 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,24 +74,12 @@ void	parser_neutral(t_parse_arg *p)
 	}
 	debug_log("parser_neutral: p->token = %s\n", p->token->word);
 	init_command(p);
-	if (p->token->type == T_VAR)
-	{
-		change_state(p, ST_ENV);
-	}
-	if (p->token->type == T_DOUBLE_QUOTED)
-	{
-		change_state(p, ST_IN_DQUOTE);
-	}
 	if (p->token->type == T_WORD)
-	{
 		change_state(p, ST_FIRST_WORD);
-	}
-	else if (p->token->type == T_PIPE)
-		next_token(p);
-	if (is_redirect_token(p->token->type))
-	{
-		change_state(p, ST_REDIRECT);
-	}
+	// else if (p->token->type == T_PIPE)
+	// 	next_token(p);
+	// else if (is_redirect_token(p->token->type))
+	// 	change_state(p, ST_REDIRECT);
 }
 
 void	parser_first_word(t_parse_arg *p)
@@ -117,10 +105,6 @@ void	parser_simple_command(t_parse_arg *p)
 		(p->index)++;
 		next_token(p);
 	}
-	else if (p->token->type == T_VAR)
-		change_state(p, ST_ENV);
-	else if (p->token->type == T_DOUBLE_QUOTED)
-		change_state(p, ST_IN_DQUOTE);
 	else if (p->token->type == T_PIPE)
 	{
 		p->command->argv[p->index] = NULL;

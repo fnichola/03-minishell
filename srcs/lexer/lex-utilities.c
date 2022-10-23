@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/19 16:28:58 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/20 10:35:19 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/23 00:53:38 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,47 +59,58 @@ char	*token_type_to_str(t_token_type token_type)
 		return ("bad type!");
 }
 
-void	join_substr_to_token(t_lex_arg *l)
+void	join_str_to_token(t_lex_arg *l, char *str)
 {
-	char	*tmp;
 	char	*old_word;
 
-	tmp = ft_substr(l->line, l->start_index, (l->index - l->start_index));
 	old_word = l->token->word;
 	if (l->token->word)
 	{
-		l->token->word = ft_strjoin(l->token->word, tmp);
-		free(tmp);
+		l->token->word = ft_strjoin(l->token->word, str);
+		free(str);
 	}
 	else
-		l->token->word = tmp;
+		l->token->word = str;
 	free(old_word);
-	debug_log("join_substr_to_token: l->token->word=%s\n", l->token->word);
+	debug_log("join_str_to_token: l->token->word=%s\n", l->token->word);
+}
+
+void	flush_to_token(t_lex_arg *l)
+{
+	char	*tmp;
+
+	if (l->start_index == l->index)
+		return;
+	tmp = ft_substr(l->line, l->start_index, (l->index - l->start_index));
+	if (tmp)
+		join_str_to_token(l, tmp);
 }
 
 void	expand_var(t_lex_arg *l)
 {
 	char	*var_name;
 	char	*found_env;
-	char	*old_word;
 
-	var_name = ft_substr(l->line, l->start_index, (l->index - l->start_index));
-
-	found_env = ft_getenv(var_name);//見つからなかったらNULLを返す
-	if (found_env)
+	if (l->current_char == '?')
 	{
-		if (l->token->word)
-		{
-			old_word = l->token->word;
-			l->token->word = ft_strjoin(l->token->word, found_env);
-			free(old_word);
-		}
-		else
-			l->token->word = ft_strdup(found_env);
-		debug_log("expand_var: var_name=%s, found_env=%s\n", var_name, found_env);
+		join_str_to_token(l, ft_itoa(g_data.exit_satus));
+		next_char(l);
+		l->start_index = l->index;
 	}
-	free(var_name);
-	var_name = NULL;
+	else
+	{
+		l->start_index = l->index;
+		while (ft_isalnum(l->current_char))
+			next_char(l);
+		var_name = ft_substr(l->line, l->start_index, (l->index - l->start_index));
+		l->start_index = l->index;
+		debug_log("expand_var: var_name=%s\n", var_name);
+	
+		found_env = ft_getenv(var_name);//見つからなかったらNULLを返す
+		if (found_env)
+			join_str_to_token(l, ft_wstrdup(found_env));
+		free(var_name);
+	}
 }
 
 void	next_char(t_lex_arg *l)
@@ -108,6 +119,8 @@ void	next_char(t_lex_arg *l)
 	{
 		(l->index)++;
 		l->current_char = (l->line)[l->index];
+		if (l->current_char)
+			l->next_char = (l->line)[l->index + 1];
 		debug_log("next_char: %c\n", l->current_char);
 	}
 	else
