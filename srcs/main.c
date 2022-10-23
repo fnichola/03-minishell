@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/26 16:46:58 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/19 22:18:24 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/23 16:20:05 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,12 @@ int	minishell(char **envp)
 	while (!status)
 	{
 		line = readline("minishell$ ");
+		if (!line)
+			line = ft_strdup("exit");
 		if (line && *line)
 			add_history(line);
 		tokens = tokenizer(line);
-		// debug_log("tokens %s\n", (char *)tokens->next->content);
 		parser(tokens);
-		// debug_log("g_data.command_table %s\n", (char *)g_data.command_table->content->);
 		free(line);
 		status = execute_commands();//ここでパイプ生成
 		debug_log("g_data.exit_status %d\n", g_data.exit_status);
