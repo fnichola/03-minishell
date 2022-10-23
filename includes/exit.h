@@ -1,28 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free_command_table.c                               :+:      :+:    :+:   */
+/*   exit.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/14 02:54:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/18 01:12:35 by akihito          ###   ########.fr       */
+/*   Created: 2022/10/20 00:59:08 by akihito           #+#    #+#             */
+/*   Updated: 2022/10/20 01:43:23 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#ifndef EXIT_H
+# define EXIT_H
 
-void	free_command_table(void)
-{
-	t_command	*ct;
-	t_command	*tmp;
+# include "../libft/libft.h"
+# include "minishell.h"
+# include <stdbool.h>
 
-	ct = g_data.command_table;
-	while(ct)
-	{
-		tmp = ct->next;
-		free_command(ct);
-		ct = tmp;
-	}
-	g_data.command_table = NULL;
-}
+void	set_status_from_child_status(int wstatus);
+# endif 

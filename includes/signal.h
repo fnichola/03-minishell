@@ -1,28 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free_command_table.c                               :+:      :+:    :+:   */
+/*   signal.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/14 02:54:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/18 01:12:35 by akihito          ###   ########.fr       */
+/*   Created: 2022/10/19 02:20:51 by akihito           #+#    #+#             */
+/*   Updated: 2022/10/19 18:18:18 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#ifndef SIGNAL_H
+# define SIGNAL_H
 
-void	free_command_table(void)
-{
-	t_command	*ct;
-	t_command	*tmp;
+# include "../libft/libft.h"
+# include "minishell.h"
+# include <stdio.h>
+# include <stdbool.h>
+# include <signal.h>
+# include <readline/readline.h>
 
-	ct = g_data.command_table;
-	while(ct)
-	{
-		tmp = ct->next;
-		free_command(ct);
-		ct = tmp;
-	}
-	g_data.command_table = NULL;
-}
+void	sig_handler(int signum);
+void	signal_handler(int signo);
+#endif

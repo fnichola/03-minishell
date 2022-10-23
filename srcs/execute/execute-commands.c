@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 09:22:05 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/14 15:25:36 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/23 14:55:25 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ static void	execute_simple_command(t_command *cmd)
 	for (int i=0; cmd->argv[i]; i++)
 		debug_log("%s ", cmd->argv[i]);
 	debug_log("\n");
-
+	ft_wsignal(SIGINT, SIG_IGN);
 	if (execute_built_in(cmd))
 		return ;
 	else
@@ -115,12 +115,12 @@ static void	execute_simple_command(t_command *cmd)
 	}
 }
 
-static void	execute_commands_loop(void)
+static void	execute_commands_loop(int *e_status)
 {
 	t_command	*ct;
-	int			status;
 
 	ct = g_data.command_table;
+	ft_wsignal(SIGINT, SIG_IGN);
 	while (ct)//num_cmdsはパイプがあれば、増えていく
 	{
 		if (!ct->argv || !ct->argv[0])
@@ -133,16 +133,24 @@ static void	execute_commands_loop(void)
 	while (ct)
 	{
 		if (ct->pid)
-			waitpid(ct->pid, &status, WUNTRACED);
+		{
+			debug_log("waitpid\n");
+			waitpid(ct->pid, e_status, WUNTRACED);
+			signal(SIGINT, signal_handler);
+		}
+		debug_log("execute_command_loop %d\n", *e_status);
 		ct = ct->next;
 	}
 }
 
 int	execute_commands(void)
 {
+	int		e_status;
 	prepare_exec_fds();
-	execute_commands_loop();
+	execute_commands_loop(&e_status);
+	set_status_from_child_status(e_status);
 	close_exec_fds();
 	free_command_table();
+	debug_log("execute_commands argv[1]  g_data.exit_status %d\n", g_data.exit_status);
 	return (0);
 }

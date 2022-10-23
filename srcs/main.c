@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/26 16:46:58 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/14 02:18:36 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/19 22:18:24 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ int	minishell(char **envp)
 		// debug_log("g_data.command_table %s\n", (char *)g_data.command_table->content->);
 		free(line);
 		status = execute_commands();//ここでパイプ生成
+		debug_log("g_data.exit_status %d\n", g_data.exit_status);
 	}
 	return (0);
 }
@@ -49,6 +50,9 @@ int	minishell(char **envp)
 int	main(int argc, char **argv, char **envp)
 {
 	(void)argv;
+
+	ft_wsignal(SIGINT, signal_handler);
+	ft_wsignal(SIGQUIT, SIG_IGN);
 	g_debug = true;
 	if (argc == 1)
 	{

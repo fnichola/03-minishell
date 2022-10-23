@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 17:23:49 by akihito           #+#    #+#             */
-/*   Updated: 2022/10/14 23:12:39 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/21 18:06:34 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,30 +40,29 @@ void	built_in_echo(char **argv)//環境変数はまだ、echo ?$も無限ルー�
 {
 	int		option;
 	size_t	arg_i;
-	// char	*put_str;
 
+	debug_log("built_in_echo\n");
 	if (write(STDOUT_FILENO, NULL, 0) == -1)
 	{
 		ft_perror("echo: write error");
 		exit(1);
 	}
 	option = 0;
-	arg_i = 1;
+	arg_i = 0;
 	if (argv[arg_i] && ft_strcmp(argv[arg_i], "-n") == 0 && arg_i++)//echo -n test とechoの直後しかオプションとして認識しない
-	{
 		option++;
-	}
-	while (argv[arg_i])
+	while (argv[++arg_i])
 	{
-		ft_putstr_fd(argv[arg_i], STDOUT_FILENO);
+		if (!ft_strcmp(argv[arg_i], "$?"))
+			ft_putendl_fd(ft_itoa(g_data.exit_status), STDOUT_FILENO);
+		else
+			ft_putstr_fd(argv[arg_i], STDOUT_FILENO);
 		if (argv[arg_i + 1] != NULL)
 			ft_putstr_fd(" ", STDOUT_FILENO);
-		arg_i++;
 	}
+	debug_log("g_data.exit_status %d\n", g_data.exit_status);
 	if (!option)
-	{
 		ft_putstr_fd("\n", STDOUT_FILENO);
-	}
 	return ;
 }
 

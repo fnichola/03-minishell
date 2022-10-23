@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/15 17:00:38 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/20 22:43:26 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 
 # include "../libft/libft.h"
 # include "env.h"
+# include "signal.h"
+# include "exit.h"
 # include <stdio.h>
 # include <readline/readline.h>
 # include <readline/history.h>
@@ -24,6 +26,10 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <fcntl.h>
+# include <stdio.h>
+# include <stdbool.h>
+# include <signal.h>
+# include <readline/readline.h>
 
 /**
  * Token types returned by tokenizer(). Input from readline is broken into
@@ -111,7 +117,7 @@ typedef struct s_minishell_data {
 	size_t				num_built_ins;
 	t_command			*command_table;
 	size_t				cmd_index;
-	int					exit_satus;
+	unsigned char		exit_status;
 	t_envlist			*env_list;
 }	t_minishell_data;
 
@@ -143,6 +149,7 @@ void		ft_puterror(char *s1, char *s2, char *s3);
 char		*ft_echo_env(char *str, t_envlist *e_list);
 int			ft_wpipe(int fd[2]);
 void		ft_wexecve(char *file, char **argv, char **envp);
+void		ft_wsignal(int sig, void f(int));
 int			execute_commands(void);
 void		prepare_exec_fds(void);
 void		free_exec_fds(void);
@@ -175,5 +182,8 @@ void		command_add_back(t_command *new_command);
 void		free_command(t_command *cmd);
 void		free_command_table(void);
 t_command	*del_command(t_command *cmd);
-
+bool		is_valid_exit_status(char	*num);
+void		exit_and_free_command(int exit_status);
+void		sig_handler(int signum);
+void		signal_handler(int signo);
 #endif

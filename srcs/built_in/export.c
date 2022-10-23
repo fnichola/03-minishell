@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 02:30:14 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/15 17:58:04 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/17 21:17:03 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ static void	export_new_var(char **argv)
 		if (!is_valid_variable(argv[1]))
 		{
 			error_command("export", argv[1], "not a valid identifier");
-			g_data.exit_satus = 1;
+			g_data.exit_status = 1;
 			return ;
 		}
 		if (ft_strlen(argv[i]) > 1 && ft_strchr(argv[i], '='))

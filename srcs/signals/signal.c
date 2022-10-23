@@ -1,28 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free_command_table.c                               :+:      :+:    :+:   */
+/*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/14 02:54:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/18 01:12:35 by akihito          ###   ########.fr       */
+/*   Created: 2022/10/19 02:20:00 by akihito           #+#    #+#             */
+/*   Updated: 2022/10/19 18:15:51 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <readline/readline.h>
 
-void	free_command_table(void)
+// void sig_handler(int signum)
+// {
+// 	printf("signum %d\n", signum);
+	
+// }
+
+void	signal_handler(int signo)
 {
-	t_command	*ct;
-	t_command	*tmp;
-
-	ct = g_data.command_table;
-	while(ct)
-	{
-		tmp = ct->next;
-		free_command(ct);
-		ct = tmp;
-	}
-	g_data.command_table = NULL;
+	printf("singal_handler\n");
+	g_data.exit_status = 128 + signo;
+	ft_putchar_fd('\n', STDOUT_FILENO);
+	rl_replace_line("", 0);
+	rl_on_new_line();
+	rl_redisplay();
 }

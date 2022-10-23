@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser-functions.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 14:58:17 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/14 02:27:19 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/17 23:37:51 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ void	parser_neutral(t_parse_arg *p)
 	debug_log("parser_neutral: p->token = %s\n", p->token->word);
 	if (!p->token)
 	{
+		debug_log("g_data.exit_status %d\n", g_data.exit_status);
 		change_state(p, ST_FINISHED);
 		return ;
 	}
@@ -103,13 +104,19 @@ void	parser_first_word(t_parse_arg *p)
 
 void	parser_simple_command(t_parse_arg *p)
 {
+	if (!!p->token)
+	{
+		debug_log(p->token->word);
+		debug_log("%d\n",p->token->token_type);
+	}
 	if (!p->token)
 	{
 		p->command->argv[p->index] = NULL;
 		command_add_back(p->command);
 		change_state(p, ST_FINISHED);
 	}
-	else if (p->token->token_type == T_WORD)
+	else if (p->token->token_type == T_WORD || \
+				p->token->token_type == T_EXIT_STATUS)
 	{
 		p->command->argv[p->index] = ft_strdup(p->token->word);
 		p->token = NULL;
