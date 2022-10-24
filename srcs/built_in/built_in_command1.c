@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 17:23:49 by akihito           #+#    #+#             */
-/*   Updated: 2022/10/21 18:06:34 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/23 22:49:38 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ void	init_built_in_table(void)
 	g_data.num_built_ins = sizeof(temp) / sizeof(t_str_func_table);
 	ft_memcpy(built_ins, temp, sizeof(temp));
 	g_data.built_ins = built_ins;
+	g_data.exit_status = 0;
 }
 
 void	built_in_echo(char **argv)//環境変数はまだ、echo ?$も無限ループしてしまう。
@@ -60,7 +61,7 @@ void	built_in_echo(char **argv)//環境変数はまだ、echo ?$も無限ルー�
 		if (argv[arg_i + 1] != NULL)
 			ft_putstr_fd(" ", STDOUT_FILENO);
 	}
-	debug_log("g_data.exit_status %d\n", g_data.exit_status);
+	debug_log("built_in_echo g_data.exit_status %d\n", g_data.exit_status);
 	if (!option)
 		ft_putstr_fd("\n", STDOUT_FILENO);
 	return ;

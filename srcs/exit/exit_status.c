@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 01:00:00 by akihito           #+#    #+#             */
-/*   Updated: 2022/10/23 20:08:42 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/23 22:52:08 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,11 @@
 void	set_status_from_child_status(int wstatus)
 {
 	debug_log("set_status_from_child_status 2 %d\n\n", wstatus);
-	if (WIFEXITED(wstatus))
+	if (WIFEXITED(wstatus))//ここに入るとexit_statusが変な値になる。
 	{
 		debug_log("exited %d\n\n", wstatus);
+		if (!!WEXITSTATUS(wstatus))
+			printf("WEXITSTATUS(wstatus)");
 		g_data.exit_status = WEXITSTATUS(wstatus);
 		debug_log(" set_status_from_child_status g_data.exit_status %d\n", g_data.exit_status);
 	}

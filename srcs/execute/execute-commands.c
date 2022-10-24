@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 09:22:05 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/23 21:07:27 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/24 00:20:19 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ static void	execute_simple_command(t_command *cmd)
 		cmd->pid = execute_external(cmd, envp);
 		free_envp(envp);
 	}
-	ft_wsignal(SIGINT, signal_handler);
+	// ft_wsignal(SIGINT, signal_handler); //意味ない？
 }
 
 static void	execute_commands_loop(int *e_status)
@@ -143,6 +143,7 @@ static void	execute_commands_loop(int *e_status)
 		debug_log("execute_command_loop %d\n", *e_status);
 		ct = ct->next;
 	}
+	ft_wsignal(SIGINT, signal_handler); //ここじゃないと特定のパターンでシグナルを受け付けなくなる
 }
 
 int	execute_commands(void)
@@ -150,6 +151,7 @@ int	execute_commands(void)
 	int		e_status;
 	prepare_exec_fds();
 	execute_commands_loop(&e_status);
+	// if ()//パイプとかの時だけ入るようにする
 	set_status_from_child_status(e_status);
 	close_exec_fds();
 	free_command_table();
