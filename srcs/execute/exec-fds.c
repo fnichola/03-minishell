@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 10:58:36 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/23 10:28:52 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/25 13:24:15 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,8 +75,13 @@ static int	update_input_redirect(t_redirect *r, t_command *cmd)
 		while (1)
 		{
 			line = readline("> ");
-			if (!line || is_str_match(line, r->filename))
+			if (!line)
 				break ;
+			else if (is_str_match(line, r->filename))
+			{
+				free(line);
+				break ;
+			}
 			heredoc_add_line(cmd, line);
 		}
 		debug_log("update_input_redirect: heredoc end\n");
