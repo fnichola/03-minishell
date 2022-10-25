@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 09:22:05 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/24 00:20:19 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/25 18:44:29 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,10 @@ static void	execute_simple_command(t_command *cmd)
 	debug_log("\n");
 	ft_wsignal(SIGINT, SIG_IGN);
 	if (execute_built_in(cmd))
+	{
+		g_data.built_in_count++;
 		return ;
+	}
 	else
 	{
 		envp = export_to_envp();
@@ -149,10 +152,14 @@ static void	execute_commands_loop(int *e_status)
 int	execute_commands(void)
 {
 	int		e_status;
+
+	g_data.built_in_count = 0;
 	prepare_exec_fds();
 	execute_commands_loop(&e_status);
-	// if ()//パイプとかの時だけ入るようにする
-	set_status_from_child_status(e_status);
+	debug_log("g_data.command_table->next %s\n", g_data.command_table->argv[0]);
+	debug_log("g_data.built_in_count %d\n", g_data.built_in_count);
+	if (g_data.num_built_ins == 0)//パイプとかの時だけ入るようにする
+		set_status_from_child_status(e_status);
 	close_exec_fds();
 	free_command_table();
 	debug_log("execute_commands argv[1]  g_data.exit_status %d\n", g_data.exit_status);

@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/23 20:53:52 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/25 02:12:00 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,6 +119,7 @@ typedef struct s_minishell_data {
 	size_t				cmd_index;
 	int					exit_status;
 	t_envlist			*env_list;
+	size_t				built_in_count;
 }	t_minishell_data;
 
 extern t_minishell_data	g_data;
