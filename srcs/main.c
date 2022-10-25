@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
+/*   By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/26 16:46:58 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/23 21:05:36 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/25 20:55:41 by atomizaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ int	minishell(char **envp)
 
 	init_env_list(envp);
 	g_data.command_table = NULL;
+	g_data.is_piped = 0;
 	init_built_in_table();
 	status = 0;
 	while (!status)

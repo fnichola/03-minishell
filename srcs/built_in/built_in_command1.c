@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_in_command1.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
+/*   By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 17:23:49 by akihito           #+#    #+#             */
-/*   Updated: 2022/10/23 22:49:38 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/25 21:22:04 by atomizaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void	built_in_echo(char **argv)//環境変数はまだ、echo ?$も無限ルー�
 	while (argv[++arg_i])
 	{
 		if (!ft_strcmp(argv[arg_i], "$?"))
-			ft_putendl_fd(ft_itoa(g_data.exit_status), STDOUT_FILENO);
+			ft_putstr_fd(ft_itoa(g_data.exit_status), STDOUT_FILENO);
 		else
 			ft_putstr_fd(argv[arg_i], STDOUT_FILENO);
 		if (argv[arg_i + 1] != NULL)

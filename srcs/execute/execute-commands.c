@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute-commands.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
+/*   By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 09:22:05 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/25 18:44:29 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/25 21:29:28 by atomizaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ bool	lookup_and_exec_built_in(char **argv)
 		if (is_str_match(str, g_data.built_ins[i].name))
 		{
 			debug_log("is_str_match\n");
+
 			g_data.built_ins[i].func(argv);
 			is_builtin = true;
 			break ;
@@ -85,13 +86,16 @@ int		execute_external(t_command *cmd, char **envp)
 	pid = fork();
 	if (pid == 0)// 子プロセス
 	{
-		ft_wsignal(SIGINT, SIG_DFL);
+		ft_wsignal(SIGINT, signal_handler_child);
 		ft_wsignal(SIGQUIT, SIG_DFL);
 		dup2(cmd->input_fd, STDIN_FILENO);
 		dup2(cmd->output_fd, STDOUT_FILENO);
 		close_exec_fds();
 		if (ft_strchr(cmd->argv[0], '/'))
+		{
+			// signal(SIG_INT, signal_handler_child)
 			execve(cmd->argv[0], cmd->argv, envp);
+		}
 		else
 			search_path_and_exec(cmd->argv, envp);
 	}
@@ -131,6 +135,7 @@ static void	execute_commands_loop(int *e_status)
 		if (!ct->argv || !ct->argv[0])
 			return ;
 		execute_simple_command(ct);
+		g_data.is_piped++;
 		ct = ct->next;
 	}
 	close_exec_fds();
@@ -146,6 +151,7 @@ static void	execute_commands_loop(int *e_status)
 		debug_log("execute_command_loop %d\n", *e_status);
 		ct = ct->next;
 	}
+	g_data.exit_status = 0;
 	ft_wsignal(SIGINT, signal_handler); //ここじゃないと特定のパターンでシグナルを受け付けなくなる
 }
 
@@ -156,9 +162,9 @@ int	execute_commands(void)
 	g_data.built_in_count = 0;
 	prepare_exec_fds();
 	execute_commands_loop(&e_status);
-	debug_log("g_data.command_table->next %s\n", g_data.command_table->argv[0]);
+	debug_log("g_data.is_piped %d\n", g_data.is_piped);
 	debug_log("g_data.built_in_count %d\n", g_data.built_in_count);
-	if (g_data.num_built_ins == 0)//パイプとかの時だけ入るようにする
+	if (g_data.is_piped == 1 || g_data.built_in_count == 0)//パイプとかの時だけ入るようにする exit 4 | lsはexit_status = 0でいい
 		set_status_from_child_status(e_status);
 	close_exec_fds();
 	free_command_table();

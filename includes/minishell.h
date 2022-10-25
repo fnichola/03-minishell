@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
+/*   By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/25 02:12:00 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/25 21:31:22 by atomizaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,6 +120,7 @@ typedef struct s_minishell_data {
 	int					exit_status;
 	t_envlist			*env_list;
 	size_t				built_in_count;
+	size_t				is_piped;
 }	t_minishell_data;
 
 extern t_minishell_data	g_data;
@@ -187,4 +188,5 @@ bool		is_valid_exit_status(char	*num);
 void		exit_and_free_command(int exit_status);
 void		sig_handler(int signum);
 void		signal_handler(int signo);
+void		signal_handler_child(int signo);
 #endif

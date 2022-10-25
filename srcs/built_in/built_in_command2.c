@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_in_command2.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
+/*   By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/08 01:54:35 by akihito           #+#    #+#             */
-/*   Updated: 2022/10/21 18:05:35 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/25 21:10:01 by atomizaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,13 +38,15 @@ void	built_in_exit(char **argv)
 
 	argc = 0;
 	while (argv[argc])
+	{
+		debug_log("argv[%d] %s\n",argc, argv[argc]);
 		argc++;
+	}
 	free_env_list(&g_data.env_list);
-	printf("builtin_exit\n");
 	ft_putendl_fd("exit", 1);
 	if (argv[1] == NULL)//ただのexit
 	{
-		ft_putendl_fd("exit", 1);
+		// ft_putendl_fd("exit", 1);
 		exit(0);
 	}
 	if (argc == 2)// exit 4など
