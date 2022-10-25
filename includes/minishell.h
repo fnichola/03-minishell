@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/23 02:20:19 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/23 03:04:37 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,7 @@ typedef struct s_command {
 	pid_t				pid;
 	int					input_fd;
 	int					output_fd;
+	char				**heredoc;
 	struct s_command	*prev;
 	struct s_command	*next;
 }	t_command;

@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 15:11:01 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/14 02:20:11 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/23 09:29:53 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 
 typedef enum e_state {
 	ST_NEUTRAL = 0,
-	ST_FIRST_WORD,
+	ST_START_WORD,
 	ST_SIMPLE_COMMAND,
 	ST_REDIRECT,
 	ST_ENV,
@@ -56,7 +56,7 @@ typedef struct s_state_func_row {
 t_state_func_row	*p_init_state_func_table(void);
 void	init_parse_arg(t_parse_arg *p, t_list *tokens);
 void	parser_neutral(t_parse_arg *p);
-void	parser_first_word(t_parse_arg *p);
+void	parser_start_word(t_parse_arg *p);
 void	parser_simple_command(t_parse_arg *p);
 void	parser_redirect(t_parse_arg *p);
 void	parser_env (t_parse_arg *p);
