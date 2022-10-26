@@ -6,7 +6,7 @@
 /*   By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 09:22:05 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/25 21:29:28 by atomizaw         ###   ########.fr       */
+/*   Updated: 2022/10/26 15:51:00 by atomizaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ bool	lookup_and_exec_built_in(char **argv)
 		if (is_str_match(str, g_data.built_ins[i].name))
 		{
 			debug_log("is_str_match\n");
-
 			g_data.built_ins[i].func(argv);
 			is_builtin = true;
 			break ;
@@ -61,6 +60,7 @@ void	search_path_and_exec(char **argv, char **envp)
 	char	*temp;
 	size_t	i;
 
+	debug_log("command not found- argv[0] %s\n", argv[0]);
 	paths = ft_split(getenv("PATH"), ':');
 	i = 0;
 	while (paths[i])
@@ -68,14 +68,15 @@ void	search_path_and_exec(char **argv, char **envp)
 		temp = ft_strjoin(paths[i], "/");
 		pathname = ft_strjoin(temp, argv[0]);
 		free(temp);
-		execve(pathname, argv, envp);
-		free(pathname);
+		if (execve(pathname, argv, envp) != -1)
+			free(pathname);
 		free(paths[i]);
 		paths[i] = NULL;
 		i++;
 	}
 	free(paths);
-	exit_error("Can't find command.");
+	ft_puterror(argv[0], " command not found", NULL);
+	exit(127);
 }
 
 int		execute_external(t_command *cmd, char **envp)
@@ -93,8 +94,12 @@ int		execute_external(t_command *cmd, char **envp)
 		close_exec_fds();
 		if (ft_strchr(cmd->argv[0], '/'))
 		{
-			// signal(SIG_INT, signal_handler_child)
-			execve(cmd->argv[0], cmd->argv, envp);
+			debug_log("command not found 絶対パス %s\n", cmd->argv[0]);
+			if (execve(cmd->argv[0], cmd->argv, envp) == -1)
+			{
+				ft_puterror(cmd->argv[0], "No such file or directory", NULL);
+				exit(127);
+			}
 		}
 		else
 			search_path_and_exec(cmd->argv, envp);
