@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 18:02:55 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/23 09:41:38 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/26 12:54:08 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,10 @@ int	get_next_token(t_lex_arg *l,
 				*token = NULL;
 			}
 			else if (l->token->type == T_ERROR)
+			{
+				free(l->token->word);
 				return (1);
+			}
 			else if (l->token->type == T_WORD && !l->token->word)
 			{
 				l->found_token = false;
