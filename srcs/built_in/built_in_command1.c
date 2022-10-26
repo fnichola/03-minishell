@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_in_command1.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
+/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 17:23:49 by akihito           #+#    #+#             */
-/*   Updated: 2022/10/14 23:12:39 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/26 00:57:41 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,35 +69,49 @@ void	built_in_echo(char **argv)//環境変数はまだ、echo ?$も無限ルー�
 
 void	built_in_cd(char **argv)
 {
-	char		*old_pwd;
+	char		*cwd;
 	char		*now_pwd;
 	char		*home_dir;
+	// char		*old_pwd;
 
-	old_pwd = getcwd(NULL, 0);
+	cwd = getcwd(NULL, 0);
 	home_dir = ft_getenv("HOME");
 	if (argv[1] && argv[1][0] && chdir(argv[1]) == -1)
 	{//status=1
 		ft_perror("cd");//エラーのステータス更新
-		free(old_pwd);
+		free(cwd);
 		return ;
 	}
 	else if (!argv[1] && chdir(home_dir) == -1)//cdの引数がなかったら、環境変数HOMEのディレクトリに移動する
 	{//status=0
 		ft_perror("cd");
-		free(old_pwd);
+		free(cwd);
 		return ;
 	}
-	// else if (argv[1] && chdir(old_pwd) == -1)
+	// else if (argv[1] && argv[1] == '-')
 	// {
-	// 	ft_perror("cd");
-	// 	free(old_pwd);
-	// 	return ;
+	// 	old_pwd = ft_getenv("OLDPWD");
+	// 	if (old_pwd)
+	// 	{
+	// 		if (chdir(old_pwd) == -1);
+	// 		{
+	// 			ft_perror("cd");
+	// 			free(cwd);
+	// 			return ;
+	// 		}
+	// 	}
+	// 	else
+	// 	{
+	// 		ft_puterror("cd", "OLDPWD not set", NULL);
+	// 		free(cwd);
+	// 		return ;
+	// 	}
 	// }
 	now_pwd = getcwd(NULL, 0);
 	ft_setenv("PWD", now_pwd, 1);
 	free(now_pwd);
-	ft_setenv("OLDPWD", old_pwd, 1);
-	free(old_pwd);
+	ft_setenv("OLDPWD", cwd, 1);
+	free(cwd);
 }
 
 void	built_in_pwd(char **argv)

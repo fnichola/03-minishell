@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 10:58:36 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/25 13:24:15 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/26 12:24:42 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,69 @@ void	heredoc_add_line(t_command *cmd, char *line)
 	cmd->heredoc[i + 1] = NULL;
 }
 
+/*
+ * Inserts a found env variable value in the middle of a string.
+ * 'start' points to the first char of var name, after the '$'.
+ * 'end' points to the character after the variable name.
+ * The new combined string is returned in *line, old *line is freed.
+ */
+void	heredoc_insert_env(char **line, char *env, size_t start, size_t end)
+{
+	size_t	size_front;
+	size_t	size_back;
+	size_t	env_len;
+	char	*new_str;
+
+	env_len = 0;
+	if (env)
+		env_len = ft_strlen(env);
+	size_front = env_len + start; // size of before + var_name
+	size_back = ft_strlen(*line + end); // size after var_name
+	new_str = malloc_error_check(sizeof(char) * (size_front + size_back));
+	ft_strlcpy(new_str, *line, start);
+	if (env)
+		ft_strlcat(new_str, env, size_front);
+	ft_strlcat(new_str, *line + end, size_front + size_back);
+	free(*line);
+	*line = new_str;
+}
+
+void	heredoc_expand_variables(char **line)
+{
+	size_t	i;
+	size_t	j;
+	char 	*var_name;
+	char	*found_env;
+
+	i = 0;
+	while ((*line)[i])
+	{
+		if ((*line)[i] == '$' && ft_isalpha((*line)[i + 1]))
+		{
+			j = ++i;
+			while (ft_isalnum((*line)[j]))
+				j++;
+			var_name = ft_substr((*line), i, (j - i));
+			found_env = ft_getenv(var_name);
+			heredoc_insert_env(line, found_env, i, j);
+			if (found_env)
+				i += ft_strlen(found_env) - 1;
+			else
+				i--;
+			free(var_name);
+		}
+		else if ((*line)[i] == '$' && (*line)[i + 1] == '?')
+		{
+			found_env = ft_itoa(g_data.exit_satus);
+			heredoc_insert_env(line, found_env, i + 1, i + 2);
+			free(found_env);
+		}
+		else
+			i++;
+	}
+	
+}
+
 static int	update_input_redirect(t_redirect *r, t_command *cmd)
 {
 	int		fd;
@@ -82,6 +145,7 @@ static int	update_input_redirect(t_redirect *r, t_command *cmd)
 				free(line);
 				break ;
 			}
+			heredoc_expand_variables(&line);
 			heredoc_add_line(cmd, line);
 		}
 		debug_log("update_input_redirect: heredoc end\n");
