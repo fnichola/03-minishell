@@ -6,7 +6,7 @@
 /*   By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 09:22:05 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/26 15:51:00 by atomizaw         ###   ########.fr       */
+/*   Updated: 2022/10/26 17:50:19 by atomizaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,10 @@ void	search_path_and_exec(char **argv, char **envp)
 	ft_puterror(argv[0], " command not found", NULL);
 	exit(127);
 }
+// void	check_execve(char **argv)
+// {
+	 
+// }
 
 int		execute_external(t_command *cmd, char **envp)
 {
@@ -95,6 +99,7 @@ int		execute_external(t_command *cmd, char **envp)
 		if (ft_strchr(cmd->argv[0], '/'))
 		{
 			debug_log("command not found 絶対パス %s\n", cmd->argv[0]);
+			// check_execve(cmd->argv[0], envp);
 			if (execve(cmd->argv[0], cmd->argv, envp) == -1)
 			{
 				ft_puterror(cmd->argv[0], "No such file or directory", NULL);
