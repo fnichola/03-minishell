@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+        */
+/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/25 21:31:22 by atomizaw         ###   ########.fr       */
+/*   Updated: 2022/10/26 23:22:29 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,4 +189,5 @@ void		exit_and_free_command(int exit_status);
 void		sig_handler(int signum);
 void		signal_handler(int signo);
 void		signal_handler_child(int signo);
+void		check_execve(char *argv);
 #endif

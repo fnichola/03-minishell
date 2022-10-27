@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+        */
+/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/26 16:46:58 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/26 18:16:58 by atomizaw         ###   ########.fr       */
+/*   Updated: 2022/10/27 00:37:28 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int	main(int argc, char **argv, char **envp)
 
 	ft_wsignal(SIGINT, signal_handler);// ctrlC
 	ft_wsignal(SIGQUIT, SIG_IGN);// ctrl 
-	// g_debug = true;
+	g_debug = true;
 	if (argc == 1)
 	{
 		debug_log("Starting Minishell\n");
