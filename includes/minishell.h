@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/23 03:04:37 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/28 14:06:05 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,5 +178,5 @@ void		free_command_table(void);
 t_command	*del_command(t_command *cmd);
 void		del_token(void *token_ptr);
 bool		is_valid_var_char(const char c);
-
+void		check_execve(char *argv);
 #endif

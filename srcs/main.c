@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/26 16:46:58 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/27 14:00:36 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/28 14:14:23 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int	minishell(char **envp, int script_fd)
 int	main(int argc, char **argv, char **envp)
 {
 	int	fd;
-	g_debug = false;
+	g_debug = true;
 
 	if (argc == 1)
 	{
@@ -70,6 +70,7 @@ int	main(int argc, char **argv, char **envp)
 	else if (argc == 2 && !access(argv[1], X_OK))
 	{
 		fd = open(argv[1], O_RDONLY);
+		debug_log("fd = %d\n", fd);
 		if (fd >= 0)
 			minishell(envp, fd);
 		else
@@ -77,7 +78,10 @@ int	main(int argc, char **argv, char **envp)
 	}
 	else
 	{
-		ft_perror("Error");
+
+		debug_log("else\n");
+		check_execve(argv[1]);
+		// ft_perror("Error");
 	}
 	return (0);
 }

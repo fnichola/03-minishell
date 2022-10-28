@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute-commands.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 09:22:05 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/23 09:58:48 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/28 14:15:29 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,28 @@ void	search_path_and_exec(char **argv, char **envp)
 	free(paths);
 	exit_error("Can't find command.");
 }
+void	check_execve(char *argv)
+{
+	// if (stat(argv[0], ))
+	// {
+
+	// 	printf("open失敗");
+	// 	ft_perror(NULL);
+	// 	exit(126);
+	// }
+	if (access(argv, F_OK) == -1)
+	{
+		debug_log("F_OK\n");
+		ft_perror(NULL);
+		exit(127);
+	}
+	else if (access(argv, X_OK))
+	{
+		debug_log("X_OK\n");
+		ft_perror(NULL);
+		exit(127);
+	}
+}
 
 int		execute_external(t_command *cmd, char **envp)
 {
@@ -85,11 +107,15 @@ int		execute_external(t_command *cmd, char **envp)
 	pid = fork();
 	if (pid == 0)// 子プロセス
 	{
+		debug_log("execute_external\n");
 		dup2(cmd->input_fd, STDIN_FILENO);
 		dup2(cmd->output_fd, STDOUT_FILENO);
 		close_exec_fds();
 		if (ft_strchr(cmd->argv[0], '/'))
+		{
+			check_execve(cmd->argv[0]);
 			execve(cmd->argv[0], cmd->argv, envp);
+		}
 		else
 			search_path_and_exec(cmd->argv, envp);
 	}
