@@ -6,21 +6,14 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 15:11:01 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/22 14:06:57 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/28 11:14:01 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LEXER_H
 # define LEXER_H
 
-# include "../libft/libft.h"
 # include "minishell.h"
-# include <stdio.h>
-# include <readline/readline.h>
-# include <readline/history.h>
-# include <sys/wait.h>
-# include <stdbool.h>
-# include <errno.h>
 
 typedef enum e_state {
 	ST_NEUTRAL = 0,

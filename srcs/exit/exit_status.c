@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit_status.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 01:00:00 by akihito           #+#    #+#             */
-/*   Updated: 2022/10/26 14:16:57 by atomizaw         ###   ########.fr       */
+/*   Updated: 2022/10/28 14:24:19 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	set_status_from_child_status(int wstatus)
 	if (WIFEXITED(wstatus))//ここに入るとexit_statusが変な値になる。
 	{
 		debug_log("exited %d\n\n", wstatus);
-		if (!!WEXITSTATUS(wstatus))
+		if (WEXITSTATUS(wstatus))
 			debug_log("WEXITSTATUS(wstatus)");
 		g_data.exit_status = WEXITSTATUS(wstatus);
 		debug_log(" set_status_from_child_status g_data.exit_status %d\n", g_data.exit_status);

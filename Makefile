@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: akihito <akihito@student.42.fr>            +#+  +:+       +#+         #
+#    By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/09 18:01:32 by fnichola          #+#    #+#              #
-#    Updated: 2022/10/28 18:20:05 by akihito          ###   ########.fr        #
+#    Updated: 2022/10/28 11:20:29 by fnichola         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME = minishell
 
 LIBFT_DIR = libft
 LIBFT_LIB = $(LIBFT_DIR)/libft.a
-READLINE_DIR = $(shell brew --prefix readline)
+# READLINE_DIR = $(shell brew --prefix readline)
 # READLINE_DIR = /usr/local/Cellar/readline/8.1.2/lib/
 CC = gcc
 CFLAGS = -Wextra -Werror -Wall -g -fsanitize=address -I $(READLINE_DIR)/include
@@ -82,7 +82,7 @@ SRCS = srcs/main.c \
 ifdef WITH_BONUS
 endif
 
- $(warning $(READLINE_DIR))
+# $(warning $(READLINE_DIR))
 
 OBJS = $(SRCS:.c=.o)
 DEPS = $(SRCS:.c=.d)

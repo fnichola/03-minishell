@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_in_command2.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
+/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/08 01:54:35 by akihito           #+#    #+#             */
-/*   Updated: 2022/10/28 19:04:50 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/28 13:52:29 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	built_in_exit(char **argv)
 	if (argv[1] == NULL)//ただのexit
 	{
 		// ft_putendl_fd("exit", 1);
-		exit(0);
+		exit(g_data.exit_status);
 	}
 	if (argc == 2)// exit 4など
 	{
