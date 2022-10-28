@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_unset_env.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 05:44:22 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/13 05:44:38 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/28 19:14:39 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ t_envlist	*ft_unsetenv(t_envlist *e_list, char *unset_key)
 	prev = NULL;
 	while (tmp)
 	{
+		debug_log("tmp->name = %s\n", tmp->name);
 		if (ft_strcmp(tmp->name, unset_key) == 0)
 		{
 			if (prev == NULL)
@@ -30,6 +31,7 @@ t_envlist	*ft_unsetenv(t_envlist *e_list, char *unset_key)
 			free(tmp->name);
 			free(tmp->value);
 			free(tmp);
+			break ;
 		}
 		prev = tmp;
 		tmp = tmp->next;

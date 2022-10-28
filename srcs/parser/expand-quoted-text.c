@@ -6,20 +6,12 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/18 16:26:16 by fnichola          #+#    #+#             */
-/*   Updated: 2022/09/26 00:44:54 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/17 14:33:55 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "parser.h"
-
-static bool	is_valid_var_char(char c)
-{
-	if (ft_isalnum(c) || c == '_')
-		return (true);
-	else
-		return (false);
-}
 
 static void	expand_and_join(t_parse_arg *p, char *pre_str,
 						char *quoted_var, char *post_str)

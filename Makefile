@@ -6,7 +6,7 @@
 #    By: akihito <akihito@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/09 18:01:32 by fnichola          #+#    #+#              #
-#    Updated: 2022/10/20 01:08:36 by akihito          ###   ########.fr        #
+#    Updated: 2022/10/28 18:20:05 by akihito          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,12 +35,14 @@ SRCS = srcs/main.c \
 	srcs/built_in/built_in_command2.c \
 	srcs/built_in/export.c \
 	srcs/built_in/export2.c \
+	srcs/utilities/del_token.c \
 	srcs/utilities/exit_error.c \
 	srcs/utilities/ft_perror.c \
 	srcs/utilities/ft_puterror.c \
 	srcs/utilities/ft_strncpy.c \
 	srcs/utilities/ft_strcmp.c \
 	srcs/utilities/is_str_match.c \
+	srcs/utilities/is_valid_var_char.c \
 	srcs/utilities/malloc_error_check.c \
 	srcs/utilities/str_tolower.c \
 	srcs/utilities/wrapper.c \
@@ -69,6 +71,8 @@ SRCS = srcs/main.c \
 	srcs/utilities/env/get_env_value.c \
 	srcs/utilities/env/init_env_list.c \
 	srcs/utilities/env/split_env.c \
+	srcs/utilities/gnl/get_next_line.c \
+	srcs/utilities/gnl/get_next_line_utils.c \
 	srcs/utilities/redirect/free_redirects.c \
 	srcs/utilities/redirect/redirect_add.c \
 	srcs/utilities/redirect/redirect_new.c \

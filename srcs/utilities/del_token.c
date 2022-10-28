@@ -1,22 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   export2.c                                          :+:      :+:    :+:   */
+/*   del_token.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/15 01:57:05 by akihito           #+#    #+#             */
-/*   Updated: 2022/10/17 14:19:23 by fnichola         ###   ########.fr       */
+/*   Created: 2022/10/21 13:05:24 by fnichola          #+#    #+#             */
+/*   Updated: 2022/10/21 13:05:46 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "minishell.h"
 
-// this check needs to be fixed!
-bool	is_valid_variable(char *variable)
+void	del_token(void *token_ptr)
 {
-	if (ft_isdigit(variable[0]))
-		return (0);
-	else
-		return (1);
+	t_token	*token;
+
+	token = (t_token *)token_ptr;
+	if (token)
+	{
+		free(token->word);
+		token->word = NULL;
+		free(token);
+		token = NULL;
+	}
 }

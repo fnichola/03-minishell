@@ -6,26 +6,12 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 18:02:55 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/24 21:46:20 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/28 18:24:39 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "parser.h"
-
-void	del_token(void *token_ptr)
-{
-	t_token	*token;
-
-	token = (t_token *)token_ptr;
-	if (token)
-	{
-		free(token->word);
-		token->word = NULL;
-		free(token);
-		token = NULL;
-	}
-}
 
 /**
  * Take a list of tokens (from tokenizer) and create a command table.
@@ -38,6 +24,8 @@ void parser(t_list *tokens)
 	t_state_func_row	*state_func_table;
 	t_parse_arg			p;
 
+	if (!tokens)
+		return ;
 	state_func_table = p_init_state_func_table();//stateと関数ポインタを作成している。
 	init_parse_arg(&p, tokens);
 	p.list_ptr = tokens;//ここでtoken(単語)のリストを渡している
@@ -46,5 +34,15 @@ void parser(t_list *tokens)
 		state_func_table[p.state].parse_func(&p);//構造体ないの関数ポインタを実行している
 	}
 	free(state_func_table);
+	if (p.previous_token)
+		if (p.previous_token->type == T_GT ||
+			p.previous_token->type == T_GTGT ||
+			p.previous_token->type == T_LT ||
+			p.previous_token->type == T_LTLT ||
+			p.previous_token->type == T_PIPE)
+		{
+			ft_putstr_fd("minishell: syntax error\n", STDERR_FILENO);
+			free_command_table();
+		}
 	ft_lstclear(&tokens, del_token);
 }

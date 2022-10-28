@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_in_command2.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+        */
+/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/08 01:54:35 by akihito           #+#    #+#             */
-/*   Updated: 2022/10/25 21:10:01 by atomizaw         ###   ########.fr       */
+/*   Updated: 2022/10/28 19:04:50 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,14 @@
 #include <readline/history.h>
 #include <sys/wait.h>
 
-void	builtin_unset(char **argv)
+void	built_in_unset(char **argv)
 {
 	size_t	i;
 
 	i = 1;
 	while (argv[i])
 	{
+		debug_log("argv[0] = %s\n", argv[0]);
 		g_data.env_list = ft_unsetenv(g_data.env_list, argv[i]);
 		i++;
 	}

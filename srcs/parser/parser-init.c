@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 13:54:14 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/14 02:19:25 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/23 09:29:53 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ t_state_func_row	*p_init_state_func_table(void)
 {
 	const t_state_func_row	temp[] = {
 		{ST_NEUTRAL,		&parser_neutral},
-		{ST_FIRST_WORD,		&parser_first_word},
+		{ST_START_WORD,		&parser_start_word},
 		{ST_SIMPLE_COMMAND,	&parser_simple_command},
 		{ST_REDIRECT,		&parser_redirect},
 		{ST_ENV,			&parser_env},
@@ -33,7 +33,10 @@ t_state_func_row	*p_init_state_func_table(void)
 void	init_parse_arg(t_parse_arg *p, t_list *tokens)
 {
 	p->list_ptr = tokens;
-	p->token = (t_token *)tokens->content;
+	if (tokens && tokens->content)
+		p->token = (t_token *)tokens->content;
+	else
+		p->token = NULL;
 	p->previous_token = NULL;
 	p->state = ST_NEUTRAL;
 	p->previous_state = ST_NEUTRAL;

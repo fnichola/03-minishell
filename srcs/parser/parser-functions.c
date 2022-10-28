@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 14:58:17 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/17 23:37:51 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/28 18:26:23 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,8 @@
 
 void	next_token(t_parse_arg *p)
 {
-	p->list_ptr = p->list_ptr->next;
+	if (p->list_ptr)
+		p->list_ptr = p->list_ptr->next;
 	p->previous_token = p->token;
 	if (p->list_ptr)
 		p->token = (t_token *)p->list_ptr->content;
@@ -27,7 +28,7 @@ void	change_state(t_parse_arg *p, t_state new_state)
 {
 	const char *state_strs[8] = {
 		"ST_NEUTRAL",
-		"ST_FIRST_WORD",
+		"ST_START_WORD",
 		"ST_SIMPLE_COMMAND",
 		"ST_REDIRECT",
 		"ST_ENV",
@@ -47,6 +48,7 @@ void	init_command(t_parse_arg *p)
 	p->command->argv = malloc_error_check(sizeof(char *) * 32); // 32 is max length of a single command, this should be changed!
 	p->command->argv[p->index] = NULL;
 	p->command->redirects = NULL;
+	p->command->heredoc = NULL;
 	p->command->pid = 0;
 	p->command->input_fd = STDIN_FILENO;
 	p->command->output_fd = STDOUT_FILENO;
@@ -66,38 +68,25 @@ bool is_redirect_token(t_token_type t)
 
 void	parser_neutral(t_parse_arg *p)
 {
-	debug_log("parser_neutral: p->token = %s\n", p->token->word);
 	if (!p->token)
 	{
 		debug_log("g_data.exit_status %d\n", g_data.exit_status);
 		change_state(p, ST_FINISHED);
 		return ;
 	}
+	debug_log("parser_neutral: p->token->word = %s\n", p->token->word);
 	init_command(p);
-	if (p->token->token_type == T_VAR)
-	{
-		change_state(p, ST_ENV);
-	}
-	if (p->token->token_type == T_DOUBLE_QUOTED)
-	{
-		change_state(p, ST_IN_DQUOTE);
-	}
-	if (p->token->token_type == T_WORD)
-	{
-		change_state(p, ST_FIRST_WORD);
-	}
-	else if (p->token->token_type == T_PIPE)
-		next_token(p);
-	if (is_redirect_token(p->token->token_type))
-	{
-		change_state(p, ST_REDIRECT);
-	}
+	change_state(p, ST_SIMPLE_COMMAND);
+	// else if (p->token->type == T_PIPE)
+	// 	next_token(p);
+	// else if (is_redirect_token(p->token->type))
+	// 	change_state(p, ST_REDIRECT);
 }
 
-void	parser_first_word(t_parse_arg *p)
+void	parser_start_word(t_parse_arg *p)
 {
+	p->command->argv[p->index] = ft_strdup(p->token->word); // duplicate token string so we can free all tokens later
 	next_token(p);
-	p->command->argv[p->index] = ft_strdup(p->previous_token->word); // duplicate token string so we can free all tokens later
 	(p->index)++;
 	change_state(p, ST_SIMPLE_COMMAND);
 }
@@ -107,7 +96,7 @@ void	parser_simple_command(t_parse_arg *p)
 	if (!!p->token)
 	{
 		debug_log(p->token->word);
-		debug_log("%d\n",p->token->token_type);
+		debug_log("%d\n",p->token->type);
 	}
 	if (!p->token)
 	{
@@ -115,36 +104,30 @@ void	parser_simple_command(t_parse_arg *p)
 		command_add_back(p->command);
 		change_state(p, ST_FINISHED);
 	}
-	else if (p->token->token_type == T_WORD || \
-				p->token->token_type == T_EXIT_STATUS)
+	else if (p->token->type == T_WORD || \
+				p->token->type == T_EXIT_STATUS)
 	{
 		p->command->argv[p->index] = ft_strdup(p->token->word);
 		p->token = NULL;
 		(p->index)++;
 		next_token(p);
 	}
-	else if (p->token->token_type == T_VAR)
-		change_state(p, ST_ENV);
-	else if (p->token->token_type == T_DOUBLE_QUOTED)
-		change_state(p, ST_IN_DQUOTE);
-	else if (p->token->token_type == T_PIPE)
+	else if (p->token->type == T_PIPE)
 	{
 		p->command->argv[p->index] = NULL;
 		command_add_back(p->command);
 		next_token(p);
 		change_state(p, ST_NEUTRAL);
 	}
-	else if (is_redirect_token(p->token->token_type))
-	{
+	else if (is_redirect_token(p->token->type))
 		change_state(p, ST_REDIRECT);
-	}
 }
 
 //ここでexpandしてT_WORDに変更する。　
 void	parser_in_dquote(t_parse_arg *p)
 {
 	expand_quoted_text(p);
-	p->token->token_type = T_WORD;
+	p->token->type = T_WORD;
 	change_state(p, p->previous_state);
 }
 
@@ -155,7 +138,7 @@ void	parser_env(t_parse_arg *p)
 	found_env = ft_getenv(p->token->word);//見つからなかったらNULLを返す
 	if (found_env)
 	{
-		p->token->token_type = T_WORD;
+		p->token->type = T_WORD;
 		free(p->token->word);
 		p->token->word = ft_strdup(found_env); // ft_findenv doesn't return a "free"-able string
 	}
@@ -169,23 +152,23 @@ void	parser_redirect(t_parse_arg *p)// > と >>で入れる
 	t_redirect		*new_redirect;
 
 	new_redirect = redirect_new();
-	if (p->token->token_type == T_GT || p->token->token_type == T_GTGT)
+	if (p->token->type == T_GT || p->token->type == T_GTGT)
 	{
 		new_redirect->type = OUTPUT_REDIRECT;
-		new_redirect->append = p->token->token_type == T_GTGT;
+		new_redirect->append = p->token->type == T_GTGT;
 		next_token(p);
-		if (p->token && p->token->token_type == T_WORD)
+		if (p->token && p->token->type == T_WORD)
 		{
 			new_redirect->filename = ft_strdup(p->token->word);
 			debug_log("parser_redirect: setting output redirect to %s, append=%d\n", p->token->word, new_redirect->append);
 		}
 	}
-	else if (p->token->token_type == T_LT || p->token->token_type == T_LTLT)
+	else if (p->token->type == T_LT || p->token->type == T_LTLT)
 	{
 		new_redirect->type = INPUT_REDIRECT;
-		new_redirect->append = p->token->token_type == T_LTLT;
+		new_redirect->append = p->token->type == T_LTLT;
 		next_token(p);
-		if (p->token && p->token->token_type == T_WORD)
+		if (p->token && p->token->type == T_WORD)
 		{
 			debug_log("parser_redirect: setting input redirect to %s, append=%d\n", p->token->word, new_redirect->append);
 			new_redirect->filename = ft_strdup(p->token->word);

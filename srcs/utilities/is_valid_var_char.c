@@ -1,22 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   export2.c                                          :+:      :+:    :+:   */
+/*   is_valid_var_char.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/15 01:57:05 by akihito           #+#    #+#             */
-/*   Updated: 2022/10/17 14:19:23 by fnichola         ###   ########.fr       */
+/*   Created: 2022/10/17 14:14:01 by fnichola          #+#    #+#             */
+/*   Updated: 2022/10/17 14:16:37 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "minishell.h"
 
-// this check needs to be fixed!
-bool	is_valid_variable(char *variable)
+bool	is_valid_var_char(const char c)
 {
-	if (ft_isdigit(variable[0]))
-		return (0);
+	if (ft_isalpha(c) || c == '_')
+		return (true);
 	else
-		return (1);
+		return (false);
 }

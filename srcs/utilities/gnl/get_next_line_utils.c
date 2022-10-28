@@ -1,22 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   export2.c                                          :+:      :+:    :+:   */
+/*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: fnichola <nic.flenghi@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/15 01:57:05 by akihito           #+#    #+#             */
-/*   Updated: 2022/10/17 14:19:23 by fnichola         ###   ########.fr       */
+/*   Created: 2021/05/18 13:58:36 by fnichola          #+#    #+#             */
+/*   Updated: 2021/05/18 15:03:44 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "get_next_line.h"
 
-// this check needs to be fixed!
-bool	is_valid_variable(char *variable)
+size_t	ft_strlen(const char *s)
 {
-	if (ft_isdigit(variable[0]))
-		return (0);
-	else
-		return (1);
+	size_t	length;
+
+	length = 0;
+	while (*s != '\0')
+	{
+		s++;
+		length++;
+	}
+	return (length);
 }

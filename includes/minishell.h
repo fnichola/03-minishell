@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/26 23:22:29 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/28 19:01:24 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ typedef enum e_token_type {
 
 typedef struct s_token {
 	char			*word;
-	t_token_type	token_type;
+	t_token_type	type;
 }	t_token;
 
 typedef struct s_str_func_table {
@@ -102,6 +102,7 @@ typedef struct s_command {
 	pid_t				pid;
 	int					input_fd;
 	int					output_fd;
+	char				**heredoc;
 	struct s_command	*prev;
 	struct s_command	*next;
 }	t_command;
@@ -136,6 +137,7 @@ void		built_in_echo(char **argv);
 void		built_in_pwd(char **argv);
 void		built_in_env(char **argv);
 void		built_in_export(char **argv);
+void		built_in_unset(char **argv);
 bool		is_valid_variable(char *variable);
 bool		is_str_match(const char *s1, const char *s2);
 char		*str_tolower(char *str);
@@ -190,4 +192,6 @@ void		sig_handler(int signum);
 void		signal_handler(int signo);
 void		signal_handler_child(int signo);
 void		check_execve(char *argv);
+void		del_token(void *token_ptr);
+bool		is_valid_var_char(const char c);
 #endif

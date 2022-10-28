@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 09:22:05 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/27 19:30:23 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/28 18:31:12 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,6 +152,17 @@ static void	execute_simple_command(t_command *cmd)
 		free_envp(envp);
 	}
 	// ft_wsignal(SIGINT, signal_handler); //意味ない？
+	size_t i = 0;
+	if (cmd->heredoc)
+	{
+		while(cmd->heredoc[i])
+		{
+			write(cmd->input_fd, cmd->heredoc[i], ft_strlen(cmd->heredoc[i]));
+			write(cmd->input_fd, "\n", 1);
+			i++;
+		}
+		close(cmd->input_fd);
+	}
 }
 
 static void	execute_commands_loop(int *e_status)
@@ -189,11 +200,13 @@ int	execute_commands(void)
 	int		e_status;
 
 	g_data.built_in_count = 0;
+	if (!g_data.command_table)
+		return (0);
 	prepare_exec_fds();
 	execute_commands_loop(&e_status);
 	debug_log("g_data.is_piped %d\n", g_data.is_piped);
 	debug_log("g_data.built_in_count %d\n", g_data.built_in_count);
-	if (g_data.is_piped == 1 || g_data.built_in_count == 0)//パイプとかの時だけ入るようにする exit 4 | lsはexit_status = 0でいい
+	if (g_data.is_piped > 1 || g_data.built_in_count == 0)//パイプとかの時だけ入るようにする exit 4 | lsはexit_status = 0でいい
 		set_status_from_child_status(e_status);
 	close_exec_fds();
 	free_command_table();
