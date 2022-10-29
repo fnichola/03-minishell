@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/26 16:46:58 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/29 09:26:43 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/29 13:45:04 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ int	minishell(char **envp, int script_fd)
 		}
 		else
 		{
+			rl_outstream = stderr;
 			line = readline("minishell$ ");
 			if (line && *line)
 				add_history(line);
