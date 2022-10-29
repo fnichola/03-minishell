@@ -3,19 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
+/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/29 19:41:06 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/29 13:08:31 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# include <stdio.h>
 # include <readline/readline.h>
 # include <readline/history.h>
-# include <stdio.h>
 # include <sys/wait.h>
 # include <stdbool.h>
 # include <errno.h>
@@ -143,7 +143,7 @@ char		*ft_wstrjoin(char *str1, const char *str2);
 char		*ft_wstrdup(const char *src);
 char		*ft_wsubstr(char const *s, unsigned int start, size_t len);
 int			ft_strncpy(char *dest, char *src, size_t cpy_len);
-void		ft_puterror(char *s1, char *s2, char *s3);
+void		ft_puterror(const char *s1, const char *s2, const char *s3);
 char		*ft_echo_env(char *str, t_envlist *e_list);
 int			ft_wpipe(int fd[2]);
 void		ft_wexecve(char *file, char **argv, char **envp);

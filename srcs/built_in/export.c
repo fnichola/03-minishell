@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
+/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 02:30:14 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/29 19:39:09 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/29 13:24:26 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,14 +35,14 @@ static void	export_split_set(const char *arg)
 	t_envlist	new_var;
 	t_envlist	*found_env;
 
+
 	new_var = split_env(arg);
-	printf("new_var.name %s\n", new_var.name);
-	ft_setenv(new_var.name, new_var.value, 1);
-	// printf("new_var.name %s\n", new_var.name);
-	found_env = ft_findenv(new_var.name);
-	printf("found_env->name %s\n", found_env->name);
-	printf("found_env->value %s\n", found_env->value);
-	found_env->export = true;
+	if (new_var.name)
+	{
+		ft_setenv(new_var.name, new_var.value, 1);
+		found_env = ft_findenv(new_var.name);
+		found_env->export = true;
+	}
 	free(new_var.name);
 	free(new_var.value);
 }
@@ -70,12 +70,6 @@ static void	export_new_var(char **argv)
 	i = 1;
 	while (argv[i])
 	{
-		debug_log("export \n%s\n", argv[i]);
-		if (!is_valid_variable(argv[1]))
-		{
-			g_data.exit_status = 1;
-			return ;
-		}
 		if (ft_strlen(argv[i]) > 1 && ft_strchr(argv[i], '='))
 			export_split_set(argv[i]);
 		else
@@ -87,7 +81,7 @@ static void	export_new_var(char **argv)
 void	built_in_export(char **argv)
 {
 	if (!argv || !argv[0])
-		exit_error("Export");
+		exit_error("export");
 	else if (!argv[1])
 		export_print();
 	else
