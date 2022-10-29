@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/28 11:16:12 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/29 10:15:42 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,7 +168,7 @@ void		free_envp(char **envp);
 t_envlist	*ft_findenv(const char *name);
 char		*ft_getenv(char *name);
 int			ft_setenv(const char *name, const char *value, int overwrite);
-t_envlist	*ft_unsetenv(t_envlist *e_list, char *unset_key);
+void		ft_unsetenv(char *unset_key);
 char		*get_env_name(char *env);
 char		*get_env_value(char *env);
 void		init_env_list(char **envp);
