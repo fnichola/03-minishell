@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_setenv.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 04:05:48 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/13 06:00:38 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/29 19:31:02 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,9 @@ int	ft_setenv(const char *name, const char *value, int overwrite)
 {
 	t_envlist	*node;
 
+	printf("setenv\n");
 	node = ft_findenv(name);
+	printf("setenv after\n");
 	if (!name || !ft_strlen(name) || ft_strchr(name, '='))
 	{
 		debug_log("ft_setenv: error!\n");

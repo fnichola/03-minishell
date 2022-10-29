@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/28 19:01:24 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/29 11:01:31 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,7 @@ void		*malloc_error_check(size_t size);
 void		parser(t_list *tokens);
 void		ft_perror(char *perror_str);
 int			ft_strcmp(const char *s1, const char *s2);
-char		*ft_wstrjoin(char *str1, char *str2);
+char		*ft_wstrjoin(char *str1, const char *str2);
 char		*ft_wstrdup(const char *src);
 char		*ft_wsubstr(char const *s, unsigned int start, size_t len);
 int			ft_strncpy(char *dest, char *src, size_t cpy_len);

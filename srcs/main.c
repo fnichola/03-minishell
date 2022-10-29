@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/26 16:46:58 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/28 19:14:56 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/29 17:58:28 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ int	minishell(char **envp, int script_fd)
 		if (script_fd >= 0)
 		{
 			line = get_next_line(script_fd);
+			if (!line)
+				line = ft_wstrdup("exit");
 			if (line)
 				line[ft_strlen(line) - 1] = 0;
 			else
@@ -47,6 +49,8 @@ int	minishell(char **envp, int script_fd)
 		else
 		{
 			line = readline("minishell$ ");
+			if (!line)
+				line = ft_wstrdup("exit");
 			if (line && *line)
 				add_history(line);
 		}

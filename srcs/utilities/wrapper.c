@@ -6,13 +6,13 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/31 16:47:07 by akihito           #+#    #+#             */
-/*   Updated: 2022/10/19 22:01:47 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/29 11:00:53 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*ft_wstrjoin(char *str1, char *str2)
+char	*ft_wstrjoin(char *str1, const char *str2)
 {
 	char	*joined_str;
 

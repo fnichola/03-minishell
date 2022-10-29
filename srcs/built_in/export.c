@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 02:30:14 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/28 18:23:03 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/29 19:39:09 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,12 @@ static void	export_split_set(const char *arg)
 	t_envlist	*found_env;
 
 	new_var = split_env(arg);
+	printf("new_var.name %s\n", new_var.name);
 	ft_setenv(new_var.name, new_var.value, 1);
+	// printf("new_var.name %s\n", new_var.name);
 	found_env = ft_findenv(new_var.name);
+	printf("found_env->name %s\n", found_env->name);
+	printf("found_env->value %s\n", found_env->value);
 	found_env->export = true;
 	free(new_var.name);
 	free(new_var.value);
@@ -66,10 +70,9 @@ static void	export_new_var(char **argv)
 	i = 1;
 	while (argv[i])
 	{
-		debug_log("\n%s\n", argv[i]);
+		debug_log("export \n%s\n", argv[i]);
 		if (!is_valid_variable(argv[1]))
 		{
-			error_command("export", argv[1], "not a valid identifier");
 			g_data.exit_status = 1;
 			return ;
 		}

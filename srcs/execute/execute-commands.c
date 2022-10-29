@@ -6,7 +6,7 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 09:22:05 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/28 18:31:12 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/28 23:00:00 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,12 +186,12 @@ static void	execute_commands_loop(int *e_status)
 		{
 			debug_log("waitpid\n");
 			waitpid(ct->pid, e_status, WUNTRACED);
-			ft_wsignal(SIGINT, signal_handler);
+			// ft_wsignal(SIGINT, signal_handler);
 		}
 		debug_log("execute_command_loop %d\n", *e_status);
 		ct = ct->next;
 	}
-	g_data.exit_status = 0;
+	// g_data.exit_status = 0;
 	ft_wsignal(SIGINT, signal_handler); //ここじゃないと特定のパターンでシグナルを受け付けなくなる
 }
 
