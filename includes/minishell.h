@@ -6,30 +6,24 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/29 11:01:31 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/29 19:41:06 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include "../libft/libft.h"
-# include "env.h"
-# include "signal.h"
-# include "exit.h"
-# include <stdio.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <stdio.h>
 # include <sys/wait.h>
 # include <stdbool.h>
 # include <errno.h>
 # include <unistd.h>
-# include <stdlib.h>
 # include <fcntl.h>
-# include <stdio.h>
-# include <stdbool.h>
 # include <signal.h>
-# include <readline/readline.h>
+# include "../libft/libft.h"
+# include "env.h"
 
 /**
  * Token types returned by tokenizer(). Input from readline is broken into
@@ -194,4 +188,7 @@ void		signal_handler_child(int signo);
 void		check_execve(char *argv);
 void		del_token(void *token_ptr);
 bool		is_valid_var_char(const char c);
+void		sig_handler(int signum);
+void		signal_handler(int signo);
+void		set_status_from_child_status(int wstatus);
 #endif

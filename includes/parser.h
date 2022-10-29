@@ -3,21 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
+/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 15:11:01 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/28 18:20:31 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/28 11:13:52 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PARSER_H
 # define PARSER_H
 
-# include "../libft/libft.h"
 # include "minishell.h"
-# include <stdio.h>
-# include <stdbool.h>
-# include <errno.h>
 
 typedef enum e_state {
 	ST_NEUTRAL = 0,

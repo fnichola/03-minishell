@@ -6,18 +6,14 @@
 /*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/26 16:46:58 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/29 17:58:28 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/29 19:41:13 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <readline/readline.h>
-#include <readline/history.h>
-#include <sys/wait.h>
-#include "../libft/libft.h"
 #include "minishell.h"
 #include "lexer.h"
 #include "get_next_line.h"
+
 
 t_minishell_data	g_data;
 bool				g_debug;
