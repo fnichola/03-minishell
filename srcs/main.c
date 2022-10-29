@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/26 16:46:58 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/28 14:43:28 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/29 09:26:43 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int	main(int argc, char **argv, char **envp)
 	ft_wsignal(SIGINT, signal_handler);// ctrlC
 	ft_wsignal(SIGQUIT, SIG_IGN);// ctrl 
 	int	fd;
-	// g_debug = true;
+	g_debug = true;
 	if (argc == 1)
 	{
 		debug_log("Starting Minishell\n");
