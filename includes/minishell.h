@@ -6,24 +6,24 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/23 03:04:37 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/28 11:16:12 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include "../libft/libft.h"
-# include "env.h"
-# include <stdio.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <stdio.h>
 # include <sys/wait.h>
 # include <stdbool.h>
 # include <errno.h>
 # include <unistd.h>
-# include <stdlib.h>
 # include <fcntl.h>
+# include <signal.h>
+# include "../libft/libft.h"
+# include "env.h"
 
 /**
  * Token types returned by tokenizer(). Input from readline is broken into
@@ -112,8 +112,10 @@ typedef struct s_minishell_data {
 	size_t				num_built_ins;
 	t_command			*command_table;
 	size_t				cmd_index;
-	int					exit_satus;
+	int					exit_status;
 	t_envlist			*env_list;
+	size_t				built_in_count;
+	size_t				is_piped;
 }	t_minishell_data;
 
 extern t_minishell_data	g_data;
@@ -129,6 +131,7 @@ void		built_in_echo(char **argv);
 void		built_in_pwd(char **argv);
 void		built_in_env(char **argv);
 void		built_in_export(char **argv);
+void		built_in_unset(char **argv);
 bool		is_valid_variable(char *variable);
 bool		is_str_match(const char *s1, const char *s2);
 char		*str_tolower(char *str);
@@ -144,6 +147,7 @@ void		ft_puterror(char *s1, char *s2, char *s3);
 char		*ft_echo_env(char *str, t_envlist *e_list);
 int			ft_wpipe(int fd[2]);
 void		ft_wexecve(char *file, char **argv, char **envp);
+void		ft_wsignal(int sig, void f(int));
 int			execute_commands(void);
 void		prepare_exec_fds(void);
 void		free_exec_fds(void);
@@ -176,7 +180,15 @@ void		command_add_back(t_command *new_command);
 void		free_command(t_command *cmd);
 void		free_command_table(void);
 t_command	*del_command(t_command *cmd);
+bool		is_valid_exit_status(char	*num);
+void		exit_and_free_command(int exit_status);
+void		sig_handler(int signum);
+void		signal_handler(int signo);
+void		signal_handler_child(int signo);
+void		check_execve(char *argv);
 void		del_token(void *token_ptr);
 bool		is_valid_var_char(const char c);
-
+void		sig_handler(int signum);
+void		signal_handler(int signo);
+void		set_status_from_child_status(int wstatus);
 #endif

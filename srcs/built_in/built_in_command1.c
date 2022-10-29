@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 17:23:49 by akihito           #+#    #+#             */
-/*   Updated: 2022/10/26 00:57:41 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/29 09:05:38 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ void	init_built_in_table(void)
 		{"env",		&built_in_env},
 		{"export",	&built_in_export},
 		{"exit",	&built_in_exit},
+		{"unset",   &built_in_unset},
 	};
 	t_str_func_table	*built_ins;
 
@@ -40,31 +41,22 @@ void	built_in_echo(char **argv)//環境変数はまだ、echo ?$も無限ルー�
 {
 	int		option;
 	size_t	arg_i;
-	// char	*put_str;
 
-	if (write(STDOUT_FILENO, NULL, 0) == -1)
-	{
-		ft_perror("echo: write error");
-		exit(1);
-	}
+	debug_log("built_in_echo\n");
 	option = 0;
-	arg_i = 1;
+	arg_i = 0;
 	if (argv[arg_i] && ft_strcmp(argv[arg_i], "-n") == 0 && arg_i++)//echo -n test とechoの直後しかオプションとして認識しない
-	{
 		option++;
-	}
-	while (argv[arg_i])
+	while (argv[++arg_i])
 	{
 		ft_putstr_fd(argv[arg_i], STDOUT_FILENO);
 		if (argv[arg_i + 1] != NULL)
 			ft_putstr_fd(" ", STDOUT_FILENO);
-		arg_i++;
 	}
+	debug_log("built_in_echo g_data.exit_status %d\n", g_data.exit_status);
 	if (!option)
-	{
 		ft_putstr_fd("\n", STDOUT_FILENO);
-	}
-	return ;
+	g_data.exit_status = 0;
 }
 
 void	built_in_cd(char **argv)
@@ -88,30 +80,12 @@ void	built_in_cd(char **argv)
 		free(cwd);
 		return ;
 	}
-	// else if (argv[1] && argv[1] == '-')
-	// {
-	// 	old_pwd = ft_getenv("OLDPWD");
-	// 	if (old_pwd)
-	// 	{
-	// 		if (chdir(old_pwd) == -1);
-	// 		{
-	// 			ft_perror("cd");
-	// 			free(cwd);
-	// 			return ;
-	// 		}
-	// 	}
-	// 	else
-	// 	{
-	// 		ft_puterror("cd", "OLDPWD not set", NULL);
-	// 		free(cwd);
-	// 		return ;
-	// 	}
-	// }
 	now_pwd = getcwd(NULL, 0);
 	ft_setenv("PWD", now_pwd, 1);
 	free(now_pwd);
 	ft_setenv("OLDPWD", cwd, 1);
 	free(cwd);
+	g_data.exit_status = 0;
 }
 
 void	built_in_pwd(char **argv)
@@ -119,22 +93,15 @@ void	built_in_pwd(char **argv)
 	char	*path_name;
 
 	(void)argv;
-	if (write(STDOUT_FILENO, NULL, 0) == -1)//標準出力エラー
-	{//エラー
-		exit_error("pwd: write error");
-	}
 	path_name = getcwd(NULL, 0);
 	if (!path_name)
-	{//エラー
-		exit_error("pwd");
-	}
+		p_error("pwd");
 	else
-	{//正常
+	{
 		printf("%s\n", path_name);
 		free(path_name);
 	}
-	// return (path_name);
-	return ;
+	g_data.exit_status = 0;
 }
 
 void	built_in_env(char **argv)
@@ -149,4 +116,5 @@ void	built_in_env(char **argv)
 			printf("%s=%s\n", per_env->name, per_env->value);
 		per_env = per_env->next;
 	}
+	g_data.exit_status = 0;
 }

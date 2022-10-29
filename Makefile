@@ -6,7 +6,7 @@
 #    By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/09 18:01:32 by fnichola          #+#    #+#              #
-#    Updated: 2022/10/27 13:34:12 by fnichola         ###   ########.fr        #
+#    Updated: 2022/10/28 11:20:29 by fnichola         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,10 +14,11 @@ NAME = minishell
 
 LIBFT_DIR = libft
 LIBFT_LIB = $(LIBFT_DIR)/libft.a
-
+# READLINE_DIR = $(shell brew --prefix readline)
+# READLINE_DIR = /usr/local/Cellar/readline/8.1.2/lib/
 CC = gcc
-CFLAGS = -Wextra -Werror -Wall -g -fsanitize=address
-
+CFLAGS = -Wextra -Werror -Wall -g -fsanitize=address -I $(READLINE_DIR)/include
+LDFLAGS = -lreadline -lhistory -L$(READLINE_DIR)/lib
 SRCS = srcs/main.c \
 	srcs/debug_log.c \
 	srcs/execute/execute-commands.c \
@@ -74,10 +75,14 @@ SRCS = srcs/main.c \
 	srcs/utilities/gnl/get_next_line_utils.c \
 	srcs/utilities/redirect/free_redirects.c \
 	srcs/utilities/redirect/redirect_add.c \
-	srcs/utilities/redirect/redirect_new.c
+	srcs/utilities/redirect/redirect_new.c \
+	srcs/signals/signal.c \
+	srcs/exit/exit_status.c
 
 ifdef WITH_BONUS
 endif
+
+# $(warning $(READLINE_DIR))
 
 OBJS = $(SRCS:.c=.o)
 DEPS = $(SRCS:.c=.d)
@@ -88,7 +93,7 @@ all: $(NAME)
 	$(CC) $(CFLAGS) -MMD -MP -I includes -o $@ -c $<
 	
 $(NAME): $(OBJS) $(LIBFT_LIB)
-	$(CC) $(CFLAGS) $(OBJS) $(LIBFT_LIB) -lreadline -lncurses -I includes -o $(NAME)
+	$(CC) $(CFLAGS) $(LDFLAGS) $(OBJS) $(LIBFT_LIB) -lncurses -I ./includes -o $(NAME)
 
 $(LIBFT_LIB):
 	$(MAKE) bonus -C $(LIBFT_DIR)

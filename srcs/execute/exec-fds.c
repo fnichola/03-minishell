@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec-fds.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 10:58:36 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/26 12:24:42 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/28 18:25:37 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ void	heredoc_expand_variables(char **line)
 		}
 		else if ((*line)[i] == '$' && (*line)[i + 1] == '?')
 		{
-			found_env = ft_itoa(g_data.exit_satus);
+			found_env = ft_itoa(g_data.exit_status);
 			heredoc_insert_env(line, found_env, i + 1, i + 2);
 			free(found_env);
 		}

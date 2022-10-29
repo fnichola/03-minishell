@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wrapper.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/31 16:47:07 by akihito           #+#    #+#             */
-/*   Updated: 2022/09/26 03:23:04 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/19 22:01:47 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,4 +58,13 @@ int	ft_wpipe(int fd[2])
 		exit(EXIT_FAILURE);
 	}
 	return (status);
+}
+
+void	ft_wsignal(int sig, void f(int))
+{
+	if (signal(sig, f) == SIG_ERR)
+	{
+		ft_perror("signal");
+		exit(EXIT_FAILURE);
+	}
 }

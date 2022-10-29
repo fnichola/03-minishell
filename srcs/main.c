@@ -6,18 +6,14 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/26 16:46:58 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/27 14:00:36 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/28 14:43:28 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <readline/readline.h>
-#include <readline/history.h>
-#include <sys/wait.h>
-#include "../libft/libft.h"
 #include "minishell.h"
 #include "lexer.h"
 #include "get_next_line.h"
+
 
 t_minishell_data	g_data;
 bool				g_debug;
@@ -30,10 +26,12 @@ int	minishell(char **envp, int script_fd)
 
 	init_env_list(envp);
 	g_data.command_table = NULL;
+	g_data.is_piped = 0;
 	init_built_in_table();
 	status = 0;
 	while (!status)
 	{
+		g_data.is_piped = 0;
 		if (script_fd >= 0)
 		{
 			line = get_next_line(script_fd);
@@ -53,15 +51,19 @@ int	minishell(char **envp, int script_fd)
 			parser(tokens);
 		free(line);
 		status = execute_commands();//ここでパイプ生成
+		debug_log("g_data.exit_status %d\n", g_data.exit_status);
 	}
 	return (0);
 }
 
 int	main(int argc, char **argv, char **envp)
 {
-	int	fd;
-	g_debug = false;
+	(void)argv;
 
+	ft_wsignal(SIGINT, signal_handler);// ctrlC
+	ft_wsignal(SIGQUIT, SIG_IGN);// ctrl 
+	int	fd;
+	// g_debug = true;
 	if (argc == 1)
 	{
 		debug_log("Starting Minishell\n");

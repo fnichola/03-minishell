@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lex-utilities.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/19 16:28:58 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/23 00:53:38 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/28 18:25:59 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ void	expand_var(t_lex_arg *l)
 
 	if (l->current_char == '?')
 	{
-		join_str_to_token(l, ft_itoa(g_data.exit_satus));
+		join_str_to_token(l, ft_itoa(g_data.exit_status));
 		next_char(l);
 		l->start_index = l->index;
 	}
