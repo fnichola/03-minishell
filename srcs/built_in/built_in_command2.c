@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/08 01:54:35 by akihito           #+#    #+#             */
-/*   Updated: 2022/10/28 13:52:29 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/29 09:08:38 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,10 @@ void	built_in_unset(char **argv)
 	i = 1;
 	while (argv[i])
 	{
-		debug_log("argv[0] = %s\n", argv[0]);
 		g_data.env_list = ft_unsetenv(g_data.env_list, argv[i]);
 		i++;
 	}
-	// g_status = 0;
-	return ;
+	g_data.exit_status = 0
 }
 
 void	built_in_exit(char **argv)
@@ -61,7 +59,6 @@ void	built_in_exit(char **argv)
 		}
 		else
 			g_data.exit_status = ft_atoi(argv[1]);
-		debug_log("argv[1]  g_data.exit_status %d\n", g_data.exit_status);
 	}
 	else//exit 4 2 1など
 	{

@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 17:23:49 by akihito           #+#    #+#             */
-/*   Updated: 2022/10/28 14:49:52 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/29 09:05:38 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ void	init_built_in_table(void)
 	g_data.num_built_ins = sizeof(temp) / sizeof(t_str_func_table);
 	ft_memcpy(built_ins, temp, sizeof(temp));
 	g_data.built_ins = built_ins;
-	g_data.exit_status = 0;
 }
 
 void	built_in_echo(char **argv)//環境変数はまだ、echo ?$も無限ループしてしまう。
@@ -57,7 +56,7 @@ void	built_in_echo(char **argv)//環境変数はまだ、echo ?$も無限ルー�
 	debug_log("built_in_echo g_data.exit_status %d\n", g_data.exit_status);
 	if (!option)
 		ft_putstr_fd("\n", STDOUT_FILENO);
-	return ;
+	g_data.exit_status = 0;
 }
 
 void	built_in_cd(char **argv)
@@ -94,22 +93,15 @@ void	built_in_pwd(char **argv)
 	char	*path_name;
 
 	(void)argv;
-	if (write(STDOUT_FILENO, NULL, 0) == -1)//標準出力エラー
-	{//エラー
-		exit_error("pwd: write error");
-	}
 	path_name = getcwd(NULL, 0);
 	if (!path_name)
-	{//エラー
-		exit_error("pwd");
-	}
+		p_error("pwd");
 	else
-	{//正常
+	{
 		printf("%s\n", path_name);
 		free(path_name);
 	}
-	// return (path_name);
-	return ;
+	g_data.exit_status = 0;
 }
 
 void	built_in_env(char **argv)
@@ -124,4 +116,5 @@ void	built_in_env(char **argv)
 			printf("%s=%s\n", per_env->name, per_env->value);
 		per_env = per_env->next;
 	}
+	g_data.exit_status = 0;
 }
