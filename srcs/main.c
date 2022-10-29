@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/26 16:46:58 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/29 13:10:31 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/29 13:57:21 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ int	minishell(char **envp, int script_fd)
 		}
 		else
 		{
+			rl_outstream = stderr;
 			line = readline("minishell$ ");
 			if (!line)
 				line = ft_wstrdup("exit");
@@ -67,7 +68,7 @@ int	main(int argc, char **argv, char **envp)
 	ft_wsignal(SIGINT, signal_handler);// ctrlC
 	ft_wsignal(SIGQUIT, SIG_IGN);// ctrl 
 	int	fd;
-	// g_debug = true;
+	g_debug = true;
 	if (argc == 1)
 	{
 		debug_log("Starting Minishell\n");

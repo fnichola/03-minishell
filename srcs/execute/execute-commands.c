@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute-commands.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
+/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 09:22:05 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/29 19:41:55 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/29 13:59:41 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,23 +60,23 @@ void	search_path_and_exec(char **argv, char **envp)
 	char	*temp;
 	size_t	i;
 
-	debug_log("command not found- argv[0] %s\n", argv[0]);
-	paths = ft_split(getenv("PATH"), ':');
+	paths = ft_split(ft_getenv("PATH"), ':');
 	i = 0;
-	while (paths[i])
+	while (paths && paths[i])
 	{
 		temp = ft_strjoin(paths[i], "/");
 		pathname = ft_strjoin(temp, argv[0]);
 		free(temp);
-		if (execve(pathname, argv, envp) != -1)
-			free(pathname);
+		execve(pathname, argv, envp);
+		free(pathname);
 		free(paths[i]);
 		paths[i] = NULL;
 		i++;
 	}
 	free(paths);
-	ft_puterror(argv[0], " command not found", NULL);
+	ft_puterror(argv[0], "command not found", NULL);
 	exit(127);
+
 }
 
 void	check_execve(char *argv)

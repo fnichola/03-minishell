@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser-functions.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
+/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 14:58:17 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/28 18:26:23 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/29 09:33:37 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,19 +93,13 @@ void	parser_start_word(t_parse_arg *p)
 
 void	parser_simple_command(t_parse_arg *p)
 {
-	if (!!p->token)
-	{
-		debug_log(p->token->word);
-		debug_log("%d\n",p->token->type);
-	}
 	if (!p->token)
 	{
 		p->command->argv[p->index] = NULL;
 		command_add_back(p->command);
 		change_state(p, ST_FINISHED);
 	}
-	else if (p->token->type == T_WORD || \
-				p->token->type == T_EXIT_STATUS)
+	else if (p->token->type == T_WORD)
 	{
 		p->command->argv[p->index] = ft_strdup(p->token->word);
 		p->token = NULL;

@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/08 01:54:35 by akihito           #+#    #+#             */
-/*   Updated: 2022/10/29 11:50:48 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/29 13:58:43 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	built_in_unset(char **argv)
 	i = 1;
 	while (argv[i])
 	{
-		g_data.env_list = ft_unsetenv(g_data.env_list, argv[i]);
+		ft_unsetenv(argv[i]);
 		i++;
 	}
 	g_data.exit_status = 0;
