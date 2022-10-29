@@ -64,7 +64,7 @@ int	main(int argc, char **argv, char **envp)
 	ft_wsignal(SIGINT, signal_handler);// ctrlC
 	ft_wsignal(SIGQUIT, SIG_IGN);// ctrl 
 	int	fd;
-	// g_debug = true;
+	g_debug = true;
 	if (argc == 1)
 	{
 		debug_log("Starting Minishell\n");
