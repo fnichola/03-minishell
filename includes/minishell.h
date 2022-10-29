@@ -6,16 +6,16 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/29 10:15:42 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/29 13:58:44 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# include <stdio.h>
 # include <readline/readline.h>
 # include <readline/history.h>
-# include <stdio.h>
 # include <sys/wait.h>
 # include <stdbool.h>
 # include <errno.h>
@@ -139,11 +139,11 @@ void		*malloc_error_check(size_t size);
 void		parser(t_list *tokens);
 void		ft_perror(char *perror_str);
 int			ft_strcmp(const char *s1, const char *s2);
-char		*ft_wstrjoin(char *str1, char *str2);
+char		*ft_wstrjoin(char *str1, const char *str2);
 char		*ft_wstrdup(const char *src);
 char		*ft_wsubstr(char const *s, unsigned int start, size_t len);
 int			ft_strncpy(char *dest, char *src, size_t cpy_len);
-void		ft_puterror(char *s1, char *s2, char *s3);
+void		ft_puterror(const char *s1, const char *s2, const char *s3);
 char		*ft_echo_env(char *str, t_envlist *e_list);
 int			ft_wpipe(int fd[2]);
 void		ft_wexecve(char *file, char **argv, char **envp);
