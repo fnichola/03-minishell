@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 17:23:49 by akihito           #+#    #+#             */
-/*   Updated: 2022/10/29 09:05:38 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/29 09:25:02 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ void	built_in_pwd(char **argv)
 	(void)argv;
 	path_name = getcwd(NULL, 0);
 	if (!path_name)
-		p_error("pwd");
+		ft_perror("pwd");
 	else
 	{
 		printf("%s\n", path_name);
