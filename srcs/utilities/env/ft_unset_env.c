@@ -3,38 +3,37 @@
 /*                                                        :::      ::::::::   */
 /*   ft_unset_env.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
+/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 05:44:22 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/28 19:14:39 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/29 10:16:28 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_envlist	*ft_unsetenv(t_envlist *e_list, char *unset_key)
+void	ft_unsetenv(char *unset_key)
 {
 	t_envlist	*tmp;
-	t_envlist	*prev;
 
-	tmp = e_list->next;
-	prev = NULL;
-	while (tmp)
+	tmp = ft_findenv(unset_key);
+	if (tmp)
 	{
-		debug_log("tmp->name = %s\n", tmp->name);
-		if (ft_strcmp(tmp->name, unset_key) == 0)
+		free(tmp->name);
+		free(tmp->value);
+		free(tmp->string);
+		if (tmp->prev)
 		{
-			if (prev == NULL)
-				e_list = tmp;
-			else
-				prev->next = tmp->next;
-			free(tmp->name);
-			free(tmp->value);
-			free(tmp);
-			break ;
+			tmp->prev->next = tmp->next;
+			if (tmp->next)
+				tmp->next->prev = tmp->prev;
 		}
-		prev = tmp;
-		tmp = tmp->next;
+		else
+		{
+			g_data.env_list = tmp->next;
+			if (tmp->next)
+				tmp->next->prev = NULL;
+		}
+		free (tmp);
 	}
-	return (e_list);
 }
