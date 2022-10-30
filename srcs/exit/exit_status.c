@@ -6,17 +6,11 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 01:00:00 by akihito           #+#    #+#             */
-/*   Updated: 2022/10/30 19:12:57 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/30 19:50:15 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	signal_handler_child(int signo)
-{
-	(void)signo;
-	exit(130);
-}
 
 void	set_status_from_child_status(int wstatus)
 {
