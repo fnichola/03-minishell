@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser-init.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 13:54:14 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/30 11:29:00 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/30 15:30:14 by atomizaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,17 +16,18 @@
 t_state_func_row	*p_init_state_func_table(void)
 {
 	const t_state_func_row	temp[] = {
-		{ST_NEUTRAL,		&parser_neutral},
-		{ST_START_WORD,		&parser_start_word},
-		{ST_SIMPLE_COMMAND,	&parser_simple_command},
-		{ST_REDIRECT,		&parser_redirect},
-		{ST_ENV,			&parser_env},
-		{ST_IN_DQUOTE,		&parser_in_dquote},//ここでexpandしてT_WORDに変更する
-		{ST_FINISHED,	NULL}
+	{ST_NEUTRAL,		&parser_neutral},
+	{ST_START_WORD,		&parser_start_word},
+	{ST_SIMPLE_COMMAND,	&parser_simple_command},
+	{ST_REDIRECT,		&parser_redirect},
+	{ST_ENV,			&parser_env},
+	{ST_IN_DQUOTE,		&parser_in_dquote},
+	{ST_FINISHED,	NULL}
 	};
-	t_state_func_row		*state_func_table;//ここでconstで初期化した構造体配列をコピーしてreturnできるようにしている。
+	t_state_func_row		*state_func_table;
+
 	state_func_table = malloc_error_check(sizeof(temp));
-	ft_memcpy(state_func_table, temp, sizeof(temp));//constだとスコープがその関数内だけだが、memcpyでコピーしたアドレスはreturnできる。
+	ft_memcpy(state_func_table, temp, sizeof(temp));
 	return (state_func_table);
 }
 

@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 09:22:05 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/30 15:16:24 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/30 16:43:51 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ static void	execute_commands_loop(void)
 		if (!ct->argv || !ct->argv[0])
 			return ;
 		execute_simple_command(ct);
-		g_data.is_piped++;
 		ct = ct->next;
 	}
 	close_exec_fds();

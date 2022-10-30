@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   redirect_add.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 08:12:38 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/13 08:17:24 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/30 15:05:18 by atomizaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_redirect *redirect_add(t_redirect **redirect_list, t_redirect *new_redirect)
+t_redirect	*redirect_add(t_redirect **redirect_list, t_redirect *new_redirect)
 {
 	t_redirect	*ptr;
 

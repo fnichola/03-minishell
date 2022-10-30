@@ -1,27 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   debug_log.c                                        :+:      :+:    :+:   */
+/*   inits.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/11 06:24:10 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/12 09:07:02 by fnichola         ###   ########.fr       */
+/*   Created: 2022/10/30 13:55:31 by atomizaw          #+#    #+#             */
+/*   Updated: 2022/10/30 14:38:49 by atomizaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdarg.h>
 #include "minishell.h"
 
-void	debug_log(const char *format, ...)
+void	init_g_data(void)
 {
-	if (!g_debug)
-		return ;
-	va_list args;
-	va_start(args, format);
-	printf("\033[0;33m");
-	vprintf(format, args);
-	printf("\033[0m");
-	fflush(stdout);
-	va_end(args);
+	g_data.command_table = NULL;
+	return ;
+}
+
+void	inits(char **envp)
+{	
+	init_env_list(envp);
+	init_g_data();
+	init_built_in_table();
+	return ;
 }
