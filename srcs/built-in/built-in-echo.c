@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built-in-echo.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+        */
+/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/30 11:41:17 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/30 14:26:59 by atomizaw         ###   ########.fr       */
+/*   Updated: 2022/10/30 18:21:23 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,20 @@ void	built_in_echo(char **argv)
 	size_t	arg_i;
 
 	option = 0;
-	arg_i = 0;
-	if (argv[arg_i] && ft_strcmp(argv[arg_i], "-n") == 0 && arg_i++)
+	arg_i = 1;
+	if (argv[1] && ft_strncmp(argv[arg_i], "-n", (int)ft_strlen(argv[arg_i])) == 0)
+	{
+		arg_i++;
+		while (ft_strncmp(argv[arg_i], "-n", 2) == 0)
+			arg_i++;
 		option++;
-	while (argv[++arg_i])
+	}
+	while (argv[arg_i])
 	{
 		ft_putstr_fd(argv[arg_i], STDOUT_FILENO);
 		if (argv[arg_i + 1] != NULL)
 			ft_putstr_fd(" ", STDOUT_FILENO);
+		arg_i++;
 	}
 	if (!option)
 		ft_putstr_fd("\n", STDOUT_FILENO);
