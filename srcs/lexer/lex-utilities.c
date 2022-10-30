@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lex-utilities.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
+/*   By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/19 16:28:58 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/28 18:25:59 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/30 14:30:17 by atomizaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,6 @@ void	join_str_to_token(t_lex_arg *l, char *str)
 	else
 		l->token->word = str;
 	free(old_word);
-	debug_log("join_str_to_token: l->token->word=%s\n", l->token->word);
 }
 
 void	flush_to_token(t_lex_arg *l)
@@ -104,8 +103,6 @@ void	expand_var(t_lex_arg *l)
 			next_char(l);
 		var_name = ft_substr(l->line, l->start_index, (l->index - l->start_index));
 		l->start_index = l->index;
-		debug_log("expand_var: var_name=%s\n", var_name);
-	
 		found_env = ft_getenv(var_name);//見つからなかったらNULLを返す
 		if (found_env)
 			join_str_to_token(l, ft_wstrdup(found_env));
@@ -121,10 +118,7 @@ void	next_char(t_lex_arg *l)
 		l->current_char = (l->line)[l->index];
 		if (l->current_char)
 			l->next_char = (l->line)[l->index + 1];
-		debug_log("next_char: %c\n", l->current_char);
 	}
-	else
-		debug_log("next_char: tried to go past end of line\n");
 }
 
 

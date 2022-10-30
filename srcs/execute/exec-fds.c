@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec-fds.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 10:58:36 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/30 13:29:54 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/30 14:27:48 by atomizaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,7 +150,6 @@ static int	update_input_redirect(t_redirect *r, t_command *cmd)
 			heredoc_add_line(cmd, line);
 		}
 		rl_set_signals();
-		debug_log("update_input_redirect: heredoc end\n");
 
 		i = 0;
 		while(!g_data.sig_int && cmd->heredoc && cmd->heredoc[i])
@@ -170,7 +169,6 @@ static int	update_input_redirect(t_redirect *r, t_command *cmd)
 			if (cmd->input_fd != STDIN_FILENO)
 				close(cmd->input_fd);
 			cmd->input_fd = fd;
-			debug_log("connect_redirects: opened %s at fd=%d\n", r->filename, fd);
 		}
 		return (fd);
 	}
@@ -186,7 +184,6 @@ static int	update_output_redirect(t_redirect *r, t_command *cmd)
 		if (cmd->output_fd != STDOUT_FILENO)
 			close(cmd->output_fd);
 		cmd->output_fd = fd;
-		debug_log("connect_redirects: opened %s at fd=%d\n", r->filename, fd);
 	}
 	return (fd);
 }
@@ -249,11 +246,9 @@ void	prepare_exec_fds(void)
 {
 	connect_pipes();
 	connect_redirects();
-	debug_log("init_exec_fds: \n");
 	int i = 0;
 	for (t_command *ct = g_data.command_table; ct; ct = ct->next)
 	{
-		debug_log("\t%d: %d, %d\n", i, ct->input_fd, ct->output_fd);
 		i++;
 	}
 }

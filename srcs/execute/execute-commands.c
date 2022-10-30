@@ -6,7 +6,7 @@
 /*   By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 09:22:05 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/30 14:07:32 by atomizaw         ###   ########.fr       */
+/*   Updated: 2022/10/30 14:28:44 by atomizaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ bool	lookup_and_exec_built_in(char **argv)
 	{
 		if (is_str_match(str, g_data.built_ins[i].name))
 		{
-			debug_log("is_str_match\n");
 			g_data.built_ins[i].func(argv);
 			is_builtin = true;
 			break ;
@@ -90,13 +89,11 @@ void	check_execve(char *argv)
 	// }
 	if (access(argv, F_OK) == -1)
 	{
-		debug_log("F_OK\n");
 		ft_perror(NULL);
 		exit(127);
 	}
 	else if (access(argv, X_OK))
 	{
-		debug_log("X_OK\n");
 		ft_perror(NULL);
 		exit(127);
 	}
@@ -117,7 +114,6 @@ int		execute_external(t_command *cmd, char **envp)
 		close_exec_fds();
 		if (ft_strchr(cmd->argv[0], '/'))
 		{
-			debug_log("command not found 絶対パス %s\n", cmd->argv[0]);
 			check_execve(cmd->argv[0]);
 			if (execve(cmd->argv[0], cmd->argv, envp) == -1)
 			{
@@ -135,10 +131,6 @@ static void	execute_simple_command(t_command *cmd)
 {
 	char	**envp;
 
-	debug_log("execute_simple_command: ");
-	for (int i=0; cmd->argv[i]; i++)
-		debug_log("%s ", cmd->argv[i]);
-	debug_log("\n");
 	ft_wsignal(SIGINT, SIG_IGN);
 	if (execute_built_in(cmd))
 	{
@@ -184,7 +176,6 @@ static void	execute_commands_loop(void)
 	{
 		if (ct->pid)
 		{
-			debug_log("waitpid\n");
 			waitpid(ct->pid, &wstatus, WUNTRACED);
 			set_status_from_child_status(wstatus);
 		}
@@ -200,9 +191,7 @@ int	execute_commands(void)
 		return (0);
 	prepare_exec_fds();
 	execute_commands_loop();
-	debug_log("g_data.built_in_count %d\n", g_data.built_in_count);
 	close_exec_fds();
 	free_command_table();
-	debug_log("execute_commands argv[1]  g_data.exit_status %d\n", g_data.exit_status);
 	return (0);
 }

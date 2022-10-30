@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lex-functions.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 14:58:17 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/23 09:26:45 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/30 14:29:35 by atomizaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ bool	is_special(char c)
 
 void	lex_neutral(t_lex_arg *l)
 {
-	debug_log("[ST_NEUTRAL]\n");
 	if (!l->current_char)
 	{
 		l->token->type = T_EOL;
@@ -43,7 +42,6 @@ void	lex_neutral(t_lex_arg *l)
 
 void	lex_special(t_lex_arg *l)
 {
-	debug_log("[ST_SPECIAL]\n");
 	if (l->current_char == '|')
 		lex_pipe(l);
 	else if (l->current_char == '>')
@@ -87,7 +85,6 @@ void	lex_lt(t_lex_arg *l)
 
 void	lex_in_single_quote(t_lex_arg *l)
 {
-	debug_log("[ST_IN_SINGLE_QUOTE]\n");
 	next_char(l);
 	l->start_index = l->index;
 	while(l->current_char != '\'')
@@ -110,7 +107,6 @@ void	lex_in_single_quote(t_lex_arg *l)
 
 void	lex_in_double_quote(t_lex_arg *l)
 {
-	debug_log("[ST_IN_DOUBLE_QUOTE]\n");
 	next_char(l);
 	l->start_index = l->index;
 	while(l->current_char != '\"')
@@ -138,11 +134,10 @@ void	lex_in_double_quote(t_lex_arg *l)
 	next_char(l);
 	l->start_index = l->index;
 	change_lex_state(l, l->previous_state);
-}
 
+}
 void	lex_in_word(t_lex_arg *l)
 {
-	debug_log("[ST_IN_WORD]\n");
 	if (is_delimeter(l->current_char))
 	{
 		l->token->type = T_WORD;

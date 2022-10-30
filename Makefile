@@ -6,7 +6,7 @@
 #    By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/09 18:01:32 by fnichola          #+#    #+#              #
-#    Updated: 2022/10/30 13:57:42 by atomizaw         ###   ########.fr        #
+#    Updated: 2022/10/30 14:31:17 by atomizaw         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,6 @@ CC = gcc
 CFLAGS = -Wextra -Werror -Wall -g -fsanitize=address -I $(READLINE_DIR)/include
 LDFLAGS = -lreadline -lhistory -L$(READLINE_DIR)/lib
 SRCS = srcs/main.c \
-	srcs/debug_log.c \
 	srcs/execute/execute-commands.c \
 	srcs/execute/exec-fds.c \
 	srcs/lexer/lexer.c \

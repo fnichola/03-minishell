@@ -6,7 +6,7 @@
 /*   By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/30 14:12:29 by atomizaw         ###   ########.fr       */
+/*   Updated: 2022/10/30 14:31:20 by atomizaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,6 @@ typedef struct s_minishell_data {
 extern t_minishell_data	g_data;
 extern bool g_debug;
 
-void		debug_log(const char *format, ...);
 void		exit_error(char *str);
 void		error_command(char *str1, char *str2, char *str3);
 void		init_built_in_table(void);

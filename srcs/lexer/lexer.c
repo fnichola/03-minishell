@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 18:02:55 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/26 12:54:08 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/30 14:30:25 by atomizaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,7 @@ int	get_next_token(t_lex_arg *l,
 	l->token->word = NULL;
 	while (!l->found_token)
 	{
-		debug_log("get_next_token: char=%c, index=%zu\n", l->current_char, l->index);
-		state_func_table[l->state].lex_func(l); //構造体の[]はenumでt_stateとインデックスが紐づいている。
+		state_func_table[l->state].lex_func(l);
 		if (l->found_token)
 		{
 			if (l->token->type == T_EOL)

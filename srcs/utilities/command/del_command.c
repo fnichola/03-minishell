@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   del_command.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/14 02:51:00 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/14 02:52:14 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/30 14:30:50 by atomizaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ t_command	*del_command(t_command *cmd)
 	new_ptr = cmd->next;
 	if (cmd == g_data.command_table)
 		g_data.command_table = new_ptr;
-	debug_log("del_command: deleting simple command argv[0]=%s\n", cmd->argv[0]);
 	free_command(cmd);
 	return (new_ptr);
 }

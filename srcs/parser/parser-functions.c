@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser-functions.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 14:58:17 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/29 09:33:37 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/30 14:31:41 by atomizaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,17 +26,6 @@ void	next_token(t_parse_arg *p)
 
 void	change_state(t_parse_arg *p, t_state new_state)
 {
-	const char *state_strs[8] = {
-		"ST_NEUTRAL",
-		"ST_START_WORD",
-		"ST_SIMPLE_COMMAND",
-		"ST_REDIRECT",
-		"ST_ENV",
-		"ST_IN_DQUOTE",
-		"ST_FINISHED",
-		NULL
-	};
-	debug_log("change_state: changing to %s\n", state_strs[new_state]);
 	p->previous_state = p->state;
 	p->state = new_state;
 }
@@ -70,11 +59,9 @@ void	parser_neutral(t_parse_arg *p)
 {
 	if (!p->token)
 	{
-		debug_log("g_data.exit_status %d\n", g_data.exit_status);
 		change_state(p, ST_FINISHED);
 		return ;
 	}
-	debug_log("parser_neutral: p->token->word = %s\n", p->token->word);
 	init_command(p);
 	change_state(p, ST_SIMPLE_COMMAND);
 	// else if (p->token->type == T_PIPE)
@@ -154,7 +141,6 @@ void	parser_redirect(t_parse_arg *p)// > と >>で入れる
 		if (p->token && p->token->type == T_WORD)
 		{
 			new_redirect->filename = ft_strdup(p->token->word);
-			debug_log("parser_redirect: setting output redirect to %s, append=%d\n", p->token->word, new_redirect->append);
 		}
 	}
 	else if (p->token->type == T_LT || p->token->type == T_LTLT)
@@ -164,7 +150,6 @@ void	parser_redirect(t_parse_arg *p)// > と >>で入れる
 		next_token(p);
 		if (p->token && p->token->type == T_WORD)
 		{
-			debug_log("parser_redirect: setting input redirect to %s, append=%d\n", p->token->word, new_redirect->append);
 			new_redirect->filename = ft_strdup(p->token->word);
 		}
 	}
