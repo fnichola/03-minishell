@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/30 11:50:41 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/30 12:41:23 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,7 @@ typedef struct s_minishell_data {
 	t_envlist			*env_list;
 	size_t				built_in_count;
 	size_t				is_piped;
+	bool				sig_int;
 }	t_minishell_data;
 
 extern t_minishell_data	g_data;
