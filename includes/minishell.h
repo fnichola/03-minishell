@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/30 12:41:23 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/30 15:03:33 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,4 +192,13 @@ bool		is_valid_var_char(const char c);
 void		sig_handler(int signum);
 void		signal_handler(int signo);
 void		set_status_from_child_status(int wstatus);
+bool		execute_built_in(t_command *cmd);
+int			execute_external(t_command *cmd, char **envp);
+int			heredoc(t_redirect *r, t_command *cmd);
+void		realloc_heredoc(t_command *cmd, size_t new_size);
+void		heredoc_add_line(t_command *cmd, char *line);
+void		heredoc_insert_env(char **line, char *env, size_t start, size_t end);
+void		heredoc_expand_variables(char **line);
+void		close_exec_fds(void);
+int			process_redirect_list(t_command *cmd);
 #endif

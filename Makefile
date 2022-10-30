@@ -6,7 +6,7 @@
 #    By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/09 18:01:32 by fnichola          #+#    #+#              #
-#    Updated: 2022/10/30 11:51:15 by fnichola         ###   ########.fr        #
+#    Updated: 2022/10/30 15:02:03 by fnichola         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,10 @@ LDFLAGS = -lreadline -lhistory -L$(READLINE_DIR)/lib
 SRCS = srcs/main.c \
 	srcs/debug_log.c \
 	srcs/execute/execute-commands.c \
+	srcs/execute/execute-built-in.c \
+	srcs/execute/execute-external.c \
 	srcs/execute/exec-fds.c \
+	srcs/execute/exec-fds2.c \
 	srcs/lexer/lexer.c \
 	srcs/lexer/lex-functions.c \
 	srcs/lexer/lex-utilities.c \
@@ -46,6 +49,8 @@ SRCS = srcs/main.c \
 	srcs/utilities/ft_puterror.c \
 	srcs/utilities/ft_strncpy.c \
 	srcs/utilities/ft_strcmp.c \
+	srcs/utilities/heredoc.c \
+	srcs/utilities/heredoc-utils.c \
 	srcs/utilities/is_str_match.c \
 	srcs/utilities/is_valid_var_char.c \
 	srcs/utilities/malloc_error_check.c \
