@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   split_env.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 02:43:15 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/30 16:46:30 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/30 19:15:05 by akihito          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	split_and_join_env(t_envlist *new_var, const char *str)
 
 	i = 0;
 	while (ft_isalnum(str[i]))
-			i++;
+		i++;
 	(*new_var).name = ft_wsubstr(str, 0, i);
 	if (str[i] == '+' && str[i + 1] == '=')
 	{
