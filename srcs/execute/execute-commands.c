@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 09:22:05 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/30 16:43:51 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/30 19:17:19 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,10 @@ static void	execute_commands_loop(void)
 	{
 		if (ct->pid)
 		{
+			ft_wsignal(SIGINT, signal_handler_parent);
 			waitpid(ct->pid, &wstatus, WUNTRACED);
 			set_status_from_child_status(wstatus);
+			ft_wsignal(SIGINT, signal_handler);
 		}
 		ct = ct->next;
 	}

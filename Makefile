@@ -6,7 +6,7 @@
 #    By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/09 18:01:32 by fnichola          #+#    #+#              #
-#    Updated: 2022/10/30 18:09:06 by fnichola         ###   ########.fr        #
+#    Updated: 2022/10/30 19:27:27 by fnichola         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,8 +16,9 @@ LIBFT_DIR = libft
 LIBFT_LIB = $(LIBFT_DIR)/libft.a
 READLINE_DIR = $(shell brew --prefix readline)
 # READLINE_DIR = /usr/local/Cellar/readline/8.1.2/lib/
+
 CC = gcc
-CFLAGS = -Wextra -Werror -Wall -g -fsanitize=address -I $(READLINE_DIR)/include
+CFLAGS = -Wextra -Werror -Wall -I $(READLINE_DIR)/include
 LDFLAGS = -lreadline -lhistory -L$(READLINE_DIR)/lib
 SRCS = srcs/main.c \
 	srcs/execute/execute-commands.c \

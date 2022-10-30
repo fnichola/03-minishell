@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/30 11:45:45 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/30 18:02:59 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/30 19:29:02 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,14 @@ bool	is_valid_exit_status(char	*num)
 	if (!ft_isdigit(num[0]) && num[0] != '-')
 		is_valid = false;
 	else
+	{
 		while (num[i] != '\0')
 		{
 			if (!ft_isdigit(num[i]))
 				is_valid = false;
 			i++;
 		}
+	}
 	err = false;
 	ft_atoi_err(num, &err);
 	if (err)

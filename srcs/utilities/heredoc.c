@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/30 14:37:23 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/30 14:40:19 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/30 19:22:03 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ int	heredoc(t_redirect *r, t_command *cmd)
 		close(cmd->input_fd);
 	cmd->input_fd = pipe_fd[0];
 	g_data.sig_int = false;
+	ft_wsignal(SIGINT, signal_handler_heredoc);
 	heredoc_read(r, cmd);
 	i = 0;
 	while (!g_data.sig_int && cmd->heredoc && cmd->heredoc[i])
@@ -49,6 +50,7 @@ int	heredoc(t_redirect *r, t_command *cmd)
 		write(pipe_fd[1], "\n", 1);
 		i++;
 	}
+	ft_wsignal(SIGINT, signal_handler);
 	close(pipe_fd[1]);
 	return (cmd->input_fd);
 }

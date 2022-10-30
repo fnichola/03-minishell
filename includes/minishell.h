@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/30 18:47:47 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/30 19:22:20 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -206,4 +206,6 @@ void		init_g_data(void);
 void		inits(char **envp);
 int			wget_next_line(int script_fd, char **line);
 int			ft_atoi_err(const char *nptr, bool *err);
+void		signal_handler_parent(int signo);
+void		signal_handler_heredoc(int signo);
 #endif
