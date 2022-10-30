@@ -6,7 +6,7 @@
 #    By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/09 18:01:32 by fnichola          #+#    #+#              #
-#    Updated: 2022/10/30 15:02:03 by fnichola         ###   ########.fr        #
+#    Updated: 2022/10/30 16:32:43 by fnichola         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,9 @@ SRCS = srcs/main.c \
 	srcs/execute/exec-fds2.c \
 	srcs/lexer/lexer.c \
 	srcs/lexer/lex-functions.c \
+	srcs/lexer/lex-functions2.c \
 	srcs/lexer/lex-utilities.c \
+	srcs/lexer/lex-utilities2.c \
 	srcs/lexer/lex-init.c \
 	srcs/parser/parser.c \
 	srcs/parser/parser-functions.c \
