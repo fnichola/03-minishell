@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 10:58:36 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/30 13:09:20 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/30 13:29:54 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,7 +136,6 @@ static int	update_input_redirect(t_redirect *r, t_command *cmd)
 			close(cmd->input_fd);
 		cmd->input_fd = pipe_fd[0];
 		g_data.sig_int = false;
-		rl_clear_signals();
 		while (!g_data.sig_int)
 		{
 			line = readline("> ");
@@ -154,7 +153,7 @@ static int	update_input_redirect(t_redirect *r, t_command *cmd)
 		debug_log("update_input_redirect: heredoc end\n");
 
 		i = 0;
-		while(!g_data.sig_int && cmd->heredoc[i])
+		while(!g_data.sig_int && cmd->heredoc && cmd->heredoc[i])
 		{
 			write(pipe_fd[1], cmd->heredoc[i], ft_strlen(cmd->heredoc[i]));
 			write(pipe_fd[1], "\n", 1);

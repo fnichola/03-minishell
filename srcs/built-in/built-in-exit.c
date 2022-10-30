@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/30 11:45:45 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/30 12:28:34 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/30 13:31:16 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	built_in_exit(char **argv)
 		else
 			g_data.exit_status = ft_atoi(argv[1]);
 	}
-	else
+	else if (argc > 2)
 	{
 		ft_puterror("exit", "too many arguments\n", NULL);
 		g_data.exit_status = 1;
