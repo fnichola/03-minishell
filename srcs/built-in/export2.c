@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   export2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
+/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/15 01:57:05 by akihito           #+#    #+#             */
-/*   Updated: 2022/10/29 19:21:26 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/30 12:29:25 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-// this check needs to be fixed!
 bool	is_valid_variable(char *variable)
 {
 	size_t	i;
@@ -21,7 +20,7 @@ bool	is_valid_variable(char *variable)
 	i = 0;
 	while (variable[i])
 	{
-		if (variable[i] == '=' && variable[i-1] == '+')
+		if (variable[i] == '=' && variable[i - 1] == '+')
 			name = ft_wsubstr(variable, 0, i - 1);
 		else if (variable[i] == '=')
 			name = ft_wsubstr(variable, 0, i);

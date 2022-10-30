@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 13:54:14 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/23 09:29:53 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/30 11:29:00 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,16 +45,3 @@ void	init_parse_arg(t_parse_arg *p, t_list *tokens)
 	p->count_cmds = 0;
 	p->is_exit = false;
 }
-
-// t_redirect	*init_redirect_nil()
-// {
-// 	t_redirect	*nil;
-
-// 	nil = (t_redirect *)malloc(sizeof(t_redirect));
-// 	nil->next = nil;
-// 	nil->prev = nil;
-// 	nil->fd = 0;
-// 	nil->redirect_type = 0;
-// 	nil->count_cmds = 0;
-// 	return (nil);
-// }

@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/09 21:50:12 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/26 12:46:37 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/30 11:37:24 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,9 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	size_t	size;
 
 	if (s1 && !s2)
-		return ft_strdup(s1);
+		return (ft_strdup(s1));
 	else if (!s1 && s2)
-		return ft_strdup(s2);
+		return (ft_strdup(s2));
 	else
 	{
 		size = ft_strlen(s1) + ft_strlen(s2) + 1;
