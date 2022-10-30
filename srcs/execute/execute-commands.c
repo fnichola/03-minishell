@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute-commands.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 09:22:05 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/29 13:59:41 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/30 14:07:32 by atomizaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,7 +176,6 @@ static void	execute_commands_loop(void)
 		if (!ct->argv || !ct->argv[0])
 			return ;
 		execute_simple_command(ct);
-		g_data.is_piped++;
 		ct = ct->next;
 	}
 	close_exec_fds();
@@ -201,7 +200,6 @@ int	execute_commands(void)
 		return (0);
 	prepare_exec_fds();
 	execute_commands_loop();
-	debug_log("g_data.is_piped %d\n", g_data.is_piped);
 	debug_log("g_data.built_in_count %d\n", g_data.built_in_count);
 	close_exec_fds();
 	free_command_table();

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/26 16:46:58 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/30 13:26:22 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/30 14:24:17 by atomizaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,55 +14,46 @@
 #include "lexer.h"
 #include "get_next_line.h"
 
-
 t_minishell_data	g_data;
 bool				g_debug;
 
-int event(void)
-{ 
-	return 0; 
+int	event(void)
+{
+	return (0);
 }
 
-int	minishell(char **envp, int script_fd)
+int	wget_next_line(int script_fd, char **line)
 {
-	int			status;
+	*line = get_next_line(script_fd);
+	if (!*line)
+		*line = ft_wstrdup("exit");
+	if (*line)
+		*line[ft_strlen(*line) - 1] = 0;
+	else
+		return (-1);
+	return (0);
+}
+
+int	minishell(char **envp)
+{
 	char		*line;
 	t_list		*tokens;
 
-	init_env_list(envp);
-	g_data.command_table = NULL;
-	g_data.is_piped = 0;
-	init_built_in_table();
-	status = 0;
+	inits(envp);
 	rl_event_hook = event;
-	while (!status)
+	while (1)
 	{
-		g_data.is_piped = 0;
-		if (script_fd >= 0)
-		{
-			line = get_next_line(script_fd);
-			if (!line)
-				line = ft_wstrdup("exit");
-			if (line)
-				line[ft_strlen(line) - 1] = 0;
-			else
-				break ;
-		}
-		else
-		{
-			rl_outstream = stderr;
-			line = readline("minishell$ ");
-			if (!line)
-				line = ft_wstrdup("exit");
-			if (line && *line)
-				add_history(line);
-		}
+		rl_outstream = stderr;
+		line = readline("minishell$ ");
+		if (!line)
+			line = ft_wstrdup("exit");
+		if (line && *line)
+			add_history(line);
 		tokens = tokenizer(line);
 		if (tokens)
 			parser(tokens);
 		free(line);
-		status = execute_commands();//ここでパイプ生成
-		debug_log("g_data.exit_status %d\n", g_data.exit_status);
+		execute_commands();
 	}
 	return (0);
 }
@@ -70,27 +61,11 @@ int	minishell(char **envp, int script_fd)
 int	main(int argc, char **argv, char **envp)
 {
 	(void)argv;
-
-	ft_wsignal(SIGINT, signal_handler);// ctrlC
-	ft_wsignal(SIGQUIT, SIG_IGN);// ctrl 
-	int	fd;
-	// g_debug = true;
+	ft_wsignal(SIGINT, signal_handler);
+	ft_wsignal(SIGQUIT, SIG_IGN);
 	if (argc == 1)
-	{
-		debug_log("Starting Minishell\n");
-		minishell(envp, -1);
-	}
-	else if (argc == 2 && !access(argv[1], X_OK))
-	{
-		fd = open(argv[1], O_RDONLY);
-		if (fd >= 0)
-			minishell(envp, fd);
-		else
-			ft_perror(argv[1]);
-	}
+		minishell(envp);
 	else
-	{
 		ft_perror("Error");
-	}
 	return (0);
 }

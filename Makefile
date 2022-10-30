@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+         #
+#    By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/09 18:01:32 by fnichola          #+#    #+#              #
-#    Updated: 2022/10/30 11:51:15 by fnichola         ###   ########.fr        #
+#    Updated: 2022/10/30 13:57:42 by atomizaw         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -82,7 +82,8 @@ SRCS = srcs/main.c \
 	srcs/utilities/redirect/redirect_add.c \
 	srcs/utilities/redirect/redirect_new.c \
 	srcs/signals/signal.c \
-	srcs/exit/exit_status.c
+	srcs/exit/exit_status.c \
+	srcs/utilities/inits.c \
 
 ifdef WITH_BONUS
 endif
