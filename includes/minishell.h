@@ -6,11 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2022/10/30 18:07:15 by fnichola         ###   ########.fr       */
-=======
-/*   Updated: 2022/10/30 16:49:24 by fnichola         ###   ########.fr       */
->>>>>>> b2107959efeed80fc72c1c0ed1670885b75dcd07
+/*   Updated: 2022/10/30 19:00:52 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -209,8 +205,5 @@ bool		is_delimeter(char c);
 void		init_g_data(void);
 void		inits(char **envp);
 int			wget_next_line(int script_fd, char **line);
-<<<<<<< HEAD
 int			ft_atoi_err(const char *nptr, bool *err);
-=======
->>>>>>> b2107959efeed80fc72c1c0ed1670885b75dcd07
 #endif
