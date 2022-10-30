@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   built-in-echo.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
+/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/30 11:41:17 by fnichola          #+#    #+#             */
 /*   Updated: 2022/10/30 19:14:26 by akihito          ###   ########.fr       */
@@ -23,7 +23,7 @@ void	built_in_echo(char **argv)
 		(int)ft_strlen(argv[arg_i])) == 0)
 	{
 		arg_i++;
-		while (ft_strncmp(argv[arg_i], "-n", 2) == 0)
+		while (argv[arg_i] && ft_strncmp(argv[arg_i], "-n", 2) == 0)
 			arg_i++;
 		option++;
 	}
