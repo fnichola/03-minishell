@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 02:30:14 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/29 13:24:26 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/30 12:21:35 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ static void	export_split_set(const char *arg)
 {
 	t_envlist	new_var;
 	t_envlist	*found_env;
-
 
 	new_var = split_env(arg);
 	if (new_var.name)

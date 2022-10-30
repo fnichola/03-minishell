@@ -1,34 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   built_in_command2.c                                :+:      :+:    :+:   */
+/*   built-in-exit.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/08 01:54:35 by akihito           #+#    #+#             */
-/*   Updated: 2022/10/29 13:58:43 by fnichola         ###   ########.fr       */
+/*   Created: 2022/10/30 11:45:45 by fnichola          #+#    #+#             */
+/*   Updated: 2022/10/30 13:31:16 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../libft/libft.h"
 #include "minishell.h"
-#include "lexer.h"
-#include <stdio.h>
-#include <readline/readline.h>
-#include <readline/history.h>
-#include <sys/wait.h>
 
-void	built_in_unset(char **argv)
+bool	is_valid_exit_status(char	*num)
 {
-	size_t	i;
+	int	i;
 
-	i = 1;
-	while (argv[i])
+	i = 0;
+	while (num[i] != '\0')
 	{
-		ft_unsetenv(argv[i]);
+		if (!ft_isdigit(num[i]))
+			return (false);
 		i++;
 	}
-	g_data.exit_status = 0;
+	return (true);
+}
+
+void	exit_and_free_command(int exit_status)
+{
+	free_command_table();
+	exit(exit_status);
 }
 
 void	built_in_exit(char **argv)
@@ -37,53 +38,23 @@ void	built_in_exit(char **argv)
 
 	argc = 0;
 	while (argv[argc])
-	{
-		debug_log("argv[%d] %s\n",argc, argv[argc]);
 		argc++;
-	}
 	free_env_list(&g_data.env_list);
 	ft_putendl_fd("exit", 1);
-	if (argv[1] == NULL)//ただのexit
+	if (argc == 2)
 	{
-		// ft_putendl_fd("exit", 1);
-		exit(g_data.exit_status);
-	}
-	if (argc == 2)// exit 4など
-	{
-		debug_log("test\n\n");
 		if (!is_valid_exit_status(argv[1]))
 		{
-			debug_log("test\n\n");
 			ft_puterror("exit", argv[1], "numeric argument required");
 			g_data.exit_status = 255;
 		}
 		else
 			g_data.exit_status = ft_atoi(argv[1]);
 	}
-	else//exit 4 2 1など
+	else if (argc > 2)
 	{
-		ft_puterror("exit","too many arguments\n", NULL); //need a separate error function
+		ft_puterror("exit", "too many arguments\n", NULL);
 		g_data.exit_status = 1;
 	}
 	exit_and_free_command(g_data.exit_status);
-}
-
-bool	is_valid_exit_status(char	*num)
-{
-	int	i;
-
-	i = 0;
-	while(num[i] != '\0')
-	{
-		if(!ft_isdigit(num[i]))
-			return (false);
-		i++;
-	}
-	return(true);
-}
-
-void	exit_and_free_command(int exit_status)
-{
-	free_command_table();
-	exit(exit_status);
 }

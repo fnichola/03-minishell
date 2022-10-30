@@ -6,7 +6,7 @@
 #    By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/09 18:01:32 by fnichola          #+#    #+#              #
-#    Updated: 2022/10/28 11:20:29 by fnichola         ###   ########.fr        #
+#    Updated: 2022/10/30 11:51:15 by fnichola         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME = minishell
 
 LIBFT_DIR = libft
 LIBFT_LIB = $(LIBFT_DIR)/libft.a
-# READLINE_DIR = $(shell brew --prefix readline)
+READLINE_DIR = $(shell brew --prefix readline)
 # READLINE_DIR = /usr/local/Cellar/readline/8.1.2/lib/
 CC = gcc
 CFLAGS = -Wextra -Werror -Wall -g -fsanitize=address -I $(READLINE_DIR)/include
@@ -31,10 +31,15 @@ SRCS = srcs/main.c \
 	srcs/parser/parser-functions.c \
 	srcs/parser/parser-init.c \
 	srcs/parser/expand-quoted-text.c \
-	srcs/built_in/built_in_command1.c \
-	srcs/built_in/built_in_command2.c \
-	srcs/built_in/export.c \
-	srcs/built_in/export2.c \
+	srcs/built-in/built-in-cd.c \
+	srcs/built-in/built-in-echo.c \
+	srcs/built-in/built-in-env.c \
+	srcs/built-in/built-in-exit.c \
+	srcs/built-in/built-in-pwd.c \
+	srcs/built-in/built-in-unset.c \
+	srcs/built-in/export.c \
+	srcs/built-in/export2.c \
+	srcs/built-in/init-built-in-table.c \
 	srcs/utilities/del_token.c \
 	srcs/utilities/exit_error.c \
 	srcs/utilities/ft_perror.c \

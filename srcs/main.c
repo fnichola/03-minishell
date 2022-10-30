@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/26 16:46:58 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/29 13:57:21 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/30 13:26:22 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,11 @@
 
 t_minishell_data	g_data;
 bool				g_debug;
+
+int event(void)
+{ 
+	return 0; 
+}
 
 int	minishell(char **envp, int script_fd)
 {
@@ -29,6 +34,7 @@ int	minishell(char **envp, int script_fd)
 	g_data.is_piped = 0;
 	init_built_in_table();
 	status = 0;
+	rl_event_hook = event;
 	while (!status)
 	{
 		g_data.is_piped = 0;
@@ -68,7 +74,7 @@ int	main(int argc, char **argv, char **envp)
 	ft_wsignal(SIGINT, signal_handler);// ctrlC
 	ft_wsignal(SIGQUIT, SIG_IGN);// ctrl 
 	int	fd;
-	g_debug = true;
+	// g_debug = true;
 	if (argc == 1)
 	{
 		debug_log("Starting Minishell\n");

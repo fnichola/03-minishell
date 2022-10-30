@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec-fds.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
+/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 10:58:36 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/28 18:25:37 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/30 13:29:54 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,12 +135,13 @@ static int	update_input_redirect(t_redirect *r, t_command *cmd)
 		if (cmd->input_fd != STDIN_FILENO)
 			close(cmd->input_fd);
 		cmd->input_fd = pipe_fd[0];
-		while (1)
+		g_data.sig_int = false;
+		while (!g_data.sig_int)
 		{
 			line = readline("> ");
 			if (!line)
 				break ;
-			else if (is_str_match(line, r->filename))
+			else if (g_data.sig_int || is_str_match(line, r->filename))
 			{
 				free(line);
 				break ;
@@ -148,10 +149,11 @@ static int	update_input_redirect(t_redirect *r, t_command *cmd)
 			heredoc_expand_variables(&line);
 			heredoc_add_line(cmd, line);
 		}
+		rl_set_signals();
 		debug_log("update_input_redirect: heredoc end\n");
 
 		i = 0;
-		while(cmd->heredoc[i])
+		while(!g_data.sig_int && cmd->heredoc && cmd->heredoc[i])
 		{
 			write(pipe_fd[1], cmd->heredoc[i], ft_strlen(cmd->heredoc[i]));
 			write(pipe_fd[1], "\n", 1);
