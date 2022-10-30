@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/30 11:45:45 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/30 13:31:16 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/30 18:02:59 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,26 @@
 
 bool	is_valid_exit_status(char	*num)
 {
-	int	i;
+	int		i;
+	bool	is_valid;
+	bool	err;
 
-	i = 0;
-	while (num[i] != '\0')
-	{
-		if (!ft_isdigit(num[i]))
-			return (false);
-		i++;
-	}
-	return (true);
+	i = 1;
+	is_valid = true;
+	if (!ft_isdigit(num[0]) && num[0] != '-')
+		is_valid = false;
+	else
+		while (num[i] != '\0')
+		{
+			if (!ft_isdigit(num[i]))
+				is_valid = false;
+			i++;
+		}
+	err = false;
+	ft_atoi_err(num, &err);
+	if (err)
+		is_valid = false;
+	return (is_valid);
 }
 
 void	exit_and_free_command(int exit_status)
@@ -41,20 +51,21 @@ void	built_in_exit(char **argv)
 		argc++;
 	free_env_list(&g_data.env_list);
 	ft_putendl_fd("exit", 1);
-	if (argc == 2)
+	if (argc > 1 && !is_valid_exit_status(argv[1]))
 	{
-		if (!is_valid_exit_status(argv[1]))
-		{
-			ft_puterror("exit", argv[1], "numeric argument required");
-			g_data.exit_status = 255;
-		}
-		else
-			g_data.exit_status = ft_atoi(argv[1]);
+		ft_puterror("exit", argv[1], "numeric argument required");
+		g_data.exit_status = 255;
+		exit_and_free_command(g_data.exit_status);
 	}
 	else if (argc > 2)
 	{
-		ft_puterror("exit", "too many arguments\n", NULL);
+		ft_puterror("exit", "too many arguments", NULL);
 		g_data.exit_status = 1;
 	}
-	exit_and_free_command(g_data.exit_status);
+	else
+	{
+		if (argc > 1)
+			g_data.exit_status = (unsigned char)ft_atoi(argv[1]);
+		exit_and_free_command(g_data.exit_status);
+	}
 }
