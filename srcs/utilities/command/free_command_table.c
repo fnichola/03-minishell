@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_command_table.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
+/*   By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/14 02:54:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/18 01:12:35 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/30 14:39:40 by atomizaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	free_command_table(void)
 	t_command	*tmp;
 
 	ct = g_data.command_table;
-	while(ct)
+	while (ct)
 	{
 		tmp = ct->next;
 		free_command(ct);

@@ -6,7 +6,11 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2022/10/30 18:07:15 by fnichola         ###   ########.fr       */
+=======
+/*   Updated: 2022/10/30 16:49:24 by fnichola         ###   ########.fr       */
+>>>>>>> b2107959efeed80fc72c1c0ed1670885b75dcd07
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,16 +119,12 @@ typedef struct s_minishell_data {
 	int					exit_status;
 	t_envlist			*env_list;
 	size_t				built_in_count;
-	size_t				is_piped;
 	bool				sig_int;
 }	t_minishell_data;
 
 extern t_minishell_data	g_data;
-extern bool g_debug;
 
-void		debug_log(const char *format, ...);
 void		exit_error(char *str);
-void		error_command(char *str1, char *str2, char *str3);
 void		init_built_in_table(void);
 void		built_in_exit(char **argv);
 void		built_in_cd(char **argv);
@@ -164,6 +164,7 @@ t_envlist	*env_list_sort(t_envlist *env_list);
 void		env_list_swap_next(t_envlist *node);
 char		*env_to_string(const char *name, const char *value);
 char		**export_to_envp(void);
+int			count_env_list_size(t_envlist	*ptr);
 void		free_env_list(t_envlist **env_list);
 void		free_envp(char **envp);
 t_envlist	*ft_findenv(const char *name);
@@ -174,6 +175,7 @@ char		*get_env_name(char *env);
 char		*get_env_value(char *env);
 void		init_env_list(char **envp);
 t_envlist	split_env(const char *str);
+void		split_and_join_env(t_envlist *new_var, const char *str);
 t_redirect	*redirect_new(void);
 t_redirect	*redirect_add(t_redirect **redirect_list, t_redirect *new_redirect);
 void		free_redirects(t_redirect **redirect_list);
@@ -207,5 +209,8 @@ bool		is_delimeter(char c);
 void		init_g_data(void);
 void		inits(char **envp);
 int			wget_next_line(int script_fd, char **line);
+<<<<<<< HEAD
 int			ft_atoi_err(const char *nptr, bool *err);
+=======
+>>>>>>> b2107959efeed80fc72c1c0ed1670885b75dcd07
 #endif

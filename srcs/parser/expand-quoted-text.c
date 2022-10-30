@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand-quoted-text.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/18 16:26:16 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/17 14:33:55 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/30 15:23:10 by atomizaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static void	expand_and_join(t_parse_arg *p, char *pre_str,
 	char	*tmp_str;
 	char	*joined_str;
 
-	found_env = ft_getenv(quoted_var);//見つからなかったらNULLを返す
+	found_env = ft_getenv(quoted_var);
 	if (found_env)
 	{
 		tmp_str = ft_strjoin(pre_str, found_env);
@@ -47,7 +47,7 @@ static void	split_quoted_text(t_parse_arg *p, size_t i)
 	start_index = i;
 	while (p->token->word[i] && is_valid_var_char(p->token->word[i]))
 		i++;
-	quoted_var = ft_substr(p->token->word, start_index, i - start_index);// echo "$HOME!"は/Users/nicでOK
+	quoted_var = ft_substr(p->token->word, start_index, i - start_index);
 	post_str = ft_substr(p->token->word, i, ft_strlen(p->token->word) - i);
 	expand_and_join(p, pre_str, quoted_var, post_str);
 	free(pre_str);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command_add_back.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/14 00:43:06 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/14 02:37:58 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/30 14:39:08 by atomizaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	command_add_back(t_command *new_command)
 	t_command	*ct;
 
 	if (!new_command)
-		return;
+		return ;
 	ct = g_data.command_table;
 	if (!ct)
 	{
