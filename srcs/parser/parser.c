@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akihito <akihito@student.42.fr>            +#+  +:+       +#+        */
+/*   By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 18:02:55 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/28 18:24:39 by akihito          ###   ########.fr       */
+/*   Updated: 2022/10/30 15:31:27 by atomizaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,30 +19,30 @@
  * The command table has one list item for each command separated by pipes.
  * (e.g. `ls dir | grep something` has two commands)
  */
-void parser(t_list *tokens)
+void	parser(t_list *tokens)
 {
 	t_state_func_row	*state_func_table;
 	t_parse_arg			p;
 
 	if (!tokens)
 		return ;
-	state_func_table = p_init_state_func_table();//stateと関数ポインタを作成している。
+	state_func_table = p_init_state_func_table();
 	init_parse_arg(&p, tokens);
-	p.list_ptr = tokens;//ここでtoken(単語)のリストを渡している
+	p.list_ptr = tokens;
 	while (p.state != ST_FINISHED)
-	{
-		state_func_table[p.state].parse_func(&p);//構造体ないの関数ポインタを実行している
-	}
+		state_func_table[p.state].parse_func(&p);
 	free(state_func_table);
 	if (p.previous_token)
-		if (p.previous_token->type == T_GT ||
-			p.previous_token->type == T_GTGT ||
-			p.previous_token->type == T_LT ||
-			p.previous_token->type == T_LTLT ||
+	{
+		if (p.previous_token->type == T_GT || \
+			p.previous_token->type == T_GTGT || \
+			p.previous_token->type == T_LT || \
+			p.previous_token->type == T_LTLT || \
 			p.previous_token->type == T_PIPE)
 		{
 			ft_putstr_fd("minishell: syntax error\n", STDERR_FILENO);
 			free_command_table();
 		}
+	}
 	ft_lstclear(&tokens, del_token);
 }

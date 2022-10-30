@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 13:54:14 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/21 12:41:35 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/30 16:26:23 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,10 @@ t_state_func_row	*init_state_func_table(void)
 	{ST_IN_DOUBLE_QUOTE,	&lex_in_double_quote},
 	{ST_IN_WORD,			*lex_in_word}
 	};
-	t_state_func_row		*state_func_table;//ここでconstで初期化した構造体配列をコピーしてreturnできるようにしている。
-	
+	t_state_func_row		*state_func_table;
+
 	state_func_table = malloc_error_check(sizeof(temp));
-	ft_memcpy(state_func_table, temp, sizeof(temp));//constだとスコープがその関数内だけだが、memcpyでコピーしたアドレスはreturnできる。
+	ft_memcpy(state_func_table, temp, sizeof(temp));
 	return (state_func_table);
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_env_value.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 04:06:50 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/13 05:36:57 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/30 14:53:40 by atomizaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,6 @@ char	*get_env_value(char *env)
 	char	*value;
 
 	value = ft_strchr(env, '=');
-	(value)++;//ここで　'='を消すERM_PROGRAM=vscodeでfind_indexが23になる
+	(value)++;
 	return (ft_wstrdup(value));
 }

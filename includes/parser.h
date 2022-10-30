@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 15:11:01 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/30 11:15:30 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/30 15:32:47 by atomizaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,4 +58,9 @@ void				parser_env(t_parse_arg *p);
 void				parser_in_dquote(t_parse_arg *p);
 void				expand_quoted_text(t_parse_arg *p);
 int					add_list(int value, size_t count_cmds, t_redirect *nil);
+void				next_token(t_parse_arg *p);
+void				change_state(t_parse_arg *p, t_state new_state);
+void				init_command(t_parse_arg *p);
+bool				is_redirect_token(t_token_type t);
+void				parser_neutral(t_parse_arg *p);
 #endif

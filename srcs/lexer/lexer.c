@@ -6,12 +6,24 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 18:02:55 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/26 12:54:08 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/30 16:44:23 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "lexer.h"
+
+void	reset_lex_arg(t_lex_arg *l, t_token **token)
+{
+	l->state = ST_NEUTRAL;
+	l->previous_state = ST_NEUTRAL;
+	l->start_index = l->index;
+	l->current_char = (l->line)[l->index];
+	l->found_token = false;
+	l->token = *token;
+	l->token->type = T_ERROR;
+	l->token->word = NULL;
+}
 
 /**
  * Returns the next token from the string "line".
@@ -22,19 +34,10 @@ int	get_next_token(t_lex_arg *l,
 	const t_state_func_row *state_func_table,
 	t_token **token)
 {
-	l->state = ST_NEUTRAL;
-	l->previous_state = ST_NEUTRAL;
-	l->start_index = l->index;
-	l->current_char = (l->line)[l->index];
-	l->found_token = false;
-
-	l->token = *token;
-	l->token->type = T_ERROR;
-	l->token->word = NULL;
+	reset_lex_arg(l, token);
 	while (!l->found_token)
 	{
-		debug_log("get_next_token: char=%c, index=%zu\n", l->current_char, l->index);
-		state_func_table[l->state].lex_func(l); //構造体の[]はenumでt_stateとインデックスが紐づいている。
+		state_func_table[l->state].lex_func(l);
 		if (l->found_token)
 		{
 			if (l->token->type == T_EOL)
@@ -75,8 +78,8 @@ t_list	*tokenizer(const char *line)
 
 	new_token = malloc_error_check(sizeof(t_token));
 	token_list = NULL;
-	state_func_table = init_state_func_table();//stateと関数ポインタを作成している。
-	init_lex_arg(&l, line); //lineは不要。ここで関数ポインタに渡すための引数を定義
+	state_func_table = init_state_func_table();
+	init_lex_arg(&l, line);
 	if (get_next_token(&l, state_func_table, &new_token))
 		return (NULL);
 	while (new_token)

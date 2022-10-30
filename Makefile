@@ -6,7 +6,7 @@
 #    By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/09 18:01:32 by fnichola          #+#    #+#              #
-#    Updated: 2022/10/30 11:51:15 by fnichola         ###   ########.fr        #
+#    Updated: 2022/10/30 16:45:03 by fnichola         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,15 +20,20 @@ CC = gcc
 CFLAGS = -Wextra -Werror -Wall -g -fsanitize=address -I $(READLINE_DIR)/include
 LDFLAGS = -lreadline -lhistory -L$(READLINE_DIR)/lib
 SRCS = srcs/main.c \
-	srcs/debug_log.c \
 	srcs/execute/execute-commands.c \
+	srcs/execute/execute-built-in.c \
+	srcs/execute/execute-external.c \
 	srcs/execute/exec-fds.c \
+	srcs/execute/exec-fds2.c \
 	srcs/lexer/lexer.c \
 	srcs/lexer/lex-functions.c \
+	srcs/lexer/lex-functions2.c \
 	srcs/lexer/lex-utilities.c \
+	srcs/lexer/lex-utilities2.c \
 	srcs/lexer/lex-init.c \
 	srcs/parser/parser.c \
 	srcs/parser/parser-functions.c \
+	srcs/parser/parser-functions2.c \
 	srcs/parser/parser-init.c \
 	srcs/parser/expand-quoted-text.c \
 	srcs/built-in/built-in-cd.c \
@@ -46,6 +51,8 @@ SRCS = srcs/main.c \
 	srcs/utilities/ft_puterror.c \
 	srcs/utilities/ft_strncpy.c \
 	srcs/utilities/ft_strcmp.c \
+	srcs/utilities/heredoc.c \
+	srcs/utilities/heredoc-utils.c \
 	srcs/utilities/is_str_match.c \
 	srcs/utilities/is_valid_var_char.c \
 	srcs/utilities/malloc_error_check.c \
@@ -82,7 +89,8 @@ SRCS = srcs/main.c \
 	srcs/utilities/redirect/redirect_add.c \
 	srcs/utilities/redirect/redirect_new.c \
 	srcs/signals/signal.c \
-	srcs/exit/exit_status.c
+	srcs/exit/exit_status.c \
+	srcs/utilities/inits.c \
 
 ifdef WITH_BONUS
 endif
