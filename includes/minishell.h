@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 16:40:07 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/29 13:58:44 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/30 11:17:20 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,15 +40,15 @@
  * T_ERROR = error
  */
 typedef enum e_token_type {
-	T_WORD, //alphabet
-	T_DOUBLE_QUOTED, // double-quoted text
-	T_PIPE,//
-	T_GT, // >
-	T_GTGT, // >>
+	T_WORD,
+	T_DOUBLE_QUOTED,
+	T_PIPE,
+	T_GT,
+	T_GTGT,
 	T_LT,
 	T_LTLT,
-	T_VAR, //$ 環境変数
-	T_EXIT_STATUS, //$?
+	T_VAR,
+	T_EXIT_STATUS,
 	T_EOL,
 	T_ERROR
 }	t_token_type;
@@ -84,14 +84,14 @@ typedef enum e_redirect_type {
 }	t_redirect_type;
 
 typedef struct s_redirect {
-	t_redirect_type	type;
+	t_redirect_type		type;
 	bool				append;
 	char				*filename;
 	struct s_redirect	*next;
 }	t_redirect;
 
 typedef struct s_command {
-	char				**argv; // = {"grep", "c", 0}
+	char				**argv;
 	t_redirect			*redirects;
 	pid_t				pid;
 	int					input_fd;
@@ -101,7 +101,7 @@ typedef struct s_command {
 	struct s_command	*next;
 }	t_command;
 
-typedef struct s_exec_fds {//command１つ１つに対して依存するべき
+typedef struct s_exec_fds {
 	int	in_fd;
 	int	out_fd;
 	int	pipe_fd[2];
@@ -119,7 +119,6 @@ typedef struct s_minishell_data {
 }	t_minishell_data;
 
 extern t_minishell_data	g_data;
-extern bool	g_debug;
 
 void		debug_log(const char *format, ...);
 void		exit_error(char *str);

@@ -6,7 +6,7 @@
 /*   By: fnichola <fnichola@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 15:11:01 by fnichola          #+#    #+#             */
-/*   Updated: 2022/10/28 11:13:52 by fnichola         ###   ########.fr       */
+/*   Updated: 2022/10/30 11:15:30 by fnichola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,16 +26,16 @@ typedef enum e_state {
 }	t_state;
 
 typedef struct s_parse_arg {
-	t_list			*list_ptr;//ここ使ってなくないですか？
+	t_list			*list_ptr;
 	t_token			*token;
 	t_token			*previous_token;
 	t_state			state;
 	t_state			previous_state;
-	t_command		*command;//ここでコマンド
+	t_command		*command;
 	size_t			index;
 	t_envlist		*e_list;
 	size_t			count_cmds;
-	bool			is_exit;// parser_redirectでファイルの権限がない場合は、exitしないといけないが、もし親プロセス（パイプなしbuiltin)だったらminishell自体が終了してしまうのでこのメンバ変数を追加。使い所はわからない
+	bool			is_exit;
 }	t_parse_arg;
 
 /**
@@ -48,16 +48,14 @@ typedef struct s_state_func_row {
 	void		(*parse_func)(t_parse_arg *l);
 }	t_state_func_row;
 
-// t_list	*parser(t_list *tokens);
 t_state_func_row	*p_init_state_func_table(void);
-void	init_parse_arg(t_parse_arg *p, t_list *tokens);
-void	parser_neutral(t_parse_arg *p);
-void	parser_start_word(t_parse_arg *p);
-void	parser_simple_command(t_parse_arg *p);
-void	parser_redirect(t_parse_arg *p);
-void	parser_env (t_parse_arg *p);
-void	parser_in_dquote (t_parse_arg *p);
-void	expand_quoted_text(t_parse_arg *p);
-int		add_list(int value, size_t count_cmds, t_redirect *nil);
-t_redirect	*init_redirect_nil();
+void				init_parse_arg(t_parse_arg *p, t_list *tokens);
+void				parser_neutral(t_parse_arg *p);
+void				parser_start_word(t_parse_arg *p);
+void				parser_simple_command(t_parse_arg *p);
+void				parser_redirect(t_parse_arg *p);
+void				parser_env(t_parse_arg *p);
+void				parser_in_dquote(t_parse_arg *p);
+void				expand_quoted_text(t_parse_arg *p);
+int					add_list(int value, size_t count_cmds, t_redirect *nil);
 #endif
