@@ -6,7 +6,7 @@
 #    By: atomizaw <atomizaw@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/09 18:01:32 by fnichola          #+#    #+#              #
-#    Updated: 2022/10/30 14:31:17 by atomizaw         ###   ########.fr        #
+#    Updated: 2022/10/30 15:28:52 by atomizaw         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,6 +28,7 @@ SRCS = srcs/main.c \
 	srcs/lexer/lex-init.c \
 	srcs/parser/parser.c \
 	srcs/parser/parser-functions.c \
+	srcs/parser/parser-functions2.c \
 	srcs/parser/parser-init.c \
 	srcs/parser/expand-quoted-text.c \
 	srcs/built-in/built-in-cd.c \
